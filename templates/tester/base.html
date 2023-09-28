@@ -3,11 +3,56 @@
 {% load static %}
 <head>
     <meta charset="UTF-8">
-     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-     <script src="{% static 'js/all_functions.js' %}" defer></script>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="{% static 'js/all_functions.js' %}" defer></script>
     <title>Title</title>
 </head>
 <body>
-<h2>Hello world</h2>
+<a href="{% url 'add_ticket' %}">Добавить заявку</a>
+<div>
+        <label>
+            identify
+            <input type="text" name="identify"/>
+        </label>
+        <label>
+            username
+            <input type="text" name="username"/>
+        </label>
+        <button type="submit">Create</button>
+        {% csrf_token %}
+    </form>
+</div>
+<table>
+    <thead>
+    <tr>
+    </tr>
+    </thead>
+        <thead>
+    <tr>
+        <th>Регион</th>
+        <th>Район</th>
+        <th>Улица</th>
+        <th>Дом</th>
+        <th>Тип заявки</th>
+        <th>Логин</th>
+        <th>Мастер</th>
+    </tr>
+    
+    <tr>
+        <th>Регион</th>
+        <th>Район</th>
+        <th>Улица</th>
+        <th>Дом</th>
+        <th>Тип заявки</th>
+        <th>Логин</th>
+        <th>Мастер</th>
+    </tr>
+
+    </thead>
+</table>
+{{ obj.district }}<br>
+{{ obj.street }}
+
+
 </body>
 </html>
