@@ -4,5 +4,5 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('tester.urls')),
-    path(r'^chaining/', include('smart_selects.urls')),
+    path('chaining', include('smart_selects.urls')),
 ]

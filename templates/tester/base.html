@@ -37,21 +37,17 @@
         <th>Логин</th>
         <th>Мастер</th>
     </tr>
-    
-    <tr>
-        <th>Регион</th>
-        <th>Район</th>
-        <th>Улица</th>
-        <th>Дом</th>
-        <th>Тип заявки</th>
-        <th>Логин</th>
-        <th>Мастер</th>
-    </tr>
+        <tr>
+            {% for foo in obj %}
+	            {{ foo.street }}
+            {% endfor %}
+        </tr>
 
     </thead>
+
 </table>
-{{ obj.district }}<br>
-{{ obj.street }}
+
+
 
 
 </body>
