@@ -9,14 +9,14 @@ def start_page(request):
     street = Street.objects.all()
     house = House.objects.all()
     ticket = Ticket.objects.all()
+    form = Region()
     context = {
-        "obj": {
         "region": region,
         "district": district,
         "street": street,
         "house": house,
-        "ticket": ticket
-        }
+        "ticket": ticket,
+        'form': form
     }
     return render(request, 'tester/base.html', context)
 

@@ -1,27 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 {% load static %}
+{% load bootstrap5 %}
 <head>
     <meta charset="UTF-8">
+
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <script src="{% static 'js/all_functions.js' %}" defer></script>
+
+    <script src="/static/smart-selects/admin/js/chainedfk.js"></script>
+    <script src="/static/smart-selects/admin/js/bindfields.js"></script>
+
+    {% bootstrap_messages %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+
     <title>Title</title>
+
+    <nav class="navbar navbar-light bg-light">
+  <form class="container-fluid justify-content-start">
+    <a href="{% url 'add_ticket' %}"><button class="btn btn-outline-dark me-2" type="button" >Добавить заявку</button></a>
+    <button class="btn btn btn-outline-danger me-2" type="button">Нихуя нет</button>
+      <a href="{{ "admin/" }}"><button class="btn btn btn-outline-danger me-2" type="button">Администраторская</button></a>
+
+  </form>
+</nav>
 </head>
 <body>
-<a href="{% url 'add_ticket' %}">Добавить заявку</a>
 <div>
-        <label>
-            identify
-            <input type="text" name="identify"/>
-        </label>
-        <label>
-            username
-            <input type="text" name="username"/>
-        </label>
-        <button type="submit">Create</button>
-        {% csrf_token %}
-    </form>
-</div>
 <table>
     <thead>
     <tr>
@@ -37,18 +43,73 @@
         <th>Логин</th>
         <th>Мастер</th>
     </tr>
-        <tr>
-            {% for foo in obj %}
-	            {{ foo.street }}
-            {% endfor %}
-        </tr>
-
     </thead>
-
 </table>
+</div>
+
+{# Списжено у Ильдара  #}
+{#<div>#}
+{#    <form method="POSt">#}
+{#        {% csrf_token %}#}
+{#        {{ form.media.js }}#}
+{#         {% if form.street %}#}
+{#            <div class="col-sm-3">#}
+{#                {{ form.street }}#}
+{#            </div>#}
+{#        {% endif %}#}
+{#        <input type="submit" value="Submit" />#}
+{#    </form>#}
+{#</div>#}
 
 
+{#<div class="form-row">#}
+{#                <div class="form-group col-md-2">{{ filter.district }}</div>#}
+{#                <div class="form-group col-md-2">{{ filter.street }}</div>#}
+{#                <div class="form-group col-md-2">{{ filter.street_custom }}</div>#}
+{#                <div class="form-group col-md-1">{{ filter.home }}</div>#}
+{#                <div class="form-group col-md-1">{{ filter.apartment }}</div>#}
+{#                <div class="form-group col-md-1">{{ filter.login }}</div>#}
+{#                <div class="form-group col-md-1">{{ filter.tps_id }}</div>#}
+{#                <div class="form-group col-md-1">{{ filter.first_contact }}</div>#}
+{#                <div class="form-group col-md-1">{{ filter.second_contact }}</div>#}
+{#                <div class="form-group col-md-1">{{ filter.services }}</div>#}
+{#                <div class="form-group col-md-1">{{ filter.priority }}</div>#}
+{#                <div class="form-group col-md-1">{{ filter.type }}</div>#}
+{#                <div class="form-group col-md-1">{{ filter.status }}</div>#}
+{#                <div class="form-group col-md-1">{{ filter.status_reason }}</div>#}
+{# </div>#}
+<br><br><br><br><br>
+<form method="post">
+    {% csrf_token %}
+    {{ form.media.js }}
+    {{ form.as_p }}
+    <input type="submit" value="Тупо кнопка от фильтра " />
+</form>
 
+<br><br><br><br><br>
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+  Что-то
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Окно тип как у Ильдара</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Типо полезная инфа
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть нахуй</button>
+        <button type="button" class="btn btn-primary">Послать нахуй</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
