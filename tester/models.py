@@ -29,7 +29,7 @@ class Human(models.Model):
 
 
 class Region(models.Model):
-    name = models.CharField(max_length=64, verbose_name=_('name'))
+    name = models.CharField(max_length=64, verbose_name=_('Регион'))
 
     def __str__(self):
         return self.name
@@ -37,7 +37,6 @@ class Region(models.Model):
     class Meta:
         verbose_name = 'Регион'
         verbose_name_plural = 'Регионы'
-
 
 
 class District(models.Model):
@@ -53,11 +52,11 @@ class District(models.Model):
 
 
 class Street(models.Model):
-    district = models.ForeignKey('District', on_delete=models.CASCADE, verbose_name=_('district'))
+    district = models.ForeignKey('District', on_delete=models.CASCADE, verbose_name=_('Район'))
     name = models.CharField(max_length=64, verbose_name=_('name'))
 
     def __str__(self):
-        return f"Район: {self.district} | Улица: {self.name}"
+        return self.name
 
     class Meta:
         verbose_name = 'Улица'
@@ -71,33 +70,37 @@ class House(models.Model):
     def __str__(self):
         return self.name
 
+    def get_full_address(self):
+        return f'{self.street.district.name}, {self.street.name}, {self.name}'
+
     class Meta:
         verbose_name = 'Дом'
         verbose_name_plural = 'Дома'
 
 
-class Apartment(models.Model):
-    home = models.ForeignKey('House', on_delete=models.CASCADE, verbose_name=_('Дом'))
-    apartment = models.CharField(max_length=32, verbose_name=_('Квартира'), blank=True, null=True)
-
-    def __str__(self):
-        return f"Дом: {self.home} | Квартира: {self.apartment}"
-
-    class Meta:
-        verbose_name = 'Квартира'
-        verbose_name_plural = 'Квартиры'
+# class Apartment(models.Model):
+#     home = models.ForeignKey('House', on_delete=models.CASCADE, verbose_name=_('Дом'))
+#     apartment = models.CharField(max_length=32, verbose_name=_('Квартира'), blank=True, null=True)
+#
+#     def __str__(self):
+#         return f"Дом: {self.home} | Квартира: {self.apartment}"
+#
+#     class Meta:
+#         verbose_name = 'Квартира'
+#         verbose_name_plural = 'Квартиры'
 
 class Ticket(models.Model):
     identify = models.CharField(max_length=32, verbose_name=_('identify'))
     username = models.CharField(max_length=32, verbose_name=_('username'))
 
     house = models.ForeignKey('House', on_delete=models.CASCADE, verbose_name=_('Дом'))
-    apartment = models.ForeignKey('Apartment',max_length=32, on_delete=models.CASCADE, verbose_name=_('Квартира'), blank=True, null=True)
+    apartment = models.CharField(max_length=32, verbose_name=_('Квартира'), blank=True, null=True)
 
     date = models.DateTimeField(editable=True, default=timezone.now, verbose_name="Дата открытия")
     closed_date = models.DateTimeField(editable=True, null=True, blank=True, verbose_name="Дата закрытия")
 
-    completion_date = models.DateTimeField(default=None, null=True, blank=True, editable=True, verbose_name="Дата выполнения")
+    completion_date = models.DateTimeField(default=None, null=True, blank=True, editable=True,
+                                           verbose_name="Дата выполнения")
     login = models.CharField(blank=True, max_length=15, null=True, verbose_name="Логин")
 
     first_contact = models.CharField(max_length=13, null=True, verbose_name="Основной номер", default=None)
@@ -107,7 +110,8 @@ class Ticket(models.Model):
     comment_operator = models.TextField(blank=True, null=True, verbose_name="Комментарий оператора", default=None)
 
     update = models.DateTimeField(default=timezone.now, editable=False, verbose_name="Дата обновления")
-    street = ChainedForeignKey(Street, blank=True, null=True, chained_field="district", chained_model_field="district", show_all=False,)
+    street = ChainedForeignKey(Street, blank=True, null=True, chained_field='district', chained_model_field='district',
+                               show_all=False, )
 
     # master = models.ForeignKey(Human, null=True, blank=True, on_delete=models.PROTECT, verbose_name="Мастер")
 
@@ -120,5 +124,3 @@ class Ticket(models.Model):
 
     def get_url(self):
         return reverse('items-detail', args=[self.id])
-
-
