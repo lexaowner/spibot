@@ -4,6 +4,14 @@ from tester.models import Ticket
 
 
 def start_page(request):
+    obj = Ticket.objects.all()
+    context = {
+        "obj": obj,
+    }
+    return render(request, 'tester/base.html', context)
+
+
+def add_ticket(request):
     region = Region.objects.all()
     district = District.objects.all()
     street = Street.objects.all()
@@ -18,18 +26,7 @@ def start_page(request):
         "ticket": ticket,
         'form': form
     }
-    return render(request, 'tester/base.html', context)
-
-
-def add_ticket(request):
-    obj = {
-        "region": Region,
-        "district": District,
-        "street": Street,
-        "house": House,
-        "ticket": Ticket
-        }
-    return render(request, 'tester/add_ticket.html', obj)
+    return render(request, 'tester/add_ticket.html', context)
     if request == 'POST':
         pass
 

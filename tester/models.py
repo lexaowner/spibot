@@ -45,7 +45,7 @@ class District(models.Model):
     name = models.CharField(max_length=64, verbose_name=_('Район'))
 
     def __str__(self):
-        return f"Район: {self.name}"
+        return self.name
 
     class Meta:
         verbose_name = 'Район'
@@ -57,7 +57,7 @@ class Street(models.Model):
     name = models.CharField(max_length=64, verbose_name=_('name'))
 
     def __str__(self):
-        return f"{self.district} | Улица: {self.name}"
+        return f"Район: {self.district} | Улица: {self.name}"
 
     class Meta:
         verbose_name = 'Улица'
@@ -69,7 +69,7 @@ class House(models.Model):
     name = models.CharField(max_length=64, verbose_name=_('Дом'))
 
     def __str__(self):
-        return f"{self.street} | Дом: {self.name}"
+        return self.name
 
     class Meta:
         verbose_name = 'Дом'
@@ -81,7 +81,7 @@ class Apartment(models.Model):
     apartment = models.CharField(max_length=32, verbose_name=_('Квартира'), blank=True, null=True)
 
     def __str__(self):
-        return f"{self.home} | Квартира: {self.apartment}"
+        return f"Дом: {self.home} | Квартира: {self.apartment}"
 
     class Meta:
         verbose_name = 'Квартира'
