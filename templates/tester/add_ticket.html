@@ -8,11 +8,13 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <script src="{% static 'js/all_functions.js' %}" defer></script>
 
+    <script src="/static/smart-selects/admin/js/chainedfk.js"></script>
+    <script src="/static/smart-selects/admin/js/bindfields.js"></script>
+
     {% bootstrap_messages %}
     {% bootstrap_css %}
-    {% bootstrap_javascript %}
-    <title>Title</title>
 
+    <title>CORA_2</title>
 
 </head>
 
@@ -30,35 +32,29 @@
     <div class="row">
         <div class="col-md-12">
             <table class="table table-stripped w-100">
-                <thead>
-                <tr>
-{#                    <th>Что-то</th>#}
-                </tr>
-                </thead>
-                <tbody>
-                {% for foo in obj %}
-                    <tr >
-                        <td>{{ foo.house.get_full_address }}{% if foo.apartment %}{% endif %}кв {{ foo.apartment }}</td>
-                        <td>TEPY</td>
-                        <td>{{ foo.first_contact}}</td>
-                        <td>A priority</td>
-                        <td>{{ foo.login}}</td>
-                        <td>{{ foo.username}}</td>
-                        <td>Name master</td>
-                        <td>{{ foo.comment_master }}</td>
-                        <td>{{ foo.comment_operator }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
+
             </table>
         </div>
     </div>
-<select name="district" class="select form-control" required="" id="id_district">
-  <option value="" selected="">---------</option>
-  <option value="1"></option>
-</select>
 </div>
-
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4">
+            <table class="table table-stripped w-100">
+                <form method="POST" class="form-row">
+                    {% csrf_token %}
+                    {{ form.media.js }}
+                    <div class="col col-md-4">
+                        {{ forms }}
+                    </div>
+                    <div id="div_id_status" class="form-group mt-4">
+                        <input type="submit" class="btn mt-2 ml-2 btn-primary" value="Добавить">
+                    </div>
+                </form>
+            </table>
+        </div>
+    </div>
+</div>
 </body>
 
 </html>

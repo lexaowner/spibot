@@ -118,9 +118,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-# JQUERY_URL = True
-
+USE_DJANGO_JQUERY = True
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+CRISPY_TEMPLATE_PACK = 'bootstrap5'

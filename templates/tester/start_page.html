@@ -2,6 +2,7 @@
 <html lang="en">
 {% load static %}
 {% load bootstrap5 %}
+{% include  'tester/navbar.html'%}
 <head>
     <meta charset="UTF-8">
 
@@ -14,24 +15,11 @@
     {% bootstrap_messages %}
     {% bootstrap_css %}
     {% bootstrap_javascript %}
-
-    <title>Title</title>
+    <title>CORA_2</title>
 </head>
 <body>
-<div class="container-fluid">
-    <nav class="navbar navbar-light bg-light">
-        <form class="container-fluid justify-content-start">
-            <a href="{% url 'add_ticket' %}">
-                <button class="btn btn-outline-dark me-2" type="button">Добавить заявку</button>
-            </a>
-            <button class="btn btn btn-outline-danger me-2" type="button">Нихуя нет</button>
-            <a href="{{ "admin/" }}">
-                <button class="btn btn btn-outline-danger me-2" type="button">Администраторская</button>
-            </a>
-
-        </form>
-    </nav>
-</div>
+{% block navbar %}
+{% endblock %}
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
@@ -53,15 +41,17 @@
                 <tbody>
                 {% for foo in obj %}
                     <tr >
-                        <td>{{ foo.house.get_full_address }}{% if foo.apartment %}{% endif %} кв {{ foo.apartment }}</td>
+                        <td>{{ foo.house.get_full_address }}{% if foo.apartment %} кв {{ foo.apartment| default:'' }}{% endif %}
+
+                        </td>
                         <td>STATUS</td>
-                        <td>TYPE</td>
-                        <td>{{ foo.first_contact}}</td>
+                        <td>{{ foo.type| default:''}}</td>
+                        <td>{{ foo.first_contact }}</td>
                         <td>A PRIORITY</td>
-                        <td>{{ foo.login}}</td>
-                        <td>{{ foo.username}}</td>
-                        <td>NAME MASTER</td>
-                        <td>{{ foo.comment_master }}</td>
+                        <td>{{ foo.login }}</td>
+                        <td>{{ foo.operator }}</td>
+                        <td>NAME <MASTER></MASTER></td>
+                        <td>{{ foo.comment_master| default:'' }}</td>
                         <td>{{ foo.comment_operator }}</td>
                     </tr>
                 {% endfor %}
@@ -120,5 +110,6 @@
         </div>
     </div>
 </div>
+
 </body>
 </html>

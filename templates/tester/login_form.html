@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+{% load bootstrap5 %}
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="{% static 'css/start_page.css' %}">
+    <script src="{% static 'js/all_functions.js' %}" defer></script>
+
+    <script src="/static/smart-selects/admin/js/chainedfk.js"></script>
+    <script src="/static/smart-selects/admin/js/bindfields.js"></script>
+
+    {% bootstrap_messages %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <title>CORA_2</title>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-1">
+            <table class="table table-stripped w-100">
+                <thead>
+                <form class="form-row" method="POST">
+                    {% csrf_token %}
+                <div>
+                   <h3>
+                        username
+                    </h3>
+                    <input type="text" class="form-control" name="login" id="inputUsername" >
+                </div>
+                <div>
+                    <h3>
+                        password
+                    </h3>
+                    <input type="password" class="form-control" name="password" id="inputPassword">
+                </div>
+                    <div id="div_id_status" class="form-group mt-4">
+                        <input type="submit" class="btn mt-2 ml-2 btn-primary" value="Добавить">
+                    </div>
+                    </form>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
