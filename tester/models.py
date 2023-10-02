@@ -6,13 +6,13 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 
 class Person(models.Model):
-    user_name = models.ForeignKey('auth.User', default=True, null=True, on_delete=models.PROTECT,verbose_name="Оператор")
+    user_name = models.OneToOneField('auth.User', default=True, null=True, on_delete=models.CASCADE,verbose_name="Оператор")
     name = models.CharField(max_length=32, verbose_name='Имя')
-    email = models.EmailField(blank=True, null=True)
+    # email = models.EmailField(blank=True, null=True)
 
     ROLES = (
         ('operator', 'Оператор📞'),
-        ('models', 'Мастер🛠'),
+        ('master', 'Мастер🛠'),
         ('admin', 'Воспитатель👶'),
         ('god', 'Боженька🧬'),
         (None, 'Никто'),
@@ -22,6 +22,9 @@ class Person(models.Model):
 
     def __str__(self):
         return f"Имя: {self.name} | Кликуха: {self.user_name} | {self.permissions}"
+
+    def get_url(self):
+        return reverse('User-name', args=[self.name])
 
     class Meta:
         verbose_name = 'Задрот'
@@ -128,7 +131,7 @@ class Ticket(models.Model):
     comment_operator = models.TextField(blank=True, null=True, verbose_name="Комментарий оператора", default=None)
 
     update = models.DateTimeField(default=timezone.now, editable=False, verbose_name="Дата обновления")
-    operator = models.ForeignKey('auth.User', default=True, null=True, on_delete=models.PROTECT,verbose_name="Оператор")
+    operator = models.ForeignKey('Person', default=True, null=True, on_delete=models.PROTECT,verbose_name="Оператор")
 
     district = ChainedForeignKey("District",blank=True, null=True, chained_field='region', chained_model_field='region', show_all=False)
     street = ChainedForeignKey("Street", blank=True, null=True, chained_field='district', chained_model_field='district',show_all=False)
@@ -145,4 +148,4 @@ class Ticket(models.Model):
         verbose_name_plural = 'Заявки'
 
     def get_url(self):
-        return reverse('items-detail', args=[self.id])
+        return reverse('ticket-form', args=[self.id])

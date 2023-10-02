@@ -36,6 +36,9 @@
                     <th>Мастер</th>
                     <th>Коментарий мастера</th>
                     <th>Коментарий опера</th>
+                        <th>
+                            <a href=""></a>
+                        </th>
                 </tr>
                 </thead>
                 <tbody>
@@ -49,7 +52,7 @@
                         <td>{{ foo.first_contact }}</td>
                         <td>A PRIORITY</td>
                         <td>{{ foo.login }}</td>
-                        <td>{{ foo.operator }}</td>
+                        <td>{{ foo.operator.name}}</td>
                         <td>NAME <MASTER></MASTER></td>
                         <td>{{ foo.comment_master| default:'' }}</td>
                         <td>{{ foo.comment_operator }}</td>

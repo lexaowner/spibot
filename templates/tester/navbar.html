@@ -9,9 +9,17 @@
             <a href="{{ "/admin/" }}">
                 <button class="btn btn btn-outline-danger me-2" type="button">Администраторская</button>
             </a>
+            {% if user.is_authenticated %}
+                {% if is_username %}
+            	    <a href="#">
+                        <button class="btn btn btn-outline-info me-2" type="button">{{ is_username }}</button>
+                    </a>
+                {% endif %}
+            {% else %}
             <a href="{% url 'login' %}">
                 <button class="btn btn btn-outline-warning me-2" type="button">Вход</button>
             </a>
+            {% endif %}
         </form>
     </nav>
 </div>

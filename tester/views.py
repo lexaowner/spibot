@@ -34,21 +34,30 @@ def add_ticket(request):
         return render(request, 'tester/add_ticket.html', context)
 
 def login_cora_2(request):
-    if request.user.is_authenticated:
-        redirect('start_page')
 
-    elif request.method == 'POST':
+    if request.user.is_authenticated:
+
+        return render(request, 'tester/login_form.html')
+
+    if request.method == 'POST':
         username = request.POST.get('login')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
-        if user is None:
+
+        if user is not None:
             login(request, user)
-            return redirect('start_page')
-        else:
-            redirect('')
+            redirect('start_page')
 
     else:
-        redirect('start_page')
+        redirect('')
+
+
+def profile(request, it):
+    profile_info = Person.objects.get(user_name=it)
+
+    return render(request, 'tester/profile.html')
+
+
 
 
 
