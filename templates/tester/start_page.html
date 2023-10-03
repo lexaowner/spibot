@@ -36,16 +36,12 @@
                     <th>Мастер</th>
                     <th>Коментарий мастера</th>
                     <th>Коментарий опера</th>
-                        <th>
-                            <a href=""></a>
-                        </th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for foo in obj %}
                     <tr >
-                        <td>{{ foo.house.get_full_address }}{% if foo.apartment %} кв {{ foo.apartment| default:'' }}{% endif %}
-
+                        <td>{{ foo.get_full_address }}{% if foo.apartment %} кв {{ foo.apartment| default:'' }}{% endif %}
                         </td>
                         <td>STATUS</td>
                         <td>{{ foo.type| default:''}}</td>
@@ -60,36 +56,10 @@
                 {% endfor %}
                 </tbody>
             </table>
-
-            {# Списжено у Ильдара  #}
-            {#<div>#}
-            {#    <form method="POSt">#}
-            {#        {% csrf_token %}#}
-            {#        {{ form.media.js }}#}
-            {#         {% if form.street %}#}
-            {#            <div class="col-sm-3">#}
-            {#                {{ form.street }}#}
-            {#            </div>#}
-            {#        {% endif %}#}
-            {#        <input type="submit" value="Submit" />#}
-            {#    </form>#}
-            {#</div>#}
-
-
-            <br><br><br><br><br>
-            <form method="post">
-                {% csrf_token %}
-                {{ form.media.js }}
-                {{ form.as_p }}
-                <input type="submit" value="Тупо кнопка от фильтра"/>
-            </form>
-
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                 Что-то
             </button>
-
             <!-- Modal -->
-
         </div>
 
     </div>

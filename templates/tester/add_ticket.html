@@ -6,8 +6,7 @@
     <meta charset="UTF-8">
 
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <script src="{% static 'js/all_functions.js' %}" defer></script>
-
+    <script src="/static/admin/js/vendor/jquery/jquery.js"></script>
     <script src="/static/smart-selects/admin/js/chainedfk.js"></script>
     <script src="/static/smart-selects/admin/js/bindfields.js"></script>
 
@@ -23,8 +22,20 @@
     <nav class="navbar navbar-light bg-light">
         <form class="container-fluid justify-content-start">
             <a href="{% url 'start_page' %}">
-                <button class="btn btn-outline-dark me-2" type="button" >Го бэк</button>
+                <button class="btn btn-outline-dark me-2" type="button" >CORA_2</button>
             </a>
+                 <button class="btn btn btn-outline-danger me-2" type="button">Нихуя нет</button>
+            <a href="{{ "/admin/" }}">
+                <button class="btn btn btn-outline-danger me-2" type="button">Администраторская</button>
+            </a>
+            {% if user.is_authenticated %}
+                    <a href="{% url 'profile' %}">
+                        <button class="btn btn btn-outline-info me-2" type="button">{{ username }}</button>
+                    </a>
+                <a href="{% url 'logaut' %}">
+                <button class="btn btn btn-outline-warning me-2" type="button">Выход</button>
+            </a>
+            {% endif %}
         </form>
     </nav>
 </div>
@@ -43,9 +54,9 @@
             <table class="table table-stripped w-100">
                 <form method="POST" class="form-row">
                     {% csrf_token %}
-                    {{ form.media.js }}
                     <div class="col col-md-4">
                         {{ forms }}
+                        {{ form.media.js }}
                     </div>
                     <div id="div_id_status" class="form-group mt-4">
                         <input type="submit" class="btn mt-2 ml-2 btn-primary" value="Добавить">
