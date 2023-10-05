@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .models import *
 from .forms import *
@@ -8,13 +9,14 @@ import time
 
 
 def start_page(request):
-
     if request.user.is_authenticated:
         obj = Ticket.objects.all()
         username = request.user.get_username()
+        is_super = bool(request.user.is_superuser)
         context = {
             "obj": obj,
             "username": username,
+            "is_super": is_super,
         }
         return render(request, 'tester/start_page.html', context)
 
@@ -23,21 +25,24 @@ def start_page(request):
         return redirect("login")
 
 
+@login_required(login_url='login')
 def add_ticket(request):
     username = request.user.get_username()
     if request.user.is_authenticated:
         if request.method == 'POST':
-            forms = Addticket(request.POST)
-            forms.save()
+            form = Addticket(request.POST)
+            form.changed_data['operator'] = request.user.id
+
+
+            form.save()
             return redirect('start_page')
 
-        form = Addticket()
-        context = {
-            "forms": form,
-            "username": username
-        }
-        return render(request, 'tester/add_ticket.html', context)
-
+    form = Addticket()
+    context = {
+        "form": form,
+        "username": username
+    }
+    return render(request, 'tester/add_ticket.html', context)
 
 
 def login_cora_2(request):
@@ -52,14 +57,16 @@ def login_cora_2(request):
             return redirect('start_page')
 
     else:
-        messages.error(request,'Имя или логин введеный не верно')
+        messages.error(request, 'Имя или логин введеный не верно')
         redirect('login')
 
     return render(request, 'tester/login_form.html')
 
+
 def logout_cora_2(request):
     logout(request)
     return redirect('start_page')
+
 
 def profile(request):
     person = Person.objects.get(pk=request.user.id)
@@ -81,3 +88,19 @@ def profile(request):
     }
     return render(request, 'tester/profile.html', context)
 
+
+def EditTicketForm(request, id):
+    if request.method == 'POST':
+        forms = Addticket(request.POST)
+        forms.save()
+        return redirect('start_page')
+
+    username = request.user.get_username()
+    form = Ticket.objects.get(id=id)
+    edit_from = Addticket(request.POST, instance=form)
+    context = {
+        "e_form": edit_from,
+        "username": username
+    }
+
+    return render(request, 'tester/edit_ticketfrom.html', context)

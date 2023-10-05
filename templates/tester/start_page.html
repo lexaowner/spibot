@@ -2,7 +2,7 @@
 <html lang="en">
 {% load static %}
 {% load bootstrap5 %}
-{% include  'tester/navbar.html'%}
+{% include 'tester/navbar.html'%}
 <head>
     <meta charset="UTF-8">
 
@@ -15,7 +15,7 @@
     {% bootstrap_messages %}
     {% bootstrap_css %}
     {% bootstrap_javascript %}
-    <title>CORA_2</title>
+    <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
 {% block navbar %}
@@ -40,7 +40,7 @@
                 </thead>
                 <tbody>
                 {% for foo in obj %}
-                    <tr >
+                    <tr>
                         <td>{{ foo.get_full_address }}{% if foo.apartment %} кв {{ foo.apartment| default:'' }}{% endif %}
                         </td>
                         <td>STATUS</td>
@@ -52,13 +52,15 @@
                         <td>NAME <MASTER></MASTER></td>
                         <td>{{ foo.comment_master| default:'' }}</td>
                         <td>{{ foo.comment_operator }}</td>
+                        <td>
+                            <div>
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Действие</button>
+                            </div>
+                        </td>
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                Что-то
-            </button>
             <!-- Modal -->
         </div>
 
@@ -69,7 +71,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel">Окно тип как у Ильдара</h5>
+                <h5 class="modal-title" id="staticBackdropLabel">Действие</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -78,7 +80,9 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть нахуй
                 </button>
-                <button type="button" class="btn btn-primary">Послать нахуй</button>
+                {% for foo in obj %}
+                	<a href="{% url 'edit_ticket' foo.id %}"><button type="button" class="btn btn-primary">Изменить</button></a>
+                {% endfor %}
             </div>
         </div>
     </div>

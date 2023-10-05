@@ -24,7 +24,6 @@
             <a href="{% url 'start_page' %}">
                 <button class="btn btn-outline-dark me-2" type="button" >CORA_2</button>
             </a>
-                 <button class="btn btn btn-outline-danger me-2" type="button">Нихуя нет</button>
             <a href="{{ "/admin/" }}">
                 <button class="btn btn btn-outline-danger me-2" type="button">Администраторская</button>
             </a>
@@ -55,7 +54,15 @@
                 <form method="POST" class="form-row">
                     {% csrf_token %}
                     <div class="col col-md-4">
-                        {{ forms }}
+                        {{ form.district }}
+                        {{ form.street }}
+                        {{ form.house }}
+                        {{ form.apartment }}
+                        {{ form.login }}
+                        {{ form.first_contact }}
+                        {{ form.second_contact }}
+                        {{ form.comment_operator }}
+                        {{ form.operator }}
                         {{ form.media.js }}
                     </div>
                     <div id="div_id_status" class="form-group mt-4">

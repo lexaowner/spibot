@@ -88,7 +88,8 @@ class TicketType(models.Model):
         ('shutdown', 'Отключение'),
         ('installation', 'Установка'),
     ]
-    type = models.CharField(max_length=13, choices=TYPE, default='repair', verbose_name="Тип заявки")
+
+    type = models.CharField(max_length=32, choices=TYPE, default='repair', verbose_name="Тип заявки")
 
     def __str__(self):
         return self.type
@@ -99,7 +100,7 @@ class TicketType(models.Model):
 
 
 class Ticket(models.Model):
-    identify = models.CharField(max_length=32, verbose_name=_('identify'))
+    # identify = models.CharField(max_length=32, verbose_name=_('identify'))
 
     district = models.ForeignKey("District", on_delete=models.PROTECT, verbose_name=('Район'))
     street = ChainedForeignKey("Street", chained_field='district', chained_model_field='district', show_all=False)
@@ -122,7 +123,7 @@ class Ticket(models.Model):
     comment_operator = models.TextField(blank=True, null=True, verbose_name="Комментарий оператора", default=None)
 
     update = models.DateTimeField(default=timezone.now, editable=False, verbose_name="Дата обновления")
-    operator = models.ForeignKey('Person', default=True, null=True, on_delete=models.PROTECT, verbose_name="Оператор")
+    operator = models.ForeignKey('Person', default=True ,on_delete=models.PROTECT, verbose_name="Оператор")
 
     type = models.ForeignKey('TicketType', blank=True, null=True, on_delete=models.PROTECT, verbose_name="Тип заявки")
 
