@@ -2,14 +2,56 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .models import *
 from .forms import *
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Permission
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.contrib.auth.decorators import permission_required
 import time
+
+
+def role(request):
+    get_user = Person.objects.get(id=request.user.id)
+    # user_new_status = Person.objects.get(status=request.user.id)
+    # user_new_status.status = 'Уже в базе'
+    # user_new_status.save()
+
+    get_role = get_user.permissions
+    group = Group.objects.get(name='Base')
+    group.user_set.add(request.user.id)
+
+    if get_role == "master":
+        group = Group.objects.get(name='Мастер🛠')
+        group.user_set.add(request.user.id)
+
+        group = Group.objects.get(name='Оператор📞')
+        group.user_set.remove(request.user.id)
+
+    if get_role == "operator":
+        group = Group.objects.get(name='Оператор📞')
+        group.user_set.add(request.user.id)
+
+        group = Group.objects.get(name='Мастер🛠')
+        group.user_set.remove(request.user.id)
+
+    if get_role == None:
+        group = Group.objects.get(name='Мастер🛠')
+        group.user_set.remove(request.user.id)
+
+        group = Group.objects.get(name='Оператор📞')
+        group.user_set.remove(request.user.id)
+
+        group = Group.objects.get(name='Base')
+        group.user_set.remove(request.user.id)
 
 
 def start_page(request):
     if request.user.is_authenticated:
+        get_user = Person.objects.get(id=request.user.id)
+        # get_status = get_user.status
+
+        role(request)
+
         obj = Ticket.objects.all()
         username = request.user.get_username()
         is_super = bool(request.user.is_superuser)
@@ -21,19 +63,15 @@ def start_page(request):
         return render(request, 'tester/start_page.html', context)
 
     else:
-
         return redirect("login")
 
 
-@login_required(login_url='login')
+@permission_required('tester.operator', login_url='error')
 def add_ticket(request):
     username = request.user.get_username()
     if request.user.is_authenticated:
         if request.method == 'POST':
             form = Addticket(request.POST)
-            form.changed_data['operator'] = request.user.id
-
-
             form.save()
             return redirect('start_page')
 
@@ -104,3 +142,7 @@ def EditTicketForm(request, id):
     }
 
     return render(request, 'tester/edit_ticketfrom.html', context)
+
+def error(request):
+    messages.error(request, 'Недостаточно прав')
+    return render(request, 'tester/error.html')

@@ -53,8 +53,13 @@
                         <td>{{ foo.comment_master| default:'' }}</td>
                         <td>{{ foo.comment_operator }}</td>
                         <td>
+                            {% if perms.tester.operator %}
                             <div>
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Действие</button>
+                            {% endif %}
+                            {% if perms.tester.operator or perms.tester.master %}
+                                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Перекинуть</button>
+                            {% endif %}
                             </div>
                         </td>
                     </tr>

@@ -14,6 +14,5 @@ class Addticket(forms.ModelForm):
             "first_contact",
             "second_contact",
             "comment_operator",
-            "operator",
         ]
 

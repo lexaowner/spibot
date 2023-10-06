@@ -10,6 +10,8 @@ admin.site.register(models.District)
 admin.site.register(models.Person)
 admin.site.register(models.Ticket)
 
+
+
 class Persons(admin.StackedInline):
     model = models.Person
     can_delete = False

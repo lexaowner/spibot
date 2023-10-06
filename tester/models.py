@@ -6,10 +6,10 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 
 
+
 class Person(models.Model):
     user_name = models.OneToOneField('auth.User', default=True, null=True, on_delete=models.PROTECT, verbose_name="Оператор")
     name = models.CharField(max_length=32, verbose_name='Имя')
-    # email = models.EmailField(blank=True, null=True)
 
     ROLES = [
         ('operator', 'Оператор📞'),
@@ -19,7 +19,14 @@ class Person(models.Model):
         (None, 'Никто'),
     ]
 
-    permissions = models.CharField(max_length=32, choices=ROLES, default=None, null=True, verbose_name='Роль')
+    permissions = models.CharField(max_length=32, choices=ROLES, default=None, blank=True, null=True, verbose_name='Роль')
+
+    STATUS = [
+        (None,  'New'),
+        ("Уже в базе", 'Old')
+    ]
+
+    status = models.CharField(max_length=32, choices=STATUS, default=None, blank=True, null=True, verbose_name='Статус')
 
     def __str__(self):
         return f"Имя: {self.name} | Кликуха: {self.user_name} | {self.permissions}"
@@ -30,6 +37,11 @@ class Person(models.Model):
     class Meta:
         verbose_name = 'Задрот'
         verbose_name_plural = 'Задроты'
+
+        permissions = [
+            ("operator", "Can add ticket,change, change yourself profile"),
+            ("master", "Can closed ticked,change owner, change yourself profile"),
+        ]
 
 
 class Region(models.Model):
@@ -80,17 +92,6 @@ class House(models.Model):
         verbose_name_plural = 'Дома'
 
 
-class TicketType(models.Model):
-    TYPE = [
-        ('repair', 'Ремонт'),
-        ('settings', 'Настройка'),
-        ('transfer', 'Перенос'),
-        ('shutdown', 'Отключение'),
-        ('installation', 'Установка'),
-    ]
-
-    type = models.CharField(max_length=32, choices=TYPE, default='repair', verbose_name="Тип заявки")
-
     def __str__(self):
         return self.type
 
@@ -123,9 +124,17 @@ class Ticket(models.Model):
     comment_operator = models.TextField(blank=True, null=True, verbose_name="Комментарий оператора", default=None)
 
     update = models.DateTimeField(default=timezone.now, editable=False, verbose_name="Дата обновления")
-    operator = models.ForeignKey('Person', default=True ,on_delete=models.PROTECT, verbose_name="Оператор")
+    operator = models.ForeignKey('Person', default=True, on_delete=models.PROTECT, verbose_name="Оператор")
 
-    type = models.ForeignKey('TicketType', blank=True, null=True, on_delete=models.PROTECT, verbose_name="Тип заявки")
+    TYPE = [
+        ('None', 'Ремонт'),
+        ('settings', 'Настройка'),
+        ('transfer', 'Перенос'),
+        ('shutdown', 'Отключение'),
+        ('installation', 'Установка'),
+    ]
+
+    type = models.CharField(max_length=32, choices=TYPE, default='None', verbose_name="Тип заявки")
 
     # master = models.ForeignKey(Human, null=True, blank=True, on_delete=models.PROTECT, verbose_name="Мастер")
 
