@@ -4,13 +4,11 @@
 <head>
     <meta charset="UTF-8">
 
-    <link rel="stylesheet" href="{% static 'css/login.css' %}">
-    <script src="{% static 'js/login.js' %}" defer></script>
+        <link rel="stylesheet" href="{% static 'css/login.css' %}">
+        <script src="{% static 'js/login.js' %}" defer></script>
 
-    <script src="/static/smart-selects/admin/js/chainedfk.js"></script>
-    <script src="/static/smart-selects/admin/js/bindfields.js"></script>
 
-    <title>CORA_2</title>
+    <title>Title</title>
 </head>
 <body>
 <div class="logo">
@@ -18,9 +16,8 @@
 </div>
 <div class="box bg-img">
   <div class="content">
-{#    <img src="{% static 'img/Spectr.png' %}" alt="" width="240" height="80">#}
-      <img src="{% static 'img/logo _KTV.png' %}" alt="" width="220" height="180">
-    <h2>Вход</h2>
+
+    <h2><span><</span>Войти<span> ></span></h2>
       <form method="POST">
     <div class="forms">
         {% csrf_token %}
@@ -53,6 +50,5 @@
 </div>
 
 <script src="https://kit.fontawesome.com/c0078485ae.js" crossorigin="anonymous"></script>
-
 </body>
 </html>

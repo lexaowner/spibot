@@ -1,13 +1,15 @@
+{% load static %}
 {% block navbar %}
 	<div class="container-fluid">
-    <nav class="navbar navbar-light bg-light">
+    <nav class="navbar navbar-dark bg-dark">
         <form class="container-fluid justify-content-start">
+        <img src="{% static 'img/cosmo_logo.png' %}" alt="" width="50" height=50>
             <a href="{% url 'start_page' %}">
-                <button class="btn btn-outline-dark me-2" type="button">CORA_2</button>
+                <button class="btn btn-primary me-2" type="button">CORA_2</button>
             </a>
             {% if perms.tester.operator %}
             <a href="{% url 'add_ticket' %}">
-                <button class="btn btn-outline-dark me-2" type="button">Добавить заявку</button>
+                <button class="btn btn-success me-2" type="button">Добавить заявку</button>
             </a>
             {% endif %}
             {% if is_super %}

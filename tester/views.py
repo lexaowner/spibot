@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .models import *
 from .forms import *
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Group
 from django.contrib.auth.models import Permission
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -10,48 +10,12 @@ from django.contrib.auth.decorators import permission_required
 import time
 
 
-def role(request):
-    get_user = Person.objects.get(id=request.user.id)
-    # user_new_status = Person.objects.get(status=request.user.id)
-    # user_new_status.status = 'Уже в базе'
-    # user_new_status.save()
-
-    get_role = get_user.permissions
-    group = Group.objects.get(name='Base')
-    group.user_set.add(request.user.id)
-
-    if get_role == "master":
-        group = Group.objects.get(name='Мастер🛠')
-        group.user_set.add(request.user.id)
-
-        group = Group.objects.get(name='Оператор📞')
-        group.user_set.remove(request.user.id)
-
-    if get_role == "operator":
-        group = Group.objects.get(name='Оператор📞')
-        group.user_set.add(request.user.id)
-
-        group = Group.objects.get(name='Мастер🛠')
-        group.user_set.remove(request.user.id)
-
-    if get_role == None:
-        group = Group.objects.get(name='Мастер🛠')
-        group.user_set.remove(request.user.id)
-
-        group = Group.objects.get(name='Оператор📞')
-        group.user_set.remove(request.user.id)
-
-        group = Group.objects.get(name='Base')
-        group.user_set.remove(request.user.id)
 
 
 def start_page(request):
     if request.user.is_authenticated:
-        get_user = Person.objects.get(id=request.user.id)
-        # get_status = get_user.status
-
-        role(request)
-
+        get_user = User.objects.get(id=request.user.id)
+        # messages.error(request, f'{get_user.has_perm("tester.operator")}')
         obj = Ticket.objects.all()
         username = request.user.get_username()
         is_super = bool(request.user.is_superuser)
@@ -94,20 +58,19 @@ def login_cora_2(request):
             login(request, user)
             return redirect('start_page')
 
-    else:
-        messages.error(request, 'Имя или логин введеный не верно')
-        redirect('login')
+        else:
+            messages.error(request, 'Имя или логин введеный не верно')
+            redirect('login')
 
     return render(request, 'tester/login_form.html')
 
 
 def logout_cora_2(request):
     logout(request)
-    return redirect('start_page')
+    return redirect('login')
 
 
 def profile(request):
-    person = Person.objects.get(pk=request.user.id)
     username = request.user.get_username()
     user = User.objects.get(pk=request.user.id)
     password = request.POST.get('password')
@@ -122,7 +85,6 @@ def profile(request):
     context = {
         "user": user,
         "username": username,
-        "person": person
     }
     return render(request, 'tester/profile.html', context)
 
@@ -146,3 +108,6 @@ def EditTicketForm(request, id):
 def error(request):
     messages.error(request, 'Недостаточно прав')
     return render(request, 'tester/error.html')
+
+def test(request):
+    return render(request,'tester/test.html')

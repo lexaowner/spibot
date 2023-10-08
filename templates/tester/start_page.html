@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
 
     <link rel="stylesheet" href="{% static 'css/start_page.css' %}">
-    <script src="{% static 'js/all_functions.js' %}" defer></script>
+    <script src="{% static 'js/start_page.js' %}" defer></script>
 
     <script src="/static/smart-selects/admin/js/chainedfk.js"></script>
     <script src="/static/smart-selects/admin/js/bindfields.js"></script>
@@ -23,35 +23,41 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-            <table class="table table-stripped w-100">
+            <table class="table table-dark table-striped">
                 <thead>
                 <tr>
                     <th>Адрес</th>
-                    <th>Статус</th>
                     <th>Тип</th>
                     <th>Контакт</th>
+                    <th>Доп.Контакт</th>
                     <th>Приоритет</th>
                     <th>Логин</th>
                     <th>Оператор</th>
+                    <th>Коментарий опера</th>
                     <th>Мастер</th>
                     <th>Коментарий мастера</th>
-                    <th>Коментарий опера</th>
+                    <th class="al">Статус</th>
+                    <th></th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody >
                 {% for foo in obj %}
                     <tr>
-                        <td>{{ foo.get_full_address }}{% if foo.apartment %} кв {{ foo.apartment| default:'' }}{% endif %}
-                        </td>
-                        <td>STATUS</td>
-                        <td>{{ foo.type| default:''}}</td>
+                        <td>{{ foo.get_full_address }}{% if foo.apartment %} кв {{ foo.apartment| default:'' }}{% endif %}</td>
+                        <td>{{ foo.type }}</td>
                         <td>{{ foo.first_contact }}</td>
-                        <td>A PRIORITY</td>
+                        <td>{{ foo.second_contact| default:"" }}</td>
+                        <td>{{ foo.priority }}</td>
                         <td>{{ foo.login }}</td>
-                        <td>{{ foo.operator.name}}</td>
-                        <td>NAME <MASTER></MASTER></td>
-                        <td>{{ foo.comment_master| default:'' }}</td>
+                        <td>{{ foo.operator.first_name}}</td>
                         <td>{{ foo.comment_operator }}</td>
+                        <td>{{ foo.master| default:'Не выбран'}}</td>
+                        <td>{{ foo.comment_master| default:'' }}</td>
+                        {% if foo.status == True %}
+                        <td>Открыта</td>
+                        {% else %}
+                        <td>Закрыта</td>
+                        {% endif %}
                         <td>
                             {% if perms.tester.operator %}
                             <div>
@@ -93,5 +99,10 @@
     </div>
 </div>
 
+<footer class="footer d-flex justify-content-center mt-auto py-3 bg-dark text-white" style="height: 4.0rem">
+    <span class="text-secondary m-auto p-2">© SPECTR IT | 2023</span>
+    <a href="https://spi.uz/"><img src="{% static 'img/Spectr.png' %}" alt="" width="240" height="40"></a>
+    <span class="text-secondary m-auto p-2">CORA_2 | OWNER</span>
+</footer>
 </body>
 </html>

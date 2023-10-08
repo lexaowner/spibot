@@ -5,7 +5,8 @@
 {% include 'tester/navbar.html'%}
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
 
     {% bootstrap_messages %}
     {% bootstrap_css %}
@@ -26,7 +27,7 @@
                     {% csrf_token %}
                     <div class="form-group col-sm-4 my-1">
                         <label for="InputFirstName">Имя</label>
-                        <input disabled name="first_name" type="text" value="{{ person.name }} | Должность: {{ person.permissions }}" class="form-control form-control-sm" id="InputFirstName" placeholder="Имя">
+                        <input disabled name="first_name" type="text" value="{{ user.username }} | {{ user.first_name }}" class="form-control form-control-sm" id="InputFirstName" placeholder="Имя">
                         <small class="form-text text-muted">Имя будет отображаться в заявках</small>
                     </div>
                     <div class="form-group col-sm-4 my-1">
