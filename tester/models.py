@@ -10,12 +10,15 @@ from spibot import settings
 
 class User(AbstractUser):
     last_login = models.DateTimeField(_('last login'), blank=True, null=True)
-    is_superuser = models.BooleanField(_('superuser status'), default=False, help_text=_('Designates that this user has all permissions without explicitly assigning them.'))
+    is_superuser = models.BooleanField(_('superuser status'), default=False, help_text=_(
+        'Designates that this user has all permissions without explicitly assigning them.'))
     first_name = models.CharField(_('first name'), max_length=150, blank=True)
     last_name = models.CharField(_('last name'), max_length=150, blank=True)
     email = models.EmailField(_('email address'), blank=True)
-    is_staff = models.BooleanField(_('staff status'), default=False,help_text=_('Designates whether the user can log into this admin site.'))
-    is_active = models.BooleanField(_('active'), default=True, help_text=_('Designates whether this user should be treated as active. Unselect this instead of deleting accounts.'))
+    is_staff = models.BooleanField(_('staff status'), default=False,
+                                   help_text=_('Designates whether the user can log into this admin site.'))
+    is_active = models.BooleanField(_('active'), default=True, help_text=_(
+        'Designates whether this user should be treated as active. Unselect this instead of deleting accounts.'))
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
     phone_number = models.CharField(max_length=32, blank=True, null=True, verbose_name=_('phone number'))
 
@@ -45,16 +48,16 @@ class User(AbstractUser):
 #     user_name = models.OneToOneField('auth.User', default=True, null=True, on_delete=models.PROTECT, verbose_name="Чел")
 #     name = models.CharField(max_length=32, verbose_name='Имя')
 #
-    # ROLES = [
-    #     ('operator', 'Оператор📞'),
-    #     ('master', 'Мастер🛠'),
-    #     ('admin', 'Воспитатель👶'),
-    #     ('god', 'Боженька🧬'),
-    #     (None, 'Никто'),
-    # ]
-    #
-    # permissions = models.CharField(max_length=32, choices=ROLES, default=None, blank=True, null=True,
-    #                                verbose_name='Роль')
+# ROLES = [
+#     ('operator', 'Оператор📞'),
+#     ('master', 'Мастер🛠'),
+#     ('admin', 'Воспитатель👶'),
+#     ('god', 'Боженька🧬'),
+#     (None, 'Никто'),
+# ]
+#
+# permissions = models.CharField(max_length=32, choices=ROLES, default=None, blank=True, null=True,
+#                                verbose_name='Роль')
 #
 #     STATUS = [
 #         (None, 'New'),
@@ -115,6 +118,7 @@ class Street(models.Model):
 
 
 class House(models.Model):
+    # master = models.ForeignKey('User')
     street = models.ForeignKey('Street', on_delete=models.CASCADE, verbose_name=_('Улица'))
     name = models.CharField(max_length=64, verbose_name=_('Дом'))
     apartment = models.CharField(max_length=16, blank=True, null=True, verbose_name=('Квартира'))
@@ -126,11 +130,6 @@ class House(models.Model):
         verbose_name = 'Дом'
         verbose_name_plural = 'Дома'
 
-# class Master(models.Model):
-#     master = User.objects.filter(user_permissions='tester.master')
-
-def master():
-    Permission.objects.all()
 
 class Ticket(models.Model):
     district = models.ForeignKey("District", on_delete=models.PROTECT, verbose_name=('Район'))
@@ -153,10 +152,9 @@ class Ticket(models.Model):
     comment_operator = models.TextField(blank=True, null=True, verbose_name="Комментарий оператора", default=None)
 
     update = models.DateTimeField(default=timezone.now, editable=False, verbose_name="Дата обновления")
-    operator = models.ForeignKey(settings.AUTH_USER_MODEL, default=True, on_delete=models.PROTECT,verbose_name="Оператор",related_name='operator_tickets')
+    operator = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name="Оператор",related_name='operator_tickets',null=True, blank=True,  default=None)
 
-    master = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.PROTECT,verbose_name="Мастер",related_name='mater_tickets')
-
+    master = models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT, verbose_name="Мастер",related_name='mater_tickets')
 
     TYPE = [
         ('Ремонт', 'Ремонт'),

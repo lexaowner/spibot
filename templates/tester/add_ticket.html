@@ -6,12 +6,15 @@
     <meta charset="UTF-8">
 
     <link rel="stylesheet" href="{% static 'css/add_ticket.css' %}">
+
     <script src="/static/admin/js/vendor/jquery/jquery.js"></script>
     <script src="/static/smart-selects/admin/js/chainedfk.js"></script>
     <script src="/static/smart-selects/admin/js/bindfields.js"></script>
 
+
     {% bootstrap_messages %}
     {% bootstrap_css %}
+    {% bootstrap_javascript %}
 
     <title>CORA_2</title>
 
@@ -19,10 +22,10 @@
 
 <body>
 <div class="container-fluid">
-    <nav class="navbar navbar-light bg-light">
+    <nav class="navbar navbar-dark bg-dark">
         <form class="container-fluid justify-content-start">
             <a href="{% url 'start_page' %}">
-                <button class="btn btn-outline-dark me-2" type="button" >CORA_2</button>
+                <button class="btn btn-primary me-2" type="button" >CORA_2</button>
             </a>
             {% if is_super %}
             <a href="{{ "/admin/" }}">
@@ -49,7 +52,7 @@
         </div>
     </div>
 </div>
-<div class="container-fluid">
+<div class="container-fluid1">
     <div class="row">
         <div class="col-md-4">
             <table class="table table-stripped w-100">
@@ -66,6 +69,10 @@
         </div>
     </div>
 </div>
+
+
+
+
 </body>
 
 </html>

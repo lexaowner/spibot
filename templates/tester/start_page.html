@@ -11,6 +11,8 @@
 
     <script src="/static/smart-selects/admin/js/chainedfk.js"></script>
     <script src="/static/smart-selects/admin/js/bindfields.js"></script>
+    <script src="/static/admin/js/vendor/jquery/jquery.js"></script>
+
 
     {% bootstrap_messages %}
     {% bootstrap_css %}
@@ -41,6 +43,35 @@
                 </tr>
                 </thead>
                 <tbody >
+                {% if perms.tester.master %}
+                	{% for mst in master_ticket %}
+                		<tr>
+                        <td>{{ mst.get_full_address }}{% if mst.apartment %} кв {{ mst.apartment| default:'' }}{% endif %}</td>
+                        <td>{{ mst.type }}</td>
+                        <td>{{ mst.first_contact }}</td>
+                        <td>{{ mst.second_contact| default:"" }}</td>
+                        <td>{{ mst.priority }}</td>
+                        <td>{{ mst.login| default:''}}</td>
+                        <td>{{ mst.operator.first_name}}</td>
+                        <td>{{ mst.comment_operator }}</td>
+                        <td>{{ mst.master| default:'Не выбран'}}</td>
+                        <td>{{ mst.comment_master| default:'' }}</td>
+                        {% if mst.status == True %}
+                        <td>Открыта</td>
+                        {% else %}
+                        <td>Закрыта</td>
+                        {% endif %}
+                        <td>
+                            <div>
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#MasterMove">Действие</button>
+                                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#MoveOn">Перекинуть</button>
+                            </div>
+                        </td>
+                    </tr>
+                	{% endfor %}
+                {% endif %}
+
+               {% if perms.tester.operator %}
                 {% for foo in obj %}
                     <tr>
                         <td>{{ foo.get_full_address }}{% if foo.apartment %} кв {{ foo.apartment| default:'' }}{% endif %}</td>
@@ -48,7 +79,7 @@
                         <td>{{ foo.first_contact }}</td>
                         <td>{{ foo.second_contact| default:"" }}</td>
                         <td>{{ foo.priority }}</td>
-                        <td>{{ foo.login }}</td>
+                        <td>{{ foo.login| default:'' }}</td>
                         <td>{{ foo.operator.first_name}}</td>
                         <td>{{ foo.comment_operator }}</td>
                         <td>{{ foo.master| default:'Не выбран'}}</td>
@@ -59,17 +90,14 @@
                         <td>Закрыта</td>
                         {% endif %}
                         <td>
-                            {% if perms.tester.operator %}
                             <div>
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Действие</button>
-                            {% endif %}
-                            {% if perms.tester.operator or perms.tester.master %}
-                                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Перекинуть</button>
-                            {% endif %}
+                                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#MoveOn">Перекинуть</button>
                             </div>
                         </td>
                     </tr>
                 {% endfor %}
+                {% endif %}
                 </tbody>
             </table>
             <!-- Modal -->
@@ -99,10 +127,45 @@
     </div>
 </div>
 
-<footer class="footer d-flex justify-content-center mt-auto py-3 bg-dark text-white" style="height: 4.0rem">
+
+
+<div class="modal fade" id="MasterMove" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Добавьте коментарий</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                 <form method="POST" class="form-row">
+                    {% csrf_token %}
+                    <div class="col col-md-4">
+                        {{ mas_com }}
+                    </div>
+                    <div id="div_id_status" class="form-group mt-4">
+                        <input type="submit" class="btn mt-2 ml-2 btn-primary" value="Добавить">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть нахуй
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<footer class="footer d-flex justify-content-center mt-auto py-3 bg-dark text-white" style="height: 4.5rem">
     <span class="text-secondary m-auto p-2">© SPECTR IT | 2023</span>
     <a href="https://spi.uz/"><img src="{% static 'img/Spectr.png' %}" alt="" width="240" height="40"></a>
-    <span class="text-secondary m-auto p-2">CORA_2 | OWNER</span>
+    <span class="text-secondary m-auto p-2">CORA_KTV | OWNER</span>
 </footer>
 </body>
 </html>

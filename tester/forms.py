@@ -5,6 +5,10 @@ from .models import *
 
 
 class Addticket(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(Addticket, self).__init__(*args, **kwargs)  # populates the post
+        self.fields['master'].queryset = User.objects.filter(groups__name='Мастер')
+
     class Meta:
         model = Ticket
         fields = [
@@ -17,8 +21,18 @@ class Addticket(forms.ModelForm):
             "second_contact",
             "type",
             "master",
+            "operator",
             "priority",
             "comment_operator",
+            "comment_master",
+        ]
+
+
+class AddComMaster(forms.ModelForm):
+    class Meta:
+        model = Ticket
+        fields = [
+            'comment_master'
         ]
 
 

@@ -14,8 +14,21 @@ import time
 
 def start_page(request):
     if request.user.is_authenticated:
-        get_user = User.objects.get(id=request.user.id)
+        # get_user = User.objects.get(id=request.user.id)
+        # if get_user.has_perm("tester.master"):
+        #     if request.method == "POST":
+        #         form_add_com_master = AddComMaster(request.POST)
+        #         form_add_com_master.save()
+        #         return redirect('start_page')
+
+        # if request.method == 'PUT':
+        #     mst_id = Addticket.objects.get(master=request.POST)
+        #     mst_id.save()
+
+        get_mater_ticket = Ticket.objects.filter(master=request.user.id)
+        master_aad_com = AddComMaster
         # messages.error(request, f'{get_user.has_perm("tester.operator")}')
+        change_master = Addticket()
         obj = Ticket.objects.all()
         username = request.user.get_username()
         is_super = bool(request.user.is_superuser)
@@ -23,11 +36,15 @@ def start_page(request):
             "obj": obj,
             "username": username,
             "is_super": is_super,
+            "master_ticket": get_mater_ticket,
+            "mas_com": master_aad_com,
+            "change_master":change_master,
         }
         return render(request, 'tester/start_page.html', context)
 
     else:
         return redirect("login")
+
 
 
 @permission_required('tester.operator', login_url='error')
@@ -36,7 +53,9 @@ def add_ticket(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
             form = Addticket(request.POST)
-            form.save()
+            ticket = form.save(commit=False)
+            ticket.operator = request.user
+            ticket.save()
             return redirect('start_page')
 
     form = Addticket()
