@@ -1,27 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'tester/base.html' %}
+
 {% load static %}
-{% load bootstrap5 %}
-{% include 'tester/navbar.html'%}
-<head>
-    <meta charset="UTF-8">
-
-    <link rel="stylesheet" href="{% static 'css/start_page.css' %}">
-    <script src="{% static 'js/start_page.js' %}" defer></script>
-
-    <script src="/static/smart-selects/admin/js/chainedfk.js"></script>
-    <script src="/static/smart-selects/admin/js/bindfields.js"></script>
-    <script src="/static/admin/js/vendor/jquery/jquery.js"></script>
-
-
-    {% bootstrap_messages %}
-    {% bootstrap_css %}
-    {% bootstrap_javascript %}
-    <title>{% block title %}{% endblock %}</title>
-</head>
-<body>
-{% block navbar %}
-{% endblock %}
+{% block content %}
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
@@ -91,8 +71,22 @@
                         {% endif %}
                         <td>
                             <div>
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Действие</button>
-                                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#MoveOn">Перекинуть</button>
+                                <a href="{% url 'edit_ticket' foo.id %}"><button type="button" class="btn btn-primary" >Изменить</button></a>
+                                <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                                      <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-warning dropdown-toggle me-1" data-bs-toggle="dropdown" aria-expanded="false">
+                                          Перекинуть
+                                        </button>
+                                           {% if is_super %}
+                                	            <a href="{% url 'full-log' foo.id %}"><button type="button" class="btn btn-danger " >Лог</button></a>
+                                            {% endif %}
+                                        <ul class="dropdown-menu">
+                                          <li><a class="dropdown-item" href="#">Кто-то</a></li>
+                                          <li><a class="dropdown-item" href="#">Кто-то</a></li>
+                                            <li><a class="dropdown-item" href="#">Кто-то</a></li>
+                                        </ul>
+                                  </div>
+                                </div>
                             </div>
                         </td>
                     </tr>
@@ -155,17 +149,7 @@
         </div>
     </div>
 </div>
-
-
-
-
-
-
-
-<footer class="footer d-flex justify-content-center mt-auto py-3 bg-dark text-white" style="height: 4.5rem">
-    <span class="text-secondary m-auto p-2">© SPECTR IT | 2023</span>
-    <a href="https://spi.uz/"><img src="{% static 'img/Spectr.png' %}" alt="" width="240" height="40"></a>
-    <span class="text-secondary m-auto p-2">CORA_KTV | OWNER</span>
-</footer>
-</body>
-</html>
+{% endblock %}
+{% block footer %}
+{% include 'tester/footer.html' %}
+{% endblock %}

@@ -10,8 +10,6 @@ from django.contrib.auth.decorators import permission_required
 import time
 
 
-
-
 def start_page(request):
     if request.user.is_authenticated:
         # get_user = User.objects.get(id=request.user.id)
@@ -38,7 +36,7 @@ def start_page(request):
             "is_super": is_super,
             "master_ticket": get_mater_ticket,
             "mas_com": master_aad_com,
-            "change_master":change_master,
+            "change_master": change_master,
         }
         return render(request, 'tester/start_page.html', context)
 
@@ -46,16 +44,12 @@ def start_page(request):
         return redirect("login")
 
 
-
 @permission_required('tester.operator', login_url='error')
 def add_ticket(request):
     username = request.user.get_username()
     if request.user.is_authenticated:
         if request.method == 'POST':
-            form = Addticket(request.POST)
-            ticket = form.save(commit=False)
-            ticket.operator = request.user
-            ticket.save()
+            handle_edit(request)
             return redirect('start_page')
 
     form = Addticket()
@@ -64,6 +58,15 @@ def add_ticket(request):
         "username": username
     }
     return render(request, 'tester/add_ticket.html', context)
+
+
+def handle_edit(request, instance=None):
+    form = Addticket(request.POST, instance=instance)
+    if form.is_valid():
+        messages.success(request, f'{instance} данные успешно изменены ')
+        form.save()
+    else:
+        messages.error(request,f'Данные не могут быть изменены {Exception()}')
 
 
 def login_cora_2(request):
@@ -108,15 +111,17 @@ def profile(request):
     return render(request, 'tester/profile.html', context)
 
 
-def EditTicketForm(request, id):
+def edit_ticket(request, pk):
     if request.method == 'POST':
-        forms = Addticket(request.POST)
-        forms.save()
-        return redirect('start_page')
-
+        try:
+            instance = Ticket.objects.get(id=pk)
+            handle_edit(request, instance)
+            return redirect('edit_ticket', pk)
+        except:
+            messages.error(request, f'{Exception()}')
     username = request.user.get_username()
-    form = Ticket.objects.get(id=id)
-    edit_from = Addticket(request.POST, instance=form)
+    on = Ticket.objects.get(id=pk)
+    edit_from = TicketEditForm(instance=on)
     context = {
         "e_form": edit_from,
         "username": username
@@ -124,9 +129,20 @@ def EditTicketForm(request, id):
 
     return render(request, 'tester/edit_ticketfrom.html', context)
 
+
 def error(request):
     messages.error(request, 'Недостаточно прав')
     return render(request, 'tester/error.html')
 
+def log(request, pk):
+    username = request.user.get_username()
+    get_odj = Ticket.objects.get(id=pk)
+    history = get_odj.history.all()
+    context = {
+        "history": history,
+        "username": username,
+    }
+    return render(request, 'tester/log.html', context)
+
 def test(request):
-    return render(request,'tester/test.html')
+    return render(request, 'tester/test.html')

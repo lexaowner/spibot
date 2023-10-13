@@ -1,25 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-{% load static %}
-{% load bootstrap5 %}
-{% include 'tester/navbar.html'%}
-<head>
-    <meta charset="UTF-8">
+{% extends 'tester/base.html' %}
 
-    <link rel="stylesheet" href="{% static 'css/add_ticket.css' %}">
-
-    <script src="/static/admin/js/vendor/jquery/jquery.js"></script>
-    <script src="/static/smart-selects/admin/js/chainedfk.js"></script>
-    <script src="/static/smart-selects/admin/js/bindfields.js"></script>
-
-    {% bootstrap_messages %}
-    {% bootstrap_css %}
-    <title>{% block title %}{% endblock %}</title>
-</head>
-<body>
 {% block navbar %}
+    {% include 'tester/navbar.html'%}
 {% endblock %}
 
+{% block content %}
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
@@ -50,6 +35,4 @@
         </div>
     </div>
 </div>
-
-</body>
-</html>
+{% endblock %}

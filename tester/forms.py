@@ -28,11 +28,35 @@ class Addticket(forms.ModelForm):
         ]
 
 
+class TicketEditForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(TicketEditForm, self).__init__(*args, **kwargs)
+        self.fields['master'].queryset = User.objects.filter(groups__name='Мастер')
+    class Meta:
+        model = Ticket
+        fields = [
+            "district",
+            "street",
+            "house",
+            "apartment",
+            "login",
+            "first_contact",
+            "second_contact",
+            "type",
+            "status",
+            "master",
+            "operator",
+            "priority",
+            "comment_operator",
+            "comment_master",
+        ]
+
 class AddComMaster(forms.ModelForm):
     class Meta:
         model = Ticket
         fields = [
-            'comment_master'
+            'comment_master',
+            'status'
         ]
 
 
@@ -46,3 +70,4 @@ class UserChangeForm(_UserChangeForm):
     class Meta:
         model = User
         fields = ('username', 'email')
+

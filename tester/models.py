@@ -4,6 +4,7 @@ from django.utils.translation import gettext as _
 from smart_selects.db_fields import ChainedForeignKey
 from django.urls import reverse
 from django.contrib.auth.models import AbstractUser, Permission
+from simple_history.models import HistoricalRecords
 
 from spibot import settings
 
@@ -42,44 +43,6 @@ class User(AbstractUser):
             randomizer = random.choice(string.ascii_letters + string.digits)
             password.append(randomizer)
         return "".join(password)
-
-
-# class User(models.Model):
-#     user_name = models.OneToOneField('auth.User', default=True, null=True, on_delete=models.PROTECT, verbose_name="Чел")
-#     name = models.CharField(max_length=32, verbose_name='Имя')
-#
-# ROLES = [
-#     ('operator', 'Оператор📞'),
-#     ('master', 'Мастер🛠'),
-#     ('admin', 'Воспитатель👶'),
-#     ('god', 'Боженька🧬'),
-#     (None, 'Никто'),
-# ]
-#
-# permissions = models.CharField(max_length=32, choices=ROLES, default=None, blank=True, null=True,
-#                                verbose_name='Роль')
-#
-#     STATUS = [
-#         (None, 'New'),
-#         ("Уже в базе", 'Old')
-#     ]
-#
-#     status = models.CharField(max_length=32, choices=STATUS, default=None, blank=True, null=True, verbose_name='Статус')
-#
-#     def __str__(self):
-#         return f"Имя: {self.name} | Кликуха: {self.user_name} | {self.permissions}"
-#
-#     def get_url(self):
-#         return reverse('User-name', args=[self.name])
-#
-#     class Meta:
-#         verbose_name = 'Задрот'
-#         verbose_name_plural = 'Задроты'
-#
-#         permissions = [
-#             ("operator", "Can add ticket,change, change yourself profile"),
-#             ("master", "Can closed ticked,change owner, change yourself profile"),
-#         ]
 
 
 class Region(models.Model):
@@ -180,6 +143,8 @@ class Ticket(models.Model):
     ]
 
     status = models.BooleanField(choices=[(True, 'Открыта'), (False, 'Закрыта')], default=True)
+
+    history = HistoricalRecords()
 
     def __str__(self):
         return f'{self.street} | {self.apartment}'

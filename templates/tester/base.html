@@ -1,0 +1,45 @@
+{% load static %}
+{% load bootstrap5 %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+
+    <script src="/static/smart-selects/admin/js/chainedfk.js"></script>
+    <script src="/static/smart-selects/admin/js/bindfields.js"></script>
+    <script src="/static/admin/js/vendor/jquery/jquery.js"></script>
+
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <script src="{% static 'js/base.js' %}" defer></script>
+
+    <link rel="shortcut icon" type="image/png" href="{% static 'icon/favicon.ico' %}"/>
+    <link rel="shortcut icon" href="{% static 'icon/favicon.png' %}" type="image/x-icon">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'icon/apple-touch-icon.png'%}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'icon/favicon-32x32.png'%}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'icon/favicon-16x16.png'%}">
+    <link rel="manifest" href="{% static 'icon/site.webmanifest'%}">
+    <link rel="mask-icon" href="{% static 'icon/safari-pinned-tab.svg' %}" color="#5bbad5">
+
+
+    {% bootstrap_messages %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <title>{% block title %}{% endblock %}</title>
+
+</head>
+<body>
+{% block navbar %}
+    {% include 'tester/navbar.html' %}
+{% endblock %}
+
+{% block content %}
+{% endblock %}
+
+
+{% block footer %}
+{% endblock %}
+</body>
+</html>

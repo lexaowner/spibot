@@ -1,72 +1,57 @@
-<!DOCTYPE html>
-<html lang="en">
-{% load static %}
-{% load bootstrap5 %}
-{% include 'tester/navbar.html'%}
-<head>
-    <meta charset="UTF-8">
-
-    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
-
-    {% bootstrap_messages %}
-    {% bootstrap_css %}
-    {% bootstrap_javascript %}
-</head>
-<body>
+{% extends 'tester/base.html' %}
 {% block navbar %}
+    {% include 'tester/navbar.html' %}
 {% endblock %}
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12">
-            <table class="table table-stripped w-100">
-                <thead>
+{% block content %}
 
-                </thead>
-                     <div class="col-md-12">
-                <form class="mt-4 form-row  align-items-center" method="post">
-                    {% csrf_token %}
-                    <div class="form-group col-sm-4 my-1">
-                        <label for="InputFirstName">Имя</label>
-                        <input disabled name="first_name" type="text" value="{{ user.username }} | {{ user.first_name }}" class="form-control form-control-sm" id="InputFirstName" placeholder="Имя">
-                        <small class="form-text text-muted">Имя будет отображаться в заявках</small>
-                    </div>
-                    <div class="form-group col-sm-4 my-1">
-                        <label for="InputLastName">Логин</label>
-                        <input  name="first_name" type="text" value="{{ user.last_name }}"
-                               class="form-control form-control-sm"
-                               id="InputLastName"
-                               placeholder="">
-                        <small class="form-text text-muted">Товй логин</small>
-                    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-stripped w-100">
+                    <thead>
 
-                    <div class="form-group col-sm-4 my-1">
-                        <label for="InputPassword">Новый пароль</label>
-                        <input name="password" type="password" class="form-control form-control-sm"
-                               id="InputPassword"
-                               placeholder="*********">
-                        <small class="form-text text-danger">Новый пароль</small>
-                    </div>
-                    <div class="form-group col-sm-4 my-1">
-                        <label for="InputPasswordConfirm">Подтвердите пароль</label>
-                        <input name="password_confirm" type="password" class="form-control form-control-sm"
-                               id="InputPasswordConfirm"
-                               placeholder="*********">
-                        <small class="form-text text-muted">Подтвердите пароль, во избежание криворукости</small>
-                    </div>
+                    </thead>
+                    <div class="col-md-12">
+                        <form class="mt-4 form-row  align-items-center" method="post">
+                            {% csrf_token %}
+                            <div class="form-group col-sm-4 my-1">
+                                <label for="InputFirstName">Имя</label>
+                                <input disabled name="first_name" type="text"
+                                       value="{{ user.username }} | {{ user.first_name }}"
+                                       class="form-control form-control-sm" id="InputFirstName" placeholder="Имя">
+                                <small class="form-text text-muted">Имя будет отображаться в заявках</small>
+                            </div>
+                            <div class="form-group col-sm-4 my-1">
+                                <label for="InputLastName">Логин</label>
+                                <input name="first_name" type="text" value="{{ user.last_name }}"
+                                       class="form-control form-control-sm"
+                                       id="InputLastName"
+                                       placeholder="">
+                                <small class="form-text text-muted">Товй логин</small>
+                            </div>
 
-                    <button type="submit" class="btn btn-sm ml-2 mt-2 btn-outline-primary">Сохранить
-                    </button>
-                </form>
+                            <div class="form-group col-sm-4 my-1">
+                                <label for="InputPassword">Новый пароль</label>
+                                <input name="password" type="password" class="form-control form-control-sm"
+                                       id="InputPassword"
+                                       placeholder="*********">
+                                <small class="form-text text-danger">Новый пароль</small>
+                            </div>
+                            <div class="form-group col-sm-4 my-1">
+                                <label for="InputPasswordConfirm">Подтвердите пароль</label>
+                                <input name="password_confirm" type="password" class="form-control form-control-sm"
+                                       id="InputPasswordConfirm"
+                                       placeholder="*********">
+                                <small class="form-text text-muted">Подтвердите пароль, во избежание
+                                    криворукости</small>
+                            </div>
+
+                            <button type="submit" class="btn btn-sm ml-2 mt-2 btn-outline-primary">Сохранить
+                            </button>
+                        </form>
+                    </div>
+                </table>
             </div>
         </div>
     </div>
-                <tbody>
-
-                </tbody>
-
-            </table>
-        </div>
-    </div>
-</div>
-</body>
-</html>
+{% endblock %}

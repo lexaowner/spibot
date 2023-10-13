@@ -1,0 +1,62 @@
+{% extends 'tester/base.html' %}
+
+{% block navbar %}
+	{%  include 'tester/navbar.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-dark table-striped">
+                <thead>
+                <tr>
+                    <th>Изменения</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th> </th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody >
+                {% for foo in history %}
+                		<tr>
+                        <td>{{ foo }}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>
+{#                            <div>#}
+{#                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#MasterMove">Действие</button>#}
+{#                                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#MoveOn">Перекинуть</button>#}
+{#                            </div>#}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <!-- Modal -->
+        </div>
+
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block footer %}
+{% include 'tester/footer.html' %}
+{% endblock %}
