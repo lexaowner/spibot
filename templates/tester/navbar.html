@@ -3,9 +3,9 @@
 	<div class="container-fluid">
     <nav class="navbar navbar-dark bg-dark">
         <form class="container-fluid justify-content-start">
-        <img src="{% static 'img/cosmo_logo.png' %}" alt="" width="50" height=50>
+        <img class="m-1" src="{% static 'img/cosmo_logo.png' %}" alt="" width="50" height=50>
             <a href="{% url 'start_page' %}">
-                <button class="btn btn-primary me-2" type="button">CORA_2</button>
+                <button class="btn me-2 " type="button" style="background-color: #861baa;">CORA_2</button>
             </a>
             {% if perms.tester.operator %}
             <a href="{% url 'add_ticket' %}">
@@ -28,6 +28,10 @@
         </form>
     </nav>
 </div>
+{% endblock %}
+
+{% block filters %}
+	{% include 'tester/filters.html' %}
 {% endblock %}
 
 {% block title %}

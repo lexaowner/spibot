@@ -1,24 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
 {% extends 'tester/base.html' %}
-{% load static %}
-{% load bootstrap5 %}
-
 {% block navbar %}
-	{%  include 'tester/navbar.html' %}
+	{% include 'tester/navbar.html' %}
 {% endblock %}
-{% block content %}
 
+{% block content %}
     <form method="POST" >
         {% csrf_token %}
         {{ form.media.js }}
-        <div class="align-baseline">>{{ form }}</div>
+        {{ form.comment_master }}
+        {{ form.status }}
+        <button class="btn btn-primary" type="submit">Добавить</button>
     </form>
-
 {% endblock %}
 
 {% block footer %}
 	{% include 'tester/footer.html' %}
 {% endblock %}
-
-

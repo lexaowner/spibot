@@ -4,9 +4,9 @@ from django.contrib.auth.forms import UserCreationForm as _UserCreationForm, Use
 from .models import *
 
 
-class Addticket(forms.ModelForm):
+class TicketForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        super(Addticket, self).__init__(*args, **kwargs)  # populates the post
+        super(TicketForm, self).__init__(*args, **kwargs)  # populates the post
         self.fields['master'].queryset = User.objects.filter(groups__name='Мастер')
 
     class Meta:
@@ -21,35 +21,12 @@ class Addticket(forms.ModelForm):
             "second_contact",
             "type",
             "master",
-            "operator",
             "priority",
             "comment_operator",
             "comment_master",
+            "status"
         ]
 
-
-class TicketEditForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(TicketEditForm, self).__init__(*args, **kwargs)
-        self.fields['master'].queryset = User.objects.filter(groups__name='Мастер')
-    class Meta:
-        model = Ticket
-        fields = [
-            "district",
-            "street",
-            "house",
-            "apartment",
-            "login",
-            "first_contact",
-            "second_contact",
-            "type",
-            "status",
-            "master",
-            "operator",
-            "priority",
-            "comment_operator",
-            "comment_master",
-        ]
 
 class AddComMaster(forms.ModelForm):
     class Meta:

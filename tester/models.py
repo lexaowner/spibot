@@ -115,9 +115,11 @@ class Ticket(models.Model):
     comment_operator = models.TextField(blank=True, null=True, verbose_name="Комментарий оператора", default=None)
 
     update = models.DateTimeField(default=timezone.now, editable=False, verbose_name="Дата обновления")
-    operator = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name="Оператор",related_name='operator_tickets',null=True, blank=True,  default=None)
+    operator = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name="Оператор",
+                                 related_name='operator_tickets', null=True, blank=True, default=None)
 
-    master = models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT, verbose_name="Мастер",related_name='mater_tickets')
+    master = models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT, verbose_name="Мастер",
+                               related_name='mater_tickets')
 
     TYPE = [
         ('Ремонт', 'Ремонт'),
@@ -146,13 +148,17 @@ class Ticket(models.Model):
 
     history = HistoricalRecords()
 
+    # deleted = models.BooleanField(default=False)
+
     def __str__(self):
-        return f'{self.street} | {self.apartment}'
+        return f'{self.street} | {self.house} | {self.apartment}'
 
     class Meta:
         verbose_name = 'Заявка'
         verbose_name_plural = 'Заявки'
-
+    #
+    # def delete(self, using=None, keep_parents=False):
+    #     self.deleted
     def get_url(self):
         return reverse('ticket-form', args=[self.id])
 

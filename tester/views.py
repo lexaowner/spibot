@@ -1,48 +1,60 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from .models import *
 from .forms import *
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import Permission
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
+from tester.filters import *
 import time
 
 
 def start_page(request):
     if request.user.is_authenticated:
-        # get_user = User.objects.get(id=request.user.id)
-        # if get_user.has_perm("tester.master"):
-        #     if request.method == "POST":
-        #         form_add_com_master = AddComMaster(request.POST)
-        #         form_add_com_master.save()
-        #         return redirect('start_page')
+        filters = TicketFilter(request.GET, queryset=Ticket.objects.all())
 
-        # if request.method == 'PUT':
-        #     mst_id = Addticket.objects.get(master=request.POST)
-        #     mst_id.save()
+        if request.method == 'GET':
+            redirect('start_page')
 
         get_mater_ticket = Ticket.objects.filter(master=request.user.id)
-        master_aad_com = AddComMaster
         # messages.error(request, f'{get_user.has_perm("tester.operator")}')
-        change_master = Addticket()
+        change_master = TicketForm()
         obj = Ticket.objects.all()
         username = request.user.get_username()
         is_super = bool(request.user.is_superuser)
+        form = TicketForm()
         context = {
             "obj": obj,
             "username": username,
             "is_super": is_super,
             "master_ticket": get_mater_ticket,
-            "mas_com": master_aad_com,
             "change_master": change_master,
+            "form": form,
+            "filters": filters
         }
         return render(request, 'tester/start_page.html', context)
 
     else:
         return redirect("login")
 
+def add_com_master(request,pk):
+    if request.method == 'POST':
+        try:
+            instance = Ticket.objects.get(id=pk)
+            com_master_edit(request, instance)
+            return redirect('start_page')
+        except:
+            messages.error(request, f'Данные не могут быть изменены {Exception()}')
+
+    username = request.user.get_username()
+    on = Ticket.objects.get(id=pk)
+    edit_from = AddComMaster(instance=on)
+    context = {
+        "username": username,
+        "form": edit_from,
+    }
+    return render(request, 'tester/add_comment_master.html', context)
 
 @permission_required('tester.operator', login_url='error')
 def add_ticket(request):
@@ -52,7 +64,7 @@ def add_ticket(request):
             handle_edit(request)
             return redirect('start_page')
 
-    form = Addticket()
+    form = TicketForm()
     context = {
         "form": form,
         "username": username
@@ -60,13 +72,24 @@ def add_ticket(request):
     return render(request, 'tester/add_ticket.html', context)
 
 
-def handle_edit(request, instance=None):
-    form = Addticket(request.POST, instance=instance)
+def com_master_edit(request, instance=None):
+    form = AddComMaster(request.POST, instance=instance)
     if form.is_valid():
-        messages.success(request, f'{instance} данные успешно изменены ')
-        form.save()
+        ticket = form.save(commit=False)
+        ticket.save()
+        messages.success(request, f'Добавлен коментарий к заявке {instance.street}  {instance.house} кв {instance.apartment}')
     else:
-        messages.error(request,f'Данные не могут быть изменены {Exception()}')
+        messages.error(request, f'Данные не могут быть изменены {Exception(request)}')
+
+
+def handle_edit(request, instance=None):
+    form = TicketForm(request.POST, instance=instance)
+    if form.is_valid():
+        ticket = form.save(commit=False)
+        ticket.operator = request.user
+        ticket.save()
+    else:
+        messages.error(request, f'Данные не могут быть изменены {Exception(request)}')
 
 
 def login_cora_2(request):
@@ -116,12 +139,13 @@ def edit_ticket(request, pk):
         try:
             instance = Ticket.objects.get(id=pk)
             handle_edit(request, instance)
+            messages.success(request,f'Данные успешно изменены {instance.street}  {instance.house} кв {instance.apartment}')
             return redirect('edit_ticket', pk)
         except:
-            messages.error(request, f'{Exception()}')
+            messages.error(request, f'Данные не могут быть изменены {Exception()}')
     username = request.user.get_username()
     on = Ticket.objects.get(id=pk)
-    edit_from = TicketEditForm(instance=on)
+    edit_from = TicketForm(instance=on)
     context = {
         "e_form": edit_from,
         "username": username
@@ -134,15 +158,20 @@ def error(request):
     messages.error(request, 'Недостаточно прав')
     return render(request, 'tester/error.html')
 
+
 def log(request, pk):
     username = request.user.get_username()
     get_odj = Ticket.objects.get(id=pk)
     history = get_odj.history.all()
+    # history_old = history.prev_record
+    # messages.error(request, f'{history_old}')
+
     context = {
         "history": history,
         "username": username,
     }
     return render(request, 'tester/log.html', context)
+
 
 def test(request):
     return render(request, 'tester/test.html')

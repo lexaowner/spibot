@@ -1,6 +1,11 @@
-body{
-    background-image: url("https://images.pexels.com/photos/2387793/pexels-photo-2387793.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260");
-}
+/*body{*/
+/*    background-color: #2b2b2c;*/
+/*}*/
+
+/*html {*/
+/*    background-color: #2b2b2c;*/
+/*}*/
+/*#2b2b2c*/
 
 .container-fluid {
     background-color: rgba(0,0,0,0.2);
@@ -30,7 +35,15 @@ body{
 
 footer {
     position:fixed;
-    bottom:10px;
+    bottom:0px;
     width:100%;
     box-shadow: 5px 8px 5px rgba(0, 0, 0, 0.3);
+}
+
+form.form-add{
+      height: calc(1.5em + .5rem + 2px);
+        padding: .25rem .5rem;
+        font-size: .875rem;
+        line-height: 1.5;
+        border-radius: .2rem;
 }
