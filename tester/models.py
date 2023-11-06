@@ -139,10 +139,6 @@ class Ticket(models.Model):
 
     priority = models.CharField(max_length=13, choices=PRIORITY, default="Обычный", verbose_name="Приоритет")
 
-    STATUS = [
-        ('open', 'Открыта'),
-        ('closed', 'Закрыта')
-    ]
 
     status = models.BooleanField(choices=[(True, 'Открыта'), (False, 'Закрыта')], default=True)
 

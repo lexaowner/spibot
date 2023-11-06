@@ -7,13 +7,57 @@
 {% block navbar %}
 	{%  include 'tester/navbar.html' %}
 {% endblock %}
-{% block content %}
 
-    <form method="POST" >
-        {% csrf_token %}
-        {{ form.media.js }}
-        <div class="align-baseline">>{{ form }}</div>
-    </form>
+{% block content %}
+<div class="container p-3">
+ <div class="row-3 row shadow p-2 me-2 ms-2 bg-body-tertiary rounded" style="background-color: rgba(89, 89, 89, 1);">
+     <div class="text-light">
+              <div class="row align-items-start rounded-pill" >
+                <div class="">
+                        <form method="POST" >
+                            {% csrf_token %}
+                            {{ form.media.js }}
+                            <div class="col-sm-1 col-md-1 input-group">
+                              {{ form.district }}
+                            </div>
+                                <div class="col-sm-1 col-md-1">
+                                {{ form.street }}
+                            </div>
+                                <div class="col-sm-1 col-md-1">
+                                {{ form.house }}
+                            </div>
+                                <div class="col-sm-1 col-md-1">
+                                {{ form.apartment }}
+                            </div>
+                                <div class="col-sm-1 col-md-1">
+                                {{ form.first_contact }}
+                            </div>
+                                <div class="col-sm-1 col-md-1">
+                                {{ form.second_contact }}
+                            </div>
+                                <div class="col-sm-1 col-md-1">
+                                {{ form.type }}
+                            </div>
+                                <div class="col-sm-1 col-md-1">
+                                {{ form.login }}
+                            </div>
+                                <div class="col-sm-1 col-md-1">
+                                {{ form.master }}
+                            </div>
+                                <div class="col-sm-1 col-md-1">
+                                {{ form.priority }}
+                            </div>
+                              <div class="col-sm-1 col-md-1">
+                                {{ form.comment_operator }}
+                            </div>
+                            <button type="submit" class="btn btn-secondary">Добавить</button>
+                        </form>
+                </div>
+              </div>
+     </div>
+ </div>
+</div>
+
 
 {% endblock %}
 

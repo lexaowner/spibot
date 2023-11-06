@@ -1,54 +1,76 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
+{% load bootstrap5 %}
 {% load static %}
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="msapplication-TileColor" content="#da532c">
 
-        <link rel="stylesheet" href="{% static 'css/login.css' %}">
-        <script src="{% static 'js/login.js' %}" defer></script>
+    <script src="/static/smart-selects/admin/js/chainedfk.js"></script>
+    <script src="/static/smart-selects/admin/js/bindfields.js"></script>
+    <script src="/static/admin/js/vendor/jquery/jquery.js"></script>
+
+    <link rel="manifest" href="{% static 'icon/site.webmanifest'%}">
+    <link rel="mask-icon" href="{% static 'icon/safari-pinned-tab.svg' %}" color="#5bbad5">
+
+
+    {% bootstrap_messages %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
 
 
     <title>Title</title>
 </head>
-<body>
-<div class="logo">
+<body data-bs-spy="scroll" data-bs-target="#ticket" data-offset="40" style="background-color: rgba(59, 59, 59, 1)">
 
+ <div class="container-12 p-2">
+    <div class="row-3 row-col-12 col-sm-12 me-2 ms-1 p-2 rounded shadow mb-2 bg-body-tertiary rounded" style="background-color: rgba(89, 89, 89, 1)">
+    <div class="text-light">
+  <div class="row row-col-12 align-items-start rounded-pill">
+        <div class="row-2 col-xl-1">
+            <input type="text" class="form-control" id="validationCustom01" placeholder="Логин" required style="height: 25px; width: 120px;">
+        </div>
+       <div class="row col-xl-1">
+            <input type="text" class="form-control" id="validationCustom01" placeholder="Логин" required style="height: 25px; width: 120px;">
+        </div>
+       <div class="row col-xl-1">
+            <input type="text" class="form-control" id="validationCustom01" placeholder="Логин" required style="height: 25px; width: 120px;">
+        </div>
+       <div class="row col-xl-1">
+            <input type="text" class="form-control" id="validationCustom01" placeholder="Логин" required style="height: 25px; width: 120px;">
+        </div>
+       <div class="row col-xl-1">
+            <input type="text" class="form-control" id="validationCustom01" placeholder="Логин" required style="height: 25px; width: 120px;">
+        </div>
+       <div class="row col-xl-1">
+            <input type="text" class="form-control" id="validationCustom01" placeholder="Логин" required style="height: 25px; width: 120px;">
+        </div>
+       <div class="row col-xl-1">
+            <input type="text" class="form-control" id="validationCustom01" placeholder="Логин" required style="height: 25px; width: 120px;">
+        </div>
+       <div class="row col-xl-1">
+            <input type="text" class="form-control" id="validationCustom01" placeholder="Логин" required style="height: 25px; width: 120px;">
+        </div>
+       <div class="row col-xl-1">
+            <input type="text" class="form-control" id="validationCustom01" placeholder="Логин" required style="height: 25px; width: 120px;">
+        </div>
+       <div class="row-2 col-xl-1">
+            <input type="text" class="form-control" id="validationCustom01" placeholder="Логин" required style="height: 25px; width: 120px;">
+        </div>
+       <div class="row col-xl-1">
+            <input type="text" class="form-control" id="validationCustom01" placeholder="Логин" required style="height: 25px; width: 120px;">
+        </div>
+       <div class="row col-xl-1">
+            <input type="text" class="form-control" id="validationCustom01" placeholder="Логин" required style="height: 25px; width: 120px;">
+        </div>
+       <div class="row col-xl-1">
+            <input type="text" class="form-control" id="validationCustom01" placeholder="Логин" required style="height: 25px; width: 120px;">
+        </div>
 </div>
-<div class="box bg-img">
-  <div class="content">
-
-    <h2><span><</span>Войти<span> ></span></h2>
-      <form method="POST">
-    <div class="forms">
-        {% csrf_token %}
-
-      <div class="user-input">
-        <input type="text" class="login-input" placeholder="user name" name="login" id="name" required>
-        <i class="fas fa-user"></i>
-      </div>
-
-      <div class="pass-input">
-        <input type="password" class="login-input" placeholder="password" name="password" id="my-password" required>
-
-        <span class="eye" onclick="myFunction()">
-          <i id="hide-1" class="fas fa-eye-slash"></i>
-          <i id="hide-2" class="fas fa-eye"></i>
-        </span>
-      </div>
-
     </div>
-
-    <button type="submit" class="login-btn">Войти</button>
-      </form>
-
-
-    <br>
-
-    <p class="f-pass">CORA_2</p>
-
-  </div>
 </div>
 
-<script src="https://kit.fontawesome.com/c0078485ae.js" crossorigin="anonymous"></script>
+
 </body>
 </html>

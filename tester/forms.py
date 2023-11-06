@@ -28,6 +28,33 @@ class TicketForm(forms.ModelForm):
         ]
 
 
+class TicketFilterForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(TicketFilterForm, self).__init__(*args, **kwargs)
+        for key in self.fields.keys(): self.fields[key].required = False
+
+        self.fields['master'].queryset = User.objects.filter(groups__name='Мастер')
+
+        self.fields['district'].empty_label = 'Район'
+        self.fields['street'].empty_label = 'Улица'
+
+    class Meta:
+        model = Ticket
+        fields = [
+            "district",
+            "street",
+            "house",
+            "apartment",
+            "login",
+            "first_contact",
+            "second_contact",
+            "type",
+            "master",
+            "priority",
+            "status"
+        ]
+
+
 class AddComMaster(forms.ModelForm):
     class Meta:
         model = Ticket
@@ -47,4 +74,3 @@ class UserChangeForm(_UserChangeForm):
     class Meta:
         model = User
         fields = ('username', 'email')
-

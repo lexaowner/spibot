@@ -6,39 +6,72 @@ from django.contrib.auth.models import Permission
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
-from tester.filters import *
 import time
+
+
+def ticket_filter_form(request, filters={}):
+    fields = [
+        'district',
+        'street',
+        'house',
+        'apartment',
+        'date',
+        'closed_date',
+        'completion_date',
+        'login',
+        'first_contact',
+        'second_contact',
+        'comment_master',
+        'comment_operator',
+        'update',
+        'operator',
+        'master',
+        'status',
+    ]
+
+    for k, v in request.GET.items():
+        if len(v) and k in fields:
+            if k == 'status':
+                v = v == 'True'
+            if k == 'district':
+                k = 'district_id'
+                v = int(v)
+            if k == 'street':
+                k = 'street_id'
+                v = int(v)
+
+            filters.update({k: v})
+            print(filters)
+    return Ticket.objects.filter(**filters), TicketFilterForm(request.GET,initial=filters)
 
 
 def start_page(request):
     if request.user.is_authenticated:
-        filters = TicketFilter(request.GET, queryset=Ticket.objects.all())
 
         if request.method == 'GET':
             redirect('start_page')
-
         get_mater_ticket = Ticket.objects.filter(master=request.user.id)
         # messages.error(request, f'{get_user.has_perm("tester.operator")}')
         change_master = TicketForm()
-        obj = Ticket.objects.all()
+
+        tickets, filter_form = ticket_filter_form(request, )
         username = request.user.get_username()
         is_super = bool(request.user.is_superuser)
-        form = TicketForm()
         context = {
-            "obj": obj,
+            "tickets": tickets,
             "username": username,
             "is_super": is_super,
             "master_ticket": get_mater_ticket,
             "change_master": change_master,
-            "form": form,
-            "filters": filters
+            "filter_form": filter_form
         }
         return render(request, 'tester/start_page.html', context)
 
     else:
         return redirect("login")
 
-def add_com_master(request,pk):
+
+def add_com_master(request, pk):
     if request.method == 'POST':
         try:
             instance = Ticket.objects.get(id=pk)
@@ -55,6 +88,7 @@ def add_com_master(request,pk):
         "form": edit_from,
     }
     return render(request, 'tester/add_comment_master.html', context)
+
 
 @permission_required('tester.operator', login_url='error')
 def add_ticket(request):
@@ -77,7 +111,8 @@ def com_master_edit(request, instance=None):
     if form.is_valid():
         ticket = form.save(commit=False)
         ticket.save()
-        messages.success(request, f'Добавлен коментарий к заявке {instance.street}  {instance.house} кв {instance.apartment}')
+        messages.success(request,
+                         f'Добавлен коментарий к заявке {instance.street}  {instance.house} кв {instance.apartment}')
     else:
         messages.error(request, f'Данные не могут быть изменены {Exception(request)}')
 
@@ -139,7 +174,8 @@ def edit_ticket(request, pk):
         try:
             instance = Ticket.objects.get(id=pk)
             handle_edit(request, instance)
-            messages.success(request,f'Данные успешно изменены {instance.street}  {instance.house} кв {instance.apartment}')
+            messages.success(request,
+                             f'Данные успешно изменены {instance.street}  {instance.house} кв {instance.apartment}')
             return redirect('edit_ticket', pk)
         except:
             messages.error(request, f'Данные не могут быть изменены {Exception()}')
@@ -174,4 +210,15 @@ def log(request, pk):
 
 
 def test(request):
-    return render(request, 'tester/test.html')
+    get_mater_ticket = Ticket.objects.filter(master=request.user.id)
+    # messages.error(request, f'{get_user.has_perm("tester.operator")}')
+    change_master = TicketForm()
+    username = request.user.get_username()
+    is_super = bool(request.user.is_superuser)
+    context = {
+        "username": username,
+        "is_super": is_super,
+        "master_ticket": get_mater_ticket,
+        "change_master": change_master,
+    }
+    return render(request, 'tester/test.html', context)
