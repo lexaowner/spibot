@@ -1,3 +1,4 @@
+import django_filters
 from django import forms
 from django.contrib.auth.forms import UserCreationForm as _UserCreationForm, UserChangeForm as _UserChangeForm
 
@@ -28,16 +29,32 @@ class TicketForm(forms.ModelForm):
         ]
 
 
-class TicketFilterForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(TicketFilterForm, self).__init__(*args, **kwargs)
-        for key in self.fields.keys(): self.fields[key].required = False
-
-        self.fields['master'].queryset = User.objects.filter(groups__name='Мастер')
-
-        self.fields['district'].empty_label = 'Район'
-        self.fields['street'].empty_label = 'Улица'
-
+# class TicketFilterForm(forms.ModelForm):
+#     def __init__(self, *args, **kwargs):
+#         super(TicketFilterForm, self).__init__(*args, **kwargs)
+#         for key in self.fields.keys(): self.fields[key].required = False
+#
+#         self.fields['master'].queryset = User.objects.filter(groups__name='Мастер')
+#
+#         self.fields['district'].empty_label = 'Район'
+#         self.fields['street'].empty_label = 'Улица'
+#
+#     class Meta:
+#         model = Ticket
+#         fields = [
+#             "district",
+#             "street",
+#             "house",
+#             "apartment",
+#             "login",
+#             "first_contact",
+#             "second_contact",
+#             "type",
+#             "master",
+#             "priority",
+#             "status"
+#         ]
+class TicketFilterForm(django_filters.FilterSet):
     class Meta:
         model = Ticket
         fields = [
@@ -51,7 +68,7 @@ class TicketFilterForm(forms.ModelForm):
             "type",
             "master",
             "priority",
-            "status"
+            "status",
         ]
 
 

@@ -7,29 +7,21 @@
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <script src="/static/smart-selects/admin/js/chainedfk.js"></script>
-    <script src="/static/smart-selects/admin/js/bindfields.js"></script>
-    <script src="/static/admin/js/vendor/jquery/jquery.js"></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
-
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <script src="{% static 'js/base.js' %}" defer></script>
 
     <link rel="shortcut icon" type="image/png" href="{% static 'icon/favicon.ico' %}"/>
     <link rel="shortcut icon" href="{% static 'icon/favicon.png' %}" type="image/x-icon">
 
-    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'icon/apple-touch-icon.png'%}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'icon/favicon-32x32.png'%}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'icon/favicon-16x16.png'%}">
-    <link rel="manifest" href="{% static 'icon/site.webmanifest'%}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'icon/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'icon/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'icon/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'icon/site.webmanifest' %}">
     <link rel="mask-icon" href="{% static 'icon/safari-pinned-tab.svg' %}" color="#5bbad5">
 
 
     {% bootstrap_messages %}
     {% bootstrap_css %}
-    {% bootstrap_javascript %}
     <title>{% block title %}CORA_KTV{% endblock %}</title>
 
 </head>
@@ -39,11 +31,13 @@
 {% endblock %}
 
 {% block content %}
-     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 {% endblock %}
 
 
 {% block footer %}
+    {% include 'tester/footer.html' %}
 {% endblock %}
+
+{% bootstrap_javascript %}
 </body>
 </html>

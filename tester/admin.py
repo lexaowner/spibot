@@ -6,6 +6,7 @@ from simple_history.admin import SimpleHistoryAdmin
 from tester.forms import UserChangeForm, UserCreationForm
 from tester.models import *
 
+admin.site.register(News)
 admin.site.register(Region)
 admin.site.register(House)
 admin.site.register(Street)

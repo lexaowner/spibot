@@ -1,12 +1,12 @@
 {% load static %}
 {% block navbar %}
-<nav class="navbar navbar-dark navbar-expand-lg bg-body-tertiary" style="background-color: rgba(89, 89, 89, 1)"; >
+<nav class="navbar navbar-dark navbar-expand-lg bg-body-tertiary" style="background-color: rgba(89, 89, 89, 1);">
   <div class="container-fluid">
     <a class="navbar-brand" href="{% url 'start_page' %}">CORA_KTV</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTopToggler" aria-controls="navbarTopToggler">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+    <div class="collapse navbar-collapse" id="navbarTopToggler">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           {% if perms.tester.operator %}
         <li class="nav-item">
@@ -28,7 +28,9 @@
             Log out
             </button></a>
         {% endif %}
-        <button type="button" class="btn btn-secondary " data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+        <button type="button" class="btn btn-secondary position-relative" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                	<span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle">
+              </span>
           News
         </button>
     </div>

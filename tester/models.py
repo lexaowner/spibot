@@ -27,8 +27,10 @@ class User(AbstractUser):
         ordering = ('id',)
 
         permissions = [
-            ("operator", "Can add ticket,change, change yourself profile"),
-            ("master", "Can closed ticked,change owner, change yourself profile"),
+            ("operator", "Can add ticket, change, change yourself profile"),
+            ("master", "Can closed ticked, change owner, change yourself profile"),
+            ("dispatcher", "Can add ticket, change, change yourself profile, add news, change news, change ticket "
+                           "status")
         ]
 
     def __str__(self):
@@ -160,3 +162,8 @@ class Ticket(models.Model):
 
     def get_full_address(self):
         return f'{self.district}, {self.street}, {self.house}'
+
+class News(models.Model):
+    title = models.TextField(max_length=25, null=True,blank=True, verbose_name="Заголовок")
+    text = models.TextField(max_length=255, verbose_name="Текст")
+    date = models.DateTimeField(editable=True, default=timezone.now, verbose_name="Дата открытия")

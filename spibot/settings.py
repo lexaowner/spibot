@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'bootstrap5',
     'simple_history',
     'tester.apps.TesterConfig',
+    'crispy_forms',
+    'crispy_bootstrap5',
 ]
 
 
@@ -128,3 +130,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 USE_DJANGO_JQUERY = True
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"

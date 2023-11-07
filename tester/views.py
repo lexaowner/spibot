@@ -8,64 +8,28 @@ from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
 import time
 
-
-def ticket_filter_form(request, filters={}):
-    fields = [
-        'district',
-        'street',
-        'house',
-        'apartment',
-        'date',
-        'closed_date',
-        'completion_date',
-        'login',
-        'first_contact',
-        'second_contact',
-        'comment_master',
-        'comment_operator',
-        'update',
-        'operator',
-        'master',
-        'status',
-    ]
-
-    for k, v in request.GET.items():
-        if len(v) and k in fields:
-            if k == 'status':
-                v = v == 'True'
-            if k == 'district':
-                k = 'district_id'
-                v = int(v)
-            if k == 'street':
-                k = 'street_id'
-                v = int(v)
-
-            filters.update({k: v})
-            print(filters)
-    return Ticket.objects.filter(**filters), TicketFilterForm(request.GET,initial=filters)
-
-
 def start_page(request):
     if request.user.is_authenticated:
-
         if request.method == 'GET':
-            redirect('start_page')
-        get_mater_ticket = Ticket.objects.filter(master=request.user.id)
-        # messages.error(request, f'{get_user.has_perm("tester.operator")}')
-        change_master = TicketForm()
+            filters = TicketFilterForm()
+            get_mater_ticket = Ticket.objects.filter(master=request.user.id)
+            news = News.objects.all()
+            # messages.error(request, f'{get_user.has_perm("tester.operator")}')
+            change_master = TicketForm()
+            tickets = TicketFilterForm(request.GET, queryset=Ticket.objects.all())
+            username = request.user.get_username()
+            is_super = bool(request.user.is_superuser)
+            context = {
+                "tickets": tickets,
+                "username": username,
+                "is_super": is_super,
+                "master_ticket": get_mater_ticket,
+                "change_master": change_master,
+                "news": news,
+                "filters": filters
+            }
 
-        tickets, filter_form = ticket_filter_form(request, )
-        username = request.user.get_username()
-        is_super = bool(request.user.is_superuser)
-        context = {
-            "tickets": tickets,
-            "username": username,
-            "is_super": is_super,
-            "master_ticket": get_mater_ticket,
-            "change_master": change_master,
-            "filter_form": filter_form
-        }
-        return render(request, 'tester/start_page.html', context)
+            return render(request, 'tester/start_page.html', context)
 
     else:
         return redirect("login")
@@ -210,15 +174,4 @@ def log(request, pk):
 
 
 def test(request):
-    get_mater_ticket = Ticket.objects.filter(master=request.user.id)
-    # messages.error(request, f'{get_user.has_perm("tester.operator")}')
-    change_master = TicketForm()
-    username = request.user.get_username()
-    is_super = bool(request.user.is_superuser)
-    context = {
-        "username": username,
-        "is_super": is_super,
-        "master_ticket": get_mater_ticket,
-        "change_master": change_master,
-    }
-    return render(request, 'tester/test.html', context)
+    return render(request, 'tester/test.html')

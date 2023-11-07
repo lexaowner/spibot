@@ -5,7 +5,7 @@
 {% block filters %}
     {% include 'tester/filters.html' %}
 {% endblock %}
-<div id="ticket" class="container-12 overflow-auto " style="max-height: 760px;">
+<div id="ticket" class="container-12 overflow-auto" style="max-height: 760px;">
      <div class="row-3 row shadow p-2 me-2 ms-2 bg-body-tertiary rounded" style="background-color: rgba(89, 89, 89, 1);">
          <div class="text-light">
               <div class="row align-items-start rounded-pill" >
@@ -27,7 +27,7 @@
                             </tr>
                           </thead>
                           <tbody class="table-group-divider">
-                            {% for foo in tickets %}
+                            {% for foo in tickets.qs %}
                             <tr {% if foo.priority == 'Срочный' %}class="table-danger"{% elif foo.priority == 'Корпоративный' %}class="table-warning"{% endif %}>
                               <td><a class="link-light" href="{% url 'edit_ticket' foo.id %}">{{ foo.get_full_address }}{% if foo.apartment %} кв {{ foo.apartment| default:'' }}</a>{% endif %}</td>
                               <td>{{ foo.type }}</td>
@@ -53,12 +53,12 @@
                                 <td>{{ foo.comment_master| slice:16 | default:'' }}</td>
                                 {% if foo.status == True %}
                                      <td>
-                                      <div class="bg-success  text-center">
+                                      <div class="bg-success  text-center rounded">
                                           Открыта
                                       </div>
                                 {% else %}
                                   <td>
-                                      <div class="bg-danger text-center">
+                                      <div class="bg-danger text-center rounded">
                                           Закрыта
                                       </div>
                                   </td>
@@ -77,74 +77,20 @@
  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable modal-xl">
     <div class="modal-content">
-      <div class="modal-header" style="background-color: rgba(89, 89, 89, 1)">
+      <div class="modal-header rounded" style="background-color: rgba(89, 89, 89, 1)">
         <h1 class="modal-title fs-5" id="staticBackdropLabel">News</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" style="background-color: rgba(59, 59, 59, 1)">
+          {% for new in news %}
         <div class="container-12 shadow p-1 me-1 ms-1 bg-body-tertiary rounded g-6" style="background-color: rgba(89, 89, 89, 1)">
             <div class="row">
-                <h1>Newsss</h1>
-                <p>What is </p>
+                <h4>{{ new.title| default:'Новости от Spectr IT' }}</h4>
+                <p>{{ new.text}}</p>
             </div>
         </div>
           <br>
-        <div class="container-12 shadow p-1 me-1 ms-1 bg-body-tertiary rounded" style="background-color: rgba(89, 89, 89, 1)">
-            <div class="row">
-                <h1>Newsss</h1>
-                <p>What is </p>
-            </div>
-        </div>
-          <br>
-        <div class="container-12 shadow p-1 me-1 ms-1 bg-body-tertiary rounded" style="background-color: rgba(89, 89, 89, 1)">
-            <div class="row">
-                <h1>Newsss</h1>
-                <p>What is </p>
-            </div>
-        </div>
-          <br>
-            <div class="container-12 shadow p-1 me-1 ms-1 bg-body-tertiary rounded" style="background-color: rgba(89, 89, 89, 1)">
-            <div class="row">
-                <h1>Newsss</h1>
-                <p>What is </p>
-            </div>
-        </div>
-          <br>
-            <div class="container-12 shadow p-1 me-1 ms-1 bg-body-tertiary rounded" style="background-color: rgba(89, 89, 89, 1)">
-            <div class="row">
-                <h1>Newsss</h1>
-                <p>What is </p>
-            </div>
-        </div>
-          <br>
-            <div class="container-12 shadow p-1 me-1 ms-1 bg-body-tertiary rounded" style="background-color: rgba(89, 89, 89, 1)">
-            <div class="row">
-                <h1>Newsss</h1>
-                <p>What is </p>
-            </div>
-        </div>
-          <br>
-            <div class="container-12 shadow p-1 me-1 ms-1 bg-body-tertiary rounded" style="background-color: rgba(89, 89, 89, 1)">
-            <div class="row">
-                <h1>Newsss</h1>
-                <p>What is </p>
-            </div>
-        </div>
-          <br>
-            <div class="container-12 shadow p-1 me-1 ms-1 bg-body-tertiary rounded" style="background-color: rgba(89, 89, 89, 1)">
-            <div class="row">
-                <h1>Newsss</h1>
-                <p>What is </p>
-            </div>
-        </div>
-          <br>
-            <div class="container-12 shadow p-1 me-1 ms-1 bg-body-tertiary rounded" style="background-color: rgba(89, 89, 89, 1)">
-            <div class="row">
-                <h1>Newsss</h1>
-                <p>What is </p>
-            </div>
-        </div>
-          <br>
+          {% endfor %}
       </div>
       <div class="modal-footer" style="background-color: rgba(89, 89, 89, 1)">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -153,7 +99,4 @@
     </div>
   </div>
 </div>
-{% endblock %}
-{% block footer %}
-    {% include 'tester/footer.html' %}
 {% endblock %}
