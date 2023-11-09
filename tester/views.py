@@ -8,10 +8,10 @@ from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
 import time
 
+
 def start_page(request):
     if request.user.is_authenticated:
         if request.method == 'GET':
-            filters = TicketFilterForm()
             get_mater_ticket = Ticket.objects.filter(master=request.user.id)
             news = News.objects.all()
             # messages.error(request, f'{get_user.has_perm("tester.operator")}')
@@ -26,7 +26,6 @@ def start_page(request):
                 "master_ticket": get_mater_ticket,
                 "change_master": change_master,
                 "news": news,
-                "filters": filters
             }
 
             return render(request, 'tester/start_page.html', context)
@@ -86,6 +85,7 @@ def handle_edit(request, instance=None):
     if form.is_valid():
         ticket = form.save(commit=False)
         ticket.operator = request.user
+        ticket.status = True
         ticket.save()
     else:
         messages.error(request, f'Данные не могут быть изменены {Exception(request)}')
@@ -134,21 +134,29 @@ def profile(request):
 
 
 def edit_ticket(request, pk):
+    get_odj = Ticket.objects.get(id=pk)
+    history = get_odj.history.all()
     if request.method == 'POST':
         try:
             instance = Ticket.objects.get(id=pk)
-            handle_edit(request, instance)
-            messages.success(request,
-                             f'Данные успешно изменены {instance.street}  {instance.house} кв {instance.apartment}')
-            return redirect('edit_ticket', pk)
+            form = TicketForm(request.POST, instance=instance)
+            if form.is_valid():
+                ticket = form.save(commit=False)
+                ticket.save()
+
+                messages.success(request, f'Данные успешно изменены {instance.street}  {instance.house} кв {instance.apartment}')
+                return redirect('edit_ticket', pk)
+
         except:
-            messages.error(request, f'Данные не могут быть изменены {Exception()}')
+            messages.error(request, f'Данные не могут быть изменены {Exception(request)}')
+
     username = request.user.get_username()
     on = Ticket.objects.get(id=pk)
     edit_from = TicketForm(instance=on)
     context = {
         "e_form": edit_from,
-        "username": username
+        "username": username,
+        "history": history,
     }
 
     return render(request, 'tester/edit_ticketfrom.html', context)

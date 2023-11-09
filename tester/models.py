@@ -98,7 +98,8 @@ class House(models.Model):
 
 class Ticket(models.Model):
     district = models.ForeignKey("District", on_delete=models.PROTECT, verbose_name=('Район'))
-    street = ChainedForeignKey("Street", chained_field='district', chained_model_field='district', show_all=False)
+    street = ChainedForeignKey("Street", chained_field='district', chained_model_field='district', show_all=False,
+                               verbose_name=('Улица'))
 
     house = models.CharField(max_length=16, verbose_name=_('Дом'))
     apartment = models.CharField(max_length=32, verbose_name=_('Квартира'), blank=True, null=True)
@@ -141,8 +142,8 @@ class Ticket(models.Model):
 
     priority = models.CharField(max_length=13, choices=PRIORITY, default="Обычный", verbose_name="Приоритет")
 
-
-    status = models.BooleanField(choices=[(True, 'Открыта'), (False, 'Закрыта')], default=True)
+    status = models.BooleanField(choices=[(True, 'Открыта'), (False, 'Закрыта')], null=True, blank=True, default=None,
+                                 verbose_name="Статус", )
 
     history = HistoricalRecords()
 
@@ -154,6 +155,7 @@ class Ticket(models.Model):
     class Meta:
         verbose_name = 'Заявка'
         verbose_name_plural = 'Заявки'
+
     #
     # def delete(self, using=None, keep_parents=False):
     #     self.deleted
@@ -163,7 +165,15 @@ class Ticket(models.Model):
     def get_full_address(self):
         return f'{self.district}, {self.street}, {self.house}'
 
+
 class News(models.Model):
-    title = models.TextField(max_length=25, null=True,blank=True, verbose_name="Заголовок")
+    title = models.TextField(max_length=25, null=True, blank=True, verbose_name="Заголовок")
     text = models.TextField(max_length=255, verbose_name="Текст")
     date = models.DateTimeField(editable=True, default=timezone.now, verbose_name="Дата открытия")
+
+    class Meta:
+        verbose_name = 'Новость'
+        verbose_name_plural = 'Новости'
+
+    def __str__(self):
+        return self.title

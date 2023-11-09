@@ -1,37 +1,88 @@
 {% extends 'tester/base.html' %}
-
+{% load crispy_forms_filters %}
 {% block navbar %}
     {% include 'tester/navbar.html'%}
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12">
-            <table class="table table-stripped w-100">
-
-            </table>
-        </div>
-    </div>
-</div>
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-4">
-            <table class="table table-stripped w-100">
+<style>
+    .col-2{display:inline-block;}
+</style>
+<div class="container p-2">
+        <div class="row col-sm-12 me-1 ms-1 rounded shadow mb-2 rounded" style="background-color: rgba(89, 89, 89, 1)">
+        <div class="text-light">
                 <form method="POST" class="form-row">
+                    {{ e_form.media.js }}
                     {% csrf_token %}
-                    <div>
-                    </div>
-                    <div class="col col-md-4">
-                        {{ e_form }}
-                        {{ form.media.js }}
-                    </div>
-                    <div id="div_id_status" class="form-group mt-4">
-                        <input type="submit" class="btn mt-2 ml-2 btn-primary" value="Сохронить">
-                    </div>
+                      <div class="col-2">
+                        {{ e_form.district|as_crispy_field }}
+                      </div>
+                      <div class="col-2">
+                        {{ e_form.street|as_crispy_field }}
+                      </div>
+                      <div class="col-2">
+                        {{ e_form.house|as_crispy_field }}
+                      </div>
+                      <div class="col-2">
+                        {{ e_form.apartment|as_crispy_field }}
+                      </div>
+                      <div class="col-2">
+                        {{ e_form.login|as_crispy_field }}
+                      </div>
+                      <div class="col-2">
+                        {{ e_form.first_contact|as_crispy_field }}
+                      </div>
+                      <div class="col-2">
+                        {{ e_form.second_contact|as_crispy_field }}
+                      </div>
+                      <div class="col-2">
+                        {{ e_form.type|as_crispy_field }}
+                      </div>
+                      <div class="col-2">
+                        {{ e_form.master|as_crispy_field }}
+                      </div>
+                      <div class="col-2">
+                        {{ e_form.status|as_crispy_field }}
+                      </div>
+                      <div class="col-2">
+                        {{ e_form.priority|as_crispy_field }}
+                      </div>
+                      <div class="col-3 w-75">
+                        {{ e_form.comment_operator|as_crispy_field }}
+                      </div>
+                        <button type="submit" class="btn mt-2 ml-2 btn-secondary">Сохронить</button>
                 </form>
-            </table>
         </div>
     </div>
 </div>
+
+    {% for foo in history %}
+    <div class="container p-2">
+        <div class="row col-sm-12 me-1 ms-1 rounded shadow mb-2 rounded" style="background-color: rgba(89, 89, 89, 1);">
+        <div class="text-light">
+            <div class="col-2">
+                {% if foo.history_type == '+' %}
+                    <span class="badge bg-success">Добавлено</span>
+                    {{ foo.history_date|date:"d.m.Y H:i" }}
+                {% endif %}
+                {% if foo.history_type == '-' %}
+                    <span class="badge bg-danger">Удалено</span>
+                    {{ foo.history_date|date:"d.m.Y H:i" }}
+                {% endif %}
+                {% if foo.history_type == '~' %}
+                    <span class="badge bg-warning">Изменено</span>
+                    {{ foo.history_date|date:"d.m.Y H:i" }}
+                {% endif %}
+            </div>
+                <div class="col-2">
+                    {{ foo.operator }}
+
+
+
+                </div>
+
+        </div>
+        </div>
+    </div>
+    {% endfor %}
 {% endblock %}

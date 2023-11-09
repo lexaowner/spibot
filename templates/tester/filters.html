@@ -1,49 +1,57 @@
 {% load crispy_forms_filters %}
 {% load static %}
-{% load crispy_forms_tags %}
 {% block filters %}
- <div class="container-12 p-2">
-    <div class="row row-col-12 col-sm-12 me-2 ms-1 p-2 rounded shadow mb-2 rounded" style="background-color: rgba(89, 89, 89, 1)">
-    <div class="text-light">
-            <form method="GET">
-                <div class="col-1">
-                    {{ filters.form.district|as_crispy_field }}
-                </div>
-                <div class="col-1">
-                    {{ filters.form.street|as_crispy_field }}
-                </div>
-                <div class="col-1">
-                    {{ filters.form.house|as_crispy_field }}
-                </div>
-                <div class="col-1">
-                    {{ filters.form.apartment|as_crispy_field }}
-                </div>
-                <div class="col-1">
-                    {{ filters.form.login|as_crispy_field }}
-                </div>
-                <div class="col-1">
-                    {{ filters.form.first_contact|as_crispy_field }}
-                </div>
-                <div class="col-1">
-                    {{ filters.form.second_contact|as_crispy_field }}
-                </div>
-                <div class="col-1">
-                    {{ filters.form.type|as_crispy_field }}
-                </div>
-                <div class="col-1">
-                    {{ filters.form.master|as_crispy_field }}
-                </div>
-                <div class="col-1">
-                    {{ filters.form.priority|as_crispy_field }}
-                </div>
-                <div class="col-1">
-                    {{ filters.form.status|as_crispy_field }}
-                </div>
-                    <div>
-                        <button type="submit" class="btn btn-secondary">Фильтр</button>
+    <style>
+        .col-1 {
+            display: inline-block;
+        }
+    </style>
+    <div class="container-12 p-2">
+        <div class="row col-sm-12 me-2 ms-1 rounded shadow mb-2 rounded" style="background-color: rgba(89, 89, 89, 1)">
+            <div class="text-light">
+                <form method="GET">
+                    <div class="col-1">
+                        {{ tickets.form.district|as_crispy_field }}
                     </div>
-            </form>
-</div>
+                    <div class="col-1">
+                        {{ tickets.form.street|as_crispy_field }}
+                    </div>
+                    <div class="col-1" style="width: 60px">
+                        {{ tickets.form.house|as_crispy_field }}
+                    </div>
+                    <div class="col-1" style="width: 70px">
+                        {{ tickets.form.apartment|as_crispy_field }}
+                    </div>
+                    <div class="col-1">
+                        {{ tickets.form.login|as_crispy_field }}
+                    </div>
+                    <div class="col-1">
+                        {{ tickets.form.first_contact|as_crispy_field }}
+                    </div>
+                    <div class="col-1">
+                        {{ tickets.form.second_contact|as_crispy_field }}
+                    </div>
+                    <div class="col-1">
+                        {{ tickets.form.type|as_crispy_field }}
+                    </div>
+                    <div class="col-1" style="width: 100px">
+                        {{ tickets.form.operator|as_crispy_field }}
+                    </div>
+                    <div class="col-1">
+                        {{ tickets.form.master|as_crispy_field }}
+                    </div>
+                    <div class="col-1">
+                        {{ tickets.form.priority|as_crispy_field }}
+                    </div>
+                    <div class="col-1">
+                        {{ tickets.form.status|as_crispy_field }}
+                    </div>
+                    <div class="col-1">
+                            <button type="submit" class="btn btn-secondary">Фильтр</button>
+                            <button type="submit" class="btn btn-secondary">Сброс</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-
 {% endblock %}

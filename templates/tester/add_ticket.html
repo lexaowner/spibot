@@ -1,14 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
 {% extends 'tester/base.html' %}
 {% load static %}
 {% load bootstrap5 %}
-
+{% load crispy_forms_filters %}
 {% block navbar %}
 	{%  include 'tester/navbar.html' %}
 {% endblock %}
-
 {% block content %}
+<style>
+    .col-2{display:inline-block;}
+</style>
 <div class="container p-3">
  <div class="row-3 row shadow p-2 me-2 ms-2 bg-body-tertiary rounded" style="background-color: rgba(89, 89, 89, 1);">
      <div class="text-light">
@@ -17,38 +17,38 @@
                         <form method="POST" >
                             {% csrf_token %}
                             {{ form.media.js }}
-                            <div class="col-sm-1 col-md-1 input-group">
-                              {{ form.district }}
+                            <div class="col-2">
+                              {{ form.district|as_crispy_field }}
                             </div>
-                                <div class="col-sm-1 col-md-1">
-                                {{ form.street }}
+                                <div class="col-2">
+                                {{ form.street|as_crispy_field }}
                             </div>
-                                <div class="col-sm-1 col-md-1">
-                                {{ form.house }}
+                                <div class="col-2">
+                                {{ form.house|as_crispy_field }}
                             </div>
-                                <div class="col-sm-1 col-md-1">
-                                {{ form.apartment }}
+                                <div class="col-2">
+                                {{ form.apartment|as_crispy_field }}
                             </div>
-                                <div class="col-sm-1 col-md-1">
-                                {{ form.first_contact }}
+                                <div class="col-2">
+                                {{ form.first_contact|as_crispy_field }}
                             </div>
-                                <div class="col-sm-1 col-md-1">
-                                {{ form.second_contact }}
+                                <div class="col-2">
+                                {{ form.second_contact|as_crispy_field }}
                             </div>
-                                <div class="col-sm-1 col-md-1">
-                                {{ form.type }}
+                                <div class="col-2">
+                                {{ form.type|as_crispy_field }}
                             </div>
-                                <div class="col-sm-1 col-md-1">
-                                {{ form.login }}
+                                <div class="col-2">
+                                {{ form.login|as_crispy_field }}
                             </div>
-                                <div class="col-sm-1 col-md-1">
-                                {{ form.master }}
+                                <div class="col-2">
+                                {{ form.master|as_crispy_field }}
                             </div>
-                                <div class="col-sm-1 col-md-1">
-                                {{ form.priority }}
+                                <div class="col-2">
+                                {{ form.priority|as_crispy_field }}
                             </div>
-                              <div class="col-sm-1 col-md-1">
-                                {{ form.comment_operator }}
+                              <div class=" w-75">
+                                {{ form.comment_operator|as_crispy_field }}
                             </div>
                             <button type="submit" class="btn btn-secondary">Добавить</button>
                         </form>
