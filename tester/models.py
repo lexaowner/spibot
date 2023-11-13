@@ -97,9 +97,9 @@ class House(models.Model):
 
 
 class Ticket(models.Model):
-    district = models.ForeignKey("District", on_delete=models.PROTECT, verbose_name=('Район'))
+    district = models.ForeignKey("District", on_delete=models.PROTECT, verbose_name=_('Район'))
     street = ChainedForeignKey("Street", chained_field='district', chained_model_field='district', show_all=False,
-                               verbose_name=('Улица'))
+                               verbose_name=_('Улица'))
 
     house = models.CharField(max_length=16, verbose_name=_('Дом'))
     apartment = models.CharField(max_length=32, verbose_name=_('Квартира'), blank=True, null=True)
@@ -117,7 +117,6 @@ class Ticket(models.Model):
     comment_master = models.TextField(blank=True, null=True, verbose_name="Комментарий мастера", default=None)
     comment_operator = models.TextField(blank=True, null=True, verbose_name="Комментарий оператора", default=None)
 
-    update = models.DateTimeField(default=timezone.now, editable=False, verbose_name="Дата обновления")
     operator = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name="Оператор",
                                  related_name='operator_tickets', null=True, blank=True, default=None)
 
@@ -142,7 +141,7 @@ class Ticket(models.Model):
 
     priority = models.CharField(max_length=13, choices=PRIORITY, default="Обычный", verbose_name="Приоритет")
 
-    status = models.BooleanField(choices=[(True, 'Открыта'), (False, 'Закрыта')], null=True, blank=True, default=None,
+    status = models.BooleanField(choices=[(True, 'Открыта'), (False, 'Закрыта'), (None, 'В обработке')], null=True, blank=True, default=None,
                                  verbose_name="Статус", )
 
     history = HistoricalRecords()

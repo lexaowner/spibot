@@ -9,7 +9,7 @@
     .col-2{display:inline-block;}
 </style>
 <div class="container p-2">
-        <div class="row col-sm-12 me-1 ms-1 rounded shadow mb-2 rounded" style="background-color: rgba(89, 89, 89, 1)">
+        <div class="row col-sm-12 me-1 ms-1 rounded shadow mb-2 rounded position-relative" style="background-color: rgba(89, 89, 89, 1)">
         <div class="text-light">
                 <form method="POST" class="form-row">
                     {{ e_form.media.js }}
@@ -44,13 +44,18 @@
                       <div class="col-2">
                         {{ e_form.status|as_crispy_field }}
                       </div>
-                      <div class="col-2">
+                      <div class="col-3" style="width: 200px">
                         {{ e_form.priority|as_crispy_field }}
                       </div>
-                      <div class="col-3 w-75">
+                      <div class="col-2 m-2" style="width: 400px;">
                         {{ e_form.comment_operator|as_crispy_field }}
                       </div>
-                        <button type="submit" class="btn mt-2 ml-2 btn-secondary">Сохронить</button>
+                      <div class="col-2" style="width: 400px;">
+                        {{ e_form.comment_master|as_crispy_field }}
+                      </div>
+                        <div class="col-2">
+                        <button type="submit" class="btn btn-secondary position-absolute bottom-0 end-0">Сохронить</button>
+                            </div>
                 </form>
         </div>
     </div>
@@ -76,11 +81,13 @@
             </div>
                 <div class="col-2">
                     {{ foo.operator }}
-
-
+                    {% for lg in delta.changes %}
+                        {{ lg.field }}
+                        {{ lg.old }}
+                        {{ lg.new }}
+                    {% endfor %}
 
                 </div>
-
         </div>
         </div>
     </div>

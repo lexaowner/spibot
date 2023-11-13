@@ -1,6 +1,6 @@
 {% extends 'tester/base.html' %}
 {% load static %}
-
+{% load crispy_forms_filters %}
 {% block content %}
 {% block filters %}
     {% include 'tester/filters.html' %}
@@ -28,6 +28,7 @@
                           </thead>
                           <tbody class="table-group-divider">
                             {% for foo in tickets.qs %}
+                                {% if foo.status == False or True and foo.status != None %}
                             <tr {% if foo.priority == 'Срочный' %}class="table-danger"{% elif foo.priority == 'Корпоративный' %}class="table-warning"{% endif %}>
                               <td><a class="link-light" href="{% url 'edit_ticket' foo.id %}">{{ foo.get_full_address }}{% if foo.apartment %} кв {{ foo.apartment| default:'' }}</a>{% endif %}</td>
                               <td>{{ foo.type }}</td>
@@ -56,7 +57,7 @@
                                       <div class="bg-success  text-center rounded">
                                           Открыта
                                       </div>
-                                {% else %}
+                                {% elif foo.status == False %}
                                   <td>
                                       <div class="bg-danger text-center rounded">
                                           Закрыта
@@ -64,6 +65,7 @@
                                   </td>
                                 {% endif %}
                             </tr>
+                                {% endif %}
                             {% endfor %}
                           </tbody>
                         </table>
@@ -72,20 +74,25 @@
          </div>
      </div>
 </div>
-
-
+<style>
+    .col-2{display:inline-block;}
+</style>
  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable modal-xl">
     <div class="modal-content">
       <div class="modal-header rounded" style="background-color: rgba(89, 89, 89, 1)">
-        <h1 class="modal-title fs-5" id="staticBackdropLabel">News</h1>
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Новости</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" style="background-color: rgba(59, 59, 59, 1)">
           {% for new in news %}
-        <div class="container-12 shadow p-1 me-1 ms-1 bg-body-tertiary rounded g-6" style="background-color: rgba(89, 89, 89, 1)">
+        <div class="container-12 shadow p-1 me-1 ms-1 bg-body-tertiary rounded g-6 position-relative" style="background-color: rgba(89, 89, 89, 1)">
+            {% if new.date|date:"d.m.Y" == time|date:"d.m.Y" %}
+                <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger rounded-circle" style="height: 5px; width: 5px;"></span>
+            {% endif %}
             <div class="row">
-                <h4>{{ new.title| default:'Новости от Spectr IT' }}</h4>
+                <div class="col-2"><h4>{{ new.title| default:'Spectr IT' }}</h4></div>
+                <div class="col-2"><h6>{{ new.date|date:"d.m.Y" }}</h6></div>
                 <p>{{ new.text}}</p>
             </div>
         </div>
@@ -93,9 +100,38 @@
           {% endfor %}
       </div>
       <div class="modal-footer" style="background-color: rgba(89, 89, 89, 1)">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Understood</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+          {% if perms.tester.dispatcher %}
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#news">Добавить</button>
+          {% endif %}
       </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="news" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header rounded" style="background-color: rgba(89, 89, 89, 1)">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Добавить новость</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+        <form method="POST">
+            {% csrf_token %}
+      <div class="modal-body" style="background-color: rgba(59, 59, 59, 1)">
+          <div class="text-light">
+              {{ n_form.title|as_crispy_field }}
+          </div>
+          <div class="text-light">
+              {{ n_form.text|as_crispy_field }}
+          </div>
+      </div>
+      <div class="modal-footer" style="background-color: rgba(89, 89, 89, 1)">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+      </div>
+        </form>
     </div>
   </div>
 </div>

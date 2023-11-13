@@ -12,5 +12,6 @@ urlpatterns = [
     path('test/', views.test, name='test'),
     path('full-log-change/<int:pk>', views.log, name='full-log'),
     path('add_comment_master/<int:pk>', views.add_com_master, name='master_comment'),
+    path('processing/', views.processing, name='processing'),
 
 ]

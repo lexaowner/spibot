@@ -9,7 +9,8 @@ class TicketForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(TicketForm, self).__init__(*args, **kwargs)  # populates the post
         self.fields['master'].queryset = User.objects.filter(groups__name='Мастер')
-        self.fields['operator'].queryset = User.objects.filter(groups__name='Оператор')
+        self.fields['operator'].queryset = User.objects.filter(groups__name='Опер')
+
     class Meta:
         model = Ticket
         fields = [
@@ -24,36 +25,22 @@ class TicketForm(forms.ModelForm):
             "master",
             "priority",
             "comment_operator",
+            "comment_master",
             "operator",
             "status"
         ]
 
 
-# class TicketFilterForm(forms.ModelForm):
-#     def __init__(self, *args, **kwargs):
-#         super(TicketFilterForm, self).__init__(*args, **kwargs)
-#         for key in self.fields.keys(): self.fields[key].required = False
-#
-#         self.fields['master'].queryset = User.objects.filter(groups__name='Мастер')
-#
-#         self.fields['district'].empty_label = 'Район'
-#         self.fields['street'].empty_label = 'Улица'
-#
-#     class Meta:
-#         model = Ticket
-#         fields = [
-#             "district",
-#             "street",
-#             "house",
-#             "apartment",
-#             "login",
-#             "first_contact",
-#             "second_contact",
-#             "type",
-#             "master",
-#             "priority",
-#             "status"
-#         ]
+class NewsForm(forms.ModelForm):
+
+    class Meta:
+        model = News
+        fields = [
+            "title",
+            "text",
+        ]
+
+
 class TicketFilterForm(django_filters.FilterSet):
 
     class Meta:

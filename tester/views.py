@@ -11,13 +11,27 @@ import time
 
 def start_page(request):
     if request.user.is_authenticated:
-        if request.method == 'GET':
+        if request.method == 'POST':
+            form = NewsForm(request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request,
+                                 f'Новость добавлена')
+                redirect('start_page')
+            else:
+                messages.error(request, f'Новость не может быть добавлена {Exception(request)}')
+
+            return redirect('start_page')
+
+        elif request.method == 'GET':
             get_mater_ticket = Ticket.objects.filter(master=request.user.id)
             news = News.objects.all()
+            news_form = NewsForm()
             # messages.error(request, f'{get_user.has_perm("tester.operator")}')
             change_master = TicketForm()
             tickets = TicketFilterForm(request.GET, queryset=Ticket.objects.all())
             username = request.user.get_username()
+            ticket_time = timezone.now()
             is_super = bool(request.user.is_superuser)
             context = {
                 "tickets": tickets,
@@ -26,6 +40,8 @@ def start_page(request):
                 "master_ticket": get_mater_ticket,
                 "change_master": change_master,
                 "news": news,
+                "n_form": news_form,
+                "time": ticket_time
             }
 
             return render(request, 'tester/start_page.html', context)
@@ -40,6 +56,7 @@ def add_com_master(request, pk):
             instance = Ticket.objects.get(id=pk)
             com_master_edit(request, instance)
             return redirect('start_page')
+
         except:
             messages.error(request, f'Данные не могут быть изменены {Exception()}')
 
@@ -85,7 +102,8 @@ def handle_edit(request, instance=None):
     if form.is_valid():
         ticket = form.save(commit=False)
         ticket.operator = request.user
-        ticket.status = True
+        ticket.status = None
+        ticket.comment_master = None
         ticket.save()
     else:
         messages.error(request, f'Данные не могут быть изменены {Exception(request)}')
@@ -133,9 +151,37 @@ def profile(request):
     return render(request, 'tester/profile.html', context)
 
 
+def processing(request):
+    news = News.objects.all()
+    # messages.error(request, f'{get_user.has_perm("tester.operator")}')
+    change_master = TicketForm()
+    tickets = TicketFilterForm(request.GET, queryset=Ticket.objects.filter(status=None))
+    username = request.user.get_username()
+    is_super = bool(request.user.is_superuser)
+    context = {
+        "tickets": tickets,
+        "username": username,
+        "is_super": is_super,
+        "change_master": change_master,
+        "news": news,
+    }
+    return render(request, 'tester/processing.html', context)
+
+
 def edit_ticket(request, pk):
     get_odj = Ticket.objects.get(id=pk)
     history = get_odj.history.all()
+
+    # global delta
+    # for i in get_odj.history.all():
+    #     delta = i.diff_against(i)
+    #
+    # messages.success(request, f"{delta.changes}")
+
+    # new, old = get_odj.history.all()
+    # delta = new.diff_against(old)
+    # messages.success(request, delta)
+
     if request.method == 'POST':
         try:
             instance = Ticket.objects.get(id=pk)
@@ -144,7 +190,13 @@ def edit_ticket(request, pk):
                 ticket = form.save(commit=False)
                 ticket.save()
 
-                messages.success(request, f'Данные успешно изменены {instance.street}  {instance.house} кв {instance.apartment}')
+                if instance.apartment is None:
+                    messages.success(request,
+                                     f'Данные успешно изменены {instance.street}  {instance.house}')
+
+                else:
+                    messages.success(request, f'Данные успешно изменены {instance.street}  {instance.house} кв {instance.apartment}')
+
                 return redirect('edit_ticket', pk)
 
         except:
@@ -157,6 +209,7 @@ def edit_ticket(request, pk):
         "e_form": edit_from,
         "username": username,
         "history": history,
+        # "delta": delta
     }
 
     return render(request, 'tester/edit_ticketfrom.html', context)

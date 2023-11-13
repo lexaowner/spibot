@@ -1,0 +1,67 @@
+{% extends 'tester/base.html' %}
+{% block content %}
+{% block filters %}
+    {% include 'tester/filters.html' %}
+{% endblock %}
+<div id="ticket" class="container-12">
+     <div class="row-3 row shadow p-2 me-2 ms-2 bg-body-tertiary rounded" style="background-color: rgba(89, 89, 89, 1);">
+         <div class="text-light">
+              <div class="row align-items-start rounded-pill" >
+                <div class="table-responsive">
+                    <table class="table table-dark table-striped scrollspy-example bg-body-tertiary rounded-2" >
+                          <thead>
+                            <tr>
+                              <th scope="col">Адрес</th>
+                              <th scope="col">Тип</th>
+                              <th scope="col">Контакт</th>
+                              <th scope="col">Доп контакт</th>
+                              <th scope="col">Приоритет</th>
+                              <th scope="col">Логин</th>
+                              <th scope="col">Оператор</th>
+                              <th scope="col">Комент оператора</th>
+                              <th scope="col">Мастер</th>
+                              <th scope="col">Комент мастера</th>
+                              <th scope="col">Статус</th>
+                            </tr>
+                          </thead>
+                          <tbody class="table-group-divider">
+                            {% for foo in tickets.qs %}
+                            <tr {% if foo.priority == 'Срочный' %}class="table-danger"{% elif foo.priority == 'Корпоративный' %}class="table-warning"{% endif %}>
+                              <td><a class="link-light" href="{% url 'edit_ticket' foo.id %}">{{ foo.get_full_address }}{% if foo.apartment %} кв {{ foo.apartment| default:'' }}</a>{% endif %}</td>
+                              <td>{{ foo.type }}</td>
+                              <td>{{ foo.first_contact }}</td>
+                              <td>{{ foo.second_contact| default:"" }}</td>
+                              {% if foo.priority == 'Срочный' %}
+                                <td class="align-middle">
+                                        <div class="">Срочный</div>
+                                </td>
+                                {% elif foo.priority == 'Корпоративный' %}
+                                    <td class="">
+                                            <div class="">Корпоративный</div>
+                                    </td>
+                                {% elif foo.priority %}
+                                    <td>
+                                        <div>{{ foo.priority }}</div>
+                                    </td>
+                                {% endif %}
+                                <td>{{ foo.login| default:'' }}</td>
+                                <td>{{ foo.operator.first_name }}</td>
+                                <td>{{ foo.comment_operator| slice:16 | default:'' }}</td>
+                                <td>{{ foo.master| default:'Не выбран' }}</td>
+                                <td>{{ foo.comment_master| slice:16 | default:'' }}</td>
+                                {% if foo.status == None %}
+                                     <td>
+                                      <div class="bg-secondary  text-center rounded">
+                                          Обработка
+                                      </div>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                          </tbody>
+                        </table>
+                </div>
+              </div>
+         </div>
+     </div>
+</div>
+{% endblock %}

@@ -13,6 +13,11 @@
           <a class="nav-link" aria-current="page" href="{% url 'add_ticket' %}">Добавить заявку</a>
         </li>
           {% endif %}
+      {% if perms.tester.dispatcher %}
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="{% url 'processing' %}">В обработке</a>
+        </li>
+          {% endif %}
       {% if is_super %}
         <li class="nav-item">
           <a class="nav-link" href="{{ "/admin/" }}">Админ</a>
@@ -26,8 +31,12 @@
             </button></a>
         {% endif %}
         <button type="button" class="btn btn-secondary position-relative" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                	<span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle">
-              </span>
+        {% for new in news %}
+                 {% if new.date|date:"d.m.Y" == time|date:"d.m.Y" %}
+            		<span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger rounded-circle"></span>
+            {% endif %}
+        {% endfor %}
+
           News
         </button>
     </div>
