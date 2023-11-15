@@ -24,7 +24,7 @@ def start_page(request):
             return redirect('start_page')
 
         elif request.method == 'GET':
-            get_mater_ticket = Ticket.objects.filter(master=request.user.id)
+            get_mater_ticket = TicketFilterForm(request.GET, queryset=Ticket.objects.filter(master=request.user.id))
             news = News.objects.all()
             news_form = NewsForm()
             # messages.error(request, f'{get_user.has_perm("tester.operator")}')

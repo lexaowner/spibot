@@ -27,6 +27,50 @@
                             </tr>
                           </thead>
                           <tbody class="table-group-divider">
+                            {% if perms.tester.master %}
+                                      {% for foo in master_ticket.qs %}
+                                {% if foo.status == False or True and foo.status != None %}
+                            <tr {% if foo.priority == 'Срочный' %}class="table-danger"{% elif foo.priority == 'Корпоративный' %}class="table-warning"{% endif %}>
+                              <td><a class="link-light" href="{% url 'edit_ticket' foo.id %}">{{ foo.get_full_address }}{% if foo.apartment %} кв {{ foo.apartment| default:'' }}</a>{% endif %}</td>
+                              <td>{{ foo.type }}</td>
+                              <td>{{ foo.first_contact }}</td>
+                              <td>{{ foo.second_contact| default:"" }}</td>
+                              {% if foo.priority == 'Срочный' %}
+                                <td class="align-middle">
+                                        <div class="">Срочный</div>
+                                </td>
+                                {% elif foo.priority == 'Корпоративный' %}
+                                    <td class="">
+                                            <div class="">Корпоративный</div>
+                                    </td>
+                                {% elif foo.priority %}
+                                    <td>
+                                        <div>{{ foo.priority }}</div>
+                                    </td>
+                                {% endif %}
+                                <td>{{ foo.login| default:'' }}</td>
+                                <td>{{ foo.operator.first_name }}</td>
+                                <td>{{ foo.comment_operator| slice:16 | default:'' }}</td>
+                                <td>{{ foo.master| default:'Не выбран' }}</td>
+                                <td>{{ foo.comment_master| slice:16 | default:'' }}</td>
+                                {% if foo.status == True %}
+                                     <td>
+                                      <div class="bg-success  text-center rounded">
+                                          Открыта
+                                      </div>
+                                {% elif foo.status == False %}
+                                  <td>
+                                      <div class="bg-danger text-center rounded">
+                                          Закрыта
+                                      </div>
+                                  </td>
+                                {% endif %}
+                            </tr>
+                                {% endif %}
+                            {% endfor %}
+                                {% endif %}
+
+                            {% if perms.tester.operator or perms.tester.dispecher %}
                             {% for foo in tickets.qs %}
                                 {% if foo.status == False or True and foo.status != None %}
                             <tr {% if foo.priority == 'Срочный' %}class="table-danger"{% elif foo.priority == 'Корпоративный' %}class="table-warning"{% endif %}>
@@ -67,6 +111,7 @@
                             </tr>
                                 {% endif %}
                             {% endfor %}
+                          {% endif %}
                           </tbody>
                         </table>
                 </div>
