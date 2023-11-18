@@ -80,13 +80,11 @@
                 {% endif %}
             </div>
                 <div class="col-2">
-                    {{ foo.operator }}
-                    {% for lg in delta.changes %}
-                        {{ lg.field }}
-                        {{ lg.old }}
-                        {{ lg.new }}
-                    {% endfor %}
+                    {% if foo.user_change == None %}
 
+                    {% else %}
+                        {{ foo.user_change }}
+                    {% endif %}
                 </div>
         </div>
         </div>

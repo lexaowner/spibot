@@ -144,6 +144,8 @@ class Ticket(models.Model):
     status = models.BooleanField(choices=[(True, 'Открыта'), (False, 'Закрыта'), (None, 'В обработке')], null=True, blank=True, default=None,
                                  verbose_name="Статус", )
 
+    user_change = models.CharField(max_length=12, null=True, blank=True, verbose_name="Изменил ")
+
     history = HistoricalRecords()
 
     # deleted = models.BooleanField(default=False)

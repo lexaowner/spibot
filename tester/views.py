@@ -90,6 +90,7 @@ def com_master_edit(request, instance=None):
     form = AddComMaster(request.POST, instance=instance)
     if form.is_valid():
         ticket = form.save(commit=False)
+        ticket.user_change = request.user.get_username()
         ticket.save()
         messages.success(request,
                          f'Добавлен коментарий к заявке {instance.street}  {instance.house} кв {instance.apartment}')
@@ -104,6 +105,7 @@ def handle_edit(request, instance=None):
         ticket.operator = request.user
         ticket.status = None
         ticket.comment_master = None
+        ticket.user_change = request.user
         ticket.save()
     else:
         messages.error(request, f'Данные не могут быть изменены {Exception(request)}')
@@ -188,6 +190,7 @@ def edit_ticket(request, pk):
             form = TicketForm(request.POST, instance=instance)
             if form.is_valid():
                 ticket = form.save(commit=False)
+                ticket.user_change = request.user.get_username()
                 ticket.save()
 
                 if instance.apartment is None:
