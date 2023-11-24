@@ -32,7 +32,6 @@ class TicketForm(forms.ModelForm):
 
 
 class NewsForm(forms.ModelForm):
-
     class Meta:
         model = News
         fields = [
@@ -42,7 +41,6 @@ class NewsForm(forms.ModelForm):
 
 
 class TicketFilterForm(django_filters.FilterSet):
-
     class Meta:
         model = Ticket
         fields = [
@@ -80,3 +78,11 @@ class UserChangeForm(_UserChangeForm):
     class Meta:
         model = User
         fields = ('username', 'email')
+
+
+class ShutdownForm(forms.ModelForm):
+    class Meta:
+        model = Shutdown
+        fields = [
+            'file'
+        ]

@@ -141,7 +141,8 @@ class Ticket(models.Model):
 
     priority = models.CharField(max_length=13, choices=PRIORITY, default="Обычный", verbose_name="Приоритет")
 
-    status = models.BooleanField(choices=[(True, 'Открыта'), (False, 'Закрыта'), (None, 'В обработке')], null=True, blank=True, default=None,
+    status = models.BooleanField(choices=[(True, 'Открыта'), (False, 'Закрыта'), (None, 'В обработке')], null=True,
+                                 blank=True, default=None,
                                  verbose_name="Статус", )
 
     user_change = models.CharField(max_length=12, null=True, blank=True, verbose_name="Изменил ")
@@ -178,3 +179,7 @@ class News(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Shutdown(models.Model):
+    file = models.FileField(verbose_name='Файл отключки')

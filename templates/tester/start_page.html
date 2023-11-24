@@ -29,8 +29,7 @@
                           <tbody class="table-group-divider">
                             {% if perms.tester.master %}
                                       {% for foo in master_ticket.qs %}
-                                {% if foo.status == False or True and foo.status != None %}
-                            <tr {% if foo.priority == 'Срочный' %}class="table-danger"{% elif foo.priority == 'Корпоративный' %}class="table-warning"{% endif %}>
+                            <tr {% if foo.priority == 'Срочный' %}class="table-danger"{% elif foo.priority == 'Корпоративный' %}class="table-warning"{% elif foo.status == None %}class="table-primary"{% endif %}>
                               <td><a class="link-light" href="{% url 'master_comment' foo.id %}">{{ foo.get_full_address }}{% if foo.apartment %} кв {{ foo.apartment| default:'' }}</a>{% endif %}</td>
                               <td>{{ foo.type }}</td>
                               <td>{{ foo.first_contact }}</td>
@@ -58,6 +57,13 @@
                                       <div class="bg-success  text-center rounded">
                                           Открыта
                                       </div>
+                                {% elif foo.status == None %}
+                                  <td>
+                                      <div class="bg-secondary text-center rounded">
+                                          Обработка
+                                      </div>
+                                  </td>
+
                                 {% elif foo.status == False %}
                                   <td>
                                       <div class="bg-danger text-center rounded">
@@ -66,7 +72,6 @@
                                   </td>
                                 {% endif %}
                             </tr>
-                                {% endif %}
                             {% endfor %}
                                 {% endif %}
 
@@ -180,4 +185,14 @@
     </div>
   </div>
 </div>
+
+ {% if pages %}
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center p-2">
+        {% for page in pages %}
+            <li class="page-item {% if tickets.number == page %} disabled{% endif %}"><a class="page-link bg-dark" href="#">{{ page }}</a></li>
+        {% endfor %}
+    </ul>
+</nav>
+    {% endif %}
 {% endblock %}

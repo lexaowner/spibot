@@ -6,7 +6,7 @@ from django.contrib.auth.models import Permission
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
-import time
+from django.core.paginator import Paginator
 
 
 def start_page(request):
@@ -24,15 +24,18 @@ def start_page(request):
             return redirect('start_page')
 
         elif request.method == 'GET':
+            username = request.user.get_username()
+            ticket_time = timezone.now()
+            is_super = bool(request.user.is_superuser)
             get_mater_ticket = TicketFilterForm(request.GET, queryset=Ticket.objects.filter(master=request.user.id))
             news = News.objects.all()
             news_form = NewsForm()
             # messages.error(request, f'{get_user.has_perm("tester.operator")}')
             change_master = TicketForm()
             tickets = TicketFilterForm(request.GET, queryset=Ticket.objects.all())
-            username = request.user.get_username()
-            ticket_time = timezone.now()
-            is_super = bool(request.user.is_superuser)
+
+            paginator = Paginator(tickets.qs, 25)
+
             context = {
                 "tickets": tickets,
                 "username": username,
@@ -41,7 +44,8 @@ def start_page(request):
                 "change_master": change_master,
                 "news": news,
                 "n_form": news_form,
-                "time": ticket_time
+                "time": ticket_time,
+                'pages': paginator.page_range,
             }
 
             return render(request, 'tester/start_page.html', context)
@@ -236,6 +240,16 @@ def log(request, pk):
     }
     return render(request, 'tester/log.html', context)
 
+
+def shutdown(request):
+    username = request.user.get_username()
+    form = ShutdownForm()
+
+    context = {
+        "username": username,
+        "form": form
+    }
+    return render(request, 'tester/shutdown.html', context)
 
 def test(request):
     return render(request, 'tester/test.html')
