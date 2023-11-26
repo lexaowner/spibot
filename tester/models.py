@@ -47,6 +47,11 @@ class User(AbstractUser):
         return "".join(password)
 
 
+class TicketManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(status=True)
+
+
 class Region(models.Model):
     name = models.CharField(max_length=64, verbose_name=_('Регион'))
 
@@ -146,6 +151,8 @@ class Ticket(models.Model):
                                  verbose_name="Статус", )
 
     user_change = models.CharField(max_length=12, null=True, blank=True, verbose_name="Изменил ")
+
+    # manager = TicketManager()
 
     history = HistoricalRecords()
 

@@ -79,7 +79,7 @@
                             {% for foo in tickets.qs %}
                                 {% if foo.status == False or True and foo.status != None %}
                             <tr {% if foo.priority == 'Срочный' %}class="table-danger"{% elif foo.priority == 'Корпоративный' %}class="table-warning"{% endif %}>
-                              <td><a class="link-light" href="{% url 'edit_ticket' foo.id %}">{{ foo.get_full_address }}{% if foo.apartment %} кв {{ foo.apartment| default:'' }}</a>{% endif %}</td>
+                              <td><a class="text-light" href="{% url 'edit_ticket' foo.id %}">{{ foo.get_full_address }}{% if foo.apartment %} кв {{ foo.apartment| default:'' }}</a>{% endif %}</td>
                               <td>{{ foo.type }}</td>
                               <td>{{ foo.first_contact }}</td>
                               <td>{{ foo.second_contact| default:"" }}</td>
@@ -189,6 +189,7 @@
  {% if pages %}
 <nav aria-label="Page navigation">
     <ul class="pagination justify-content-center p-2">
+    {{ tickets.number }}
         {% for page in pages %}
             <li class="page-item {% if tickets.number == page %} disabled{% endif %}"><a class="page-link bg-dark" href="#">{{ page }}</a></li>
         {% endfor %}

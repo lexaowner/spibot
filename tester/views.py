@@ -35,6 +35,8 @@ def start_page(request):
             tickets = TicketFilterForm(request.GET, queryset=Ticket.objects.all())
 
             paginator = Paginator(tickets.qs, 25)
+            page_number = request.POST.get('page_id')
+            page_objcs = paginator.get_page(page_number)
 
             context = {
                 "tickets": tickets,
@@ -202,7 +204,8 @@ def edit_ticket(request, pk):
                                      f'Данные успешно изменены {instance.street}  {instance.house}')
 
                 else:
-                    messages.success(request, f'Данные успешно изменены {instance.street}  {instance.house} кв {instance.apartment}')
+                    messages.success(request,
+                                     f'Данные успешно изменены {instance.street}  {instance.house} кв {instance.apartment}')
 
                 return redirect('edit_ticket', pk)
 
@@ -250,6 +253,11 @@ def shutdown(request):
         "form": form
     }
     return render(request, 'tester/shutdown.html', context)
+
+
+def territory(request):
+    return render(request, 'tester/territory.html')
+
 
 def test(request):
     return render(request, 'tester/test.html')
