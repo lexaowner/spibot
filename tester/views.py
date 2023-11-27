@@ -270,6 +270,15 @@ def shutdown(request):
     username = request.user.get_username()
     form = ShutdownForm()
 
+    if request.method == "POST":
+        messages.success(request, f"{request.POST.get('file')}")
+        with open(request.POST.get('file'), "r") as file:
+            content = file
+            messages.error(request, f"{content}")
+
+    else:
+        messages.error(request, f'Данные не могут быть изменены {Exception(request)}')
+
     context = {
         "username": username,
         "form": form
@@ -278,6 +287,37 @@ def shutdown(request):
 
 
 @permission_required('tester.dispatcher', login_url='error')
+def add_address(request):
+    username = request.user.get_username()
+    year_now = timezone.now()
+    f = AddStreet()
+    d = AddDistrict()
+    street = Street.objects.all()
+    district = District.objects.all()
+
+    if request.method == "POST":
+        form = AddDistrict(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Район добавлен')
+
+    if request.method == "POST":
+        form = AddStreet(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Улица добавлена')
+
+    context = {
+        "username": username,
+        "year_now": year_now,
+        "form_street": f,
+        "form_district": d,
+        "streets": street,
+        "districts": district,
+    }
+    return render(request, 'tester/address.html', context)
+
+
 def territory(request):
     username = request.user.get_username()
     year_now = timezone.now()
@@ -290,4 +330,3 @@ def territory(request):
 
 def test(request):
     return render(request, 'tester/test.html')
-

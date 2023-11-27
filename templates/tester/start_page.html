@@ -131,19 +131,19 @@
   <div class="modal-dialog modal-dialog-scrollable modal-xl">
     <div class="modal-content">
       <div class="modal-header rounded" style="background-color: rgba(89, 89, 89, 1)">
-        <h1 class="modal-title fs-5" id="staticBackdropLabel">Новости</h1>
+        <h1 class="modal-title fs-5 text-light" id="staticBackdropLabel">Новости Spectr IT</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" style="background-color: rgba(59, 59, 59, 1)">
           {% for new in news %}
-        <div class="container-12 shadow p-1 me-1 ms-1 bg-body-tertiary rounded g-6 position-relative" style="background-color: rgba(89, 89, 89, 1)">
+        <div class="container-12 shadow p-1 me-1 ms-1 bg-body-tertiary rounded g-6 position-relative bg-primary">
             {% if new.date|date:"d.m.Y" == time|date:"d.m.Y" %}
                 <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger rounded-circle" style="height: 5px; width: 5px;"></span>
             {% endif %}
             <div class="row">
-                <div class="col-2"><h4>{{ new.title| default:'Spectr IT' }}</h4></div>
-                <div class="col-2"><h6>{{ new.date|date:"d.m.Y" }}</h6></div>
-                <p>{{ new.text}}</p>
+                <div class="col-sm-2"><h4>{{ new.title| default:'Spectr IT' }}</h4></div>
+                <div class="col-sm-2 text-light"><h6>{{ new.date|date:"d.m.Y" }}</h6></div>
+                <p class="text-light">{{ new.text}}</p>
             </div>
         </div>
           <br>

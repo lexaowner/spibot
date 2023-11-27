@@ -1,0 +1,140 @@
+{% extends 'tester/base.html' %}
+{% load crispy_forms_filters %}
+{% block navbar %}
+	{% include 'tester/navbar.html' %}
+{% endblock %}
+{% block content %}
+        <style>
+        .col-sm-1 {
+            display: inline-block;
+        }
+    </style>
+	<div class="container p-3">
+    <div class="row-3 row shadow p-2 me-2 ms-2 bg-body-tertiary rounded position-relative" style="background-color: rgba(89, 89, 89, 1);">
+        <div class="text-light">
+            <div class="row align-items-start rounded-pill">
+                <form method="POST" name="form_street">
+                    {% csrf_token %}
+                    <div class="col-sm-1" style="width: 160px">
+                        {{ form_street.district|as_crispy_field}}
+                    </div>
+                    <div class="col-sm-1" style="width: 200px">
+                        {{ form_street.name|as_crispy_field }}
+                    </div>
+                    <button type="submit" class="btn btn-secondary">Добавить</button>
+                </form>
+                <form method="POST" name="form_district">
+                    {% csrf_token %}
+                    <div class="col-sm-1" style="width: 160px">
+                        {{ form_district.region|as_crispy_field}}
+                    </div>
+                    <div class="col-sm-1" style="width: 160px">
+                        {{ form_district.name|as_crispy_field}}
+                    </div>
+                    <button type="submit" class="btn btn-secondary">Добавить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container p-3">
+    <div class="row-3 row shadow p-2 me-2 ms-2 bg-body-tertiary rounded position-relative" style="background-color: rgba(89, 89, 89, 1);">
+        <div class="text-light">
+            <div class="row align-items-start rounded-pill">
+            <h3 class="mb-2">Районы</h3>
+                           {% for district in districts %}
+                       <div class="col-md-auto mb-3">
+                    <div class="btn-group" role="group">
+                        <button type="submit" name="district" form="district_edit" value="{{ district.id }}"
+                                class="btn btn-primary btn-sm">{{ district.name }}</button>
+                        <div class="btn-group" role="group">
+                            <button id="btnEdit{{ district.id }}" type="button"
+                                    class="btn btn-sm btn-success form_selector"
+                                    data-toggle="dropdown"><i class="bi bi-vector-pen"></i>
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="btnEdit{{ district.id }}">
+                                <input name="district_edit" type="text"
+                                       class="form-control form-control-sm mb-2"
+                                       value="{{ district.name }}">
+                                <button type="button" class="btn btn-sm btn-sm btn-outline-secondary ml-1">Отмена
+                                </button>
+                                <button name="district_id" type="submit"
+                                        value="{{ district.id }}"
+                                        class="btn btn-sm btn-sm btn-outline-success ml-2">Готово
+                                </button>
+                            </div>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <button id="btnRem{{ district.id }}" type="button"
+                                    class="btn btn-sm btn-danger form_selector"
+                                    data-toggle="dropdown"><i class="bi bi-trash"></i>
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="btnRem{{ district.id }}">
+                                <input type="hidden" name="district_remove" value="ok">
+                                <button type="submit" name="district_id" value="{{ district.id }}"
+                                        class="btn btn-sm btn-sm btn-outline-danger ml-2">Удалить
+                                </button>
+                                <button type="reset" class="btn btn-sm btn-sm btn-outline-secondary mr-2">Отмена
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+    <div class="container p-3">
+    <div class="row-3 row shadow p-2 me-2 ms-2 bg-body-tertiary rounded position-relative" style="background-color: rgba(89, 89, 89, 1);">
+        <div class="text-light">
+            <div class="row align-items-start rounded-pill">
+            <div class="col-md-12">
+                <h3 class="mb-2">Улицы</h3>
+            </div>
+            <form method="post" id="street_edit"> {% csrf_token %}</form>
+            {% for street in streets %}
+                <div class="col-md-auto mb-2">
+                    <div class="btn-group" role="group">
+                        <span class="btn btn-secondary btn-sm">{{ street.name }}</span>
+                        <div class="btn-group" role="group">
+                            <button id="btnEdit{{ street.id }}" type="button"
+                                    class="btn btn-sm btn-success form_selector"
+                                    data-toggle="dropdown"><i class="bi bi-vector-pen"></i>
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="btnEdit{{ street.id }}">
+                                <input name="street_edit" type="text"
+                                       class="form-control form-control-sm mb-2"
+                                       value="{{ street.name }}">
+                                <button type="button" class="btn btn-sm btn-sm btn-outline-secondary ml-1">Отмена
+                                </button>
+                                <button name="street_id" type="submit"
+                                        value="{{ street.id }}"
+                                        class="btn btn-sm btn-sm btn-outline-success ml-2">Готово
+                                </button>
+                            </div>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <button id="btnRem{{ street.id }}" type="button" class="btn btn-sm btn-danger form_selector"
+                                    data-toggle="dropdown"><i class="bi bi-trash"></i>
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="btnRem{{ street.id }}">
+                                <input type="hidden" name="street_remove" value="ok">
+                                <button type="submit" name="street_id" value="{{ street.id }}"
+                                        class="btn btn-sm btn-sm btn-outline-danger ml-2">Удалить
+                                </button>
+                                <button type="reset" class="btn btn-sm btn-sm btn-outline-secondary mr-2">Отмена
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+            </div>
+        </div>
+{% endblock %}
+{% block footer %}
+	{% include 'tester/footer.html' %}
+{% endblock %}

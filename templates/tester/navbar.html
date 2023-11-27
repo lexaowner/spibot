@@ -15,10 +15,13 @@
           {% endif %}
       {% if perms.tester.dispatcher %}
           <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="{% url 'territory' %}">Территории</a>
+          <a class="nav-link" aria-current="page" href="{% url 'address' %}">Добавить адрес</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" aria-current="page" href="{% url 'processing' %}">В обработке</a>
+        </li>
+          <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="{% url 'territory' %}">Территории</a>
         </li>
           {% endif %}
       {% if perms.tester.dispatcher or perms.tester.master%}

@@ -29,8 +29,11 @@ class User(AbstractUser):
         permissions = [
             ("operator", "Can add ticket, change, change yourself profile"),
             ("master", "Can closed ticked, change owner, change yourself profile"),
-            ("dispatcher", "Can add ticket, change, change yourself profile, add news, change news, change ticket "
-                           "status")
+            (""
+             ""
+             ""
+             "", "Can add ticket, change, change yourself profile, add news, change news, change ticket "
+                 "status")
         ]
 
     def __str__(self):
@@ -50,6 +53,9 @@ class User(AbstractUser):
 class TicketManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(status=True)
+
+    def get_queryset_none(self):
+        return super().get_queryset().filter(status=None)
 
 
 class Region(models.Model):
@@ -77,7 +83,7 @@ class District(models.Model):
 
 class Street(models.Model):
     district = models.ForeignKey('District', on_delete=models.CASCADE, verbose_name=_('Район'))
-    name = models.CharField(max_length=64, verbose_name=_('name'))
+    name = models.CharField(max_length=64, verbose_name=_('Улица'))
 
     def __str__(self):
         return self.name
@@ -102,6 +108,8 @@ class House(models.Model):
 
 
 class Ticket(models.Model):
+    # objects = TicketManager()
+
     district = models.ForeignKey("District", on_delete=models.PROTECT, verbose_name=_('Район'))
     street = ChainedForeignKey("Street", chained_field='district', chained_model_field='district', show_all=False,
                                verbose_name=_('Улица'))
@@ -150,9 +158,11 @@ class Ticket(models.Model):
                                  blank=True, default=None,
                                  verbose_name="Статус", )
 
-    user_change = models.CharField(max_length=12, null=True, blank=True, verbose_name="Изменил ")
+    cause = models.BooleanField(choices=[(True, '----------'), (None, 'Выполнена'), (False, 'Не дозвон')], null=True,
+                                blank=True, default=None,
+                                verbose_name="Причина", )
 
-    # manager = TicketManager()
+    user_change = models.CharField(max_length=12, null=True, blank=True, verbose_name="Изменил")
 
     history = HistoricalRecords()
 

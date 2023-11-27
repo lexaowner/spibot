@@ -14,46 +14,49 @@
                 <form method="POST" class="form-row">
                     {{ e_form.media.js }}
                     {% csrf_token %}
-                      <div class="col-2">
+                      <div class="col-sm-2">
                         {{ e_form.district|as_crispy_field }}
                       </div>
-                      <div class="col-2">
+                      <div class="col-sm-2">
                         {{ e_form.street|as_crispy_field }}
                       </div>
-                      <div class="col-2">
+                      <div class="col-sm-2">
                         {{ e_form.house|as_crispy_field }}
                       </div>
-                      <div class="col-2">
+                      <div class="col-sm-2">
                         {{ e_form.apartment|as_crispy_field }}
                       </div>
-                      <div class="col-2">
+                      <div class="col-sm-2">
                         {{ e_form.login|as_crispy_field }}
                       </div>
-                      <div class="col-2">
+                      <div class="col-sm-2">
                         {{ e_form.first_contact|as_crispy_field }}
                       </div>
-                      <div class="col-2">
+                      <div class="col-sm-2">
                         {{ e_form.second_contact|as_crispy_field }}
                       </div>
-                      <div class="col-2">
+                      <div class="col-sm-2">
                         {{ e_form.type|as_crispy_field }}
                       </div>
-                      <div class="col-2">
+                      <div class="col-sm-2">
                         {{ e_form.master|as_crispy_field }}
                       </div>
-                      <div class="col-2">
-                        {{ e_form.status|as_crispy_field }}
-                      </div>
-                      <div class="col-3" style="width: 200px">
+                      <div class="col-sm-2">
                         {{ e_form.priority|as_crispy_field }}
                       </div>
-                      <div class="col-2 m-2" style="width: 400px;">
+                      <div class="col-sm-2">
+                        {{ e_form.cause|as_crispy_field }}
+                      </div>
+                      <div class="col-sm-3"  style="width: 200px">
+                        {{ e_form.status|as_crispy_field }}
+                      </div>
+                      <div class="col-sm-2 m-2" style="width: 320px;">
                         {{ e_form.comment_operator|as_crispy_field }}
                       </div>
-                      <div class="col-2" style="width: 400px;">
+                      <div class="col-sm-2" style="width: 320px;">
                         {{ e_form.comment_master|as_crispy_field }}
                       </div>
-                        <div class="col-2">
+                        <div class="col-sm-2">
                         <button type="submit" class="btn btn-secondary position-absolute bottom-0 end-0">Сохронить</button>
                             </div>
                 </form>
@@ -65,7 +68,7 @@
     <div class="container p-2">
         <div class="row col-sm-12 me-1 ms-1 rounded shadow mb-2 rounded" style="background-color: rgba(89, 89, 89, 1);">
         <div class="text-light">
-            <div class="col-2">
+            <div class="col-sm-2">
                 {% if foo.history_type == '+' %}
                     <span class="badge bg-success">Добавлено</span>
                     {{ foo.history_date|date:"d.m.Y H:i" }}
@@ -79,7 +82,7 @@
                     {{ foo.history_date|date:"d.m.Y H:i" }}
                 {% endif %}
             </div>
-                <div class="col-2">
+                <div class="col-sm-2">
                     {% if foo.user_change == None %}
 
                     {% else %}

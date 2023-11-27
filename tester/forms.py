@@ -27,6 +27,7 @@ class TicketForm(forms.ModelForm):
             "comment_operator",
             "comment_master",
             "operator",
+            "cause",
             "status"
         ]
 
@@ -64,7 +65,8 @@ class AddComMaster(forms.ModelForm):
         model = Ticket
         fields = [
             'comment_master',
-            'status'
+            'cause',
+            'status',
         ]
 
 
@@ -85,4 +87,22 @@ class ShutdownForm(forms.ModelForm):
         model = Shutdown
         fields = [
             'file'
+        ]
+
+
+class AddDistrict(forms.ModelForm):
+    class Meta:
+        model = District
+        fields = [
+            'region',
+            'name'
+        ]
+
+
+class AddStreet(forms.ModelForm):
+    class Meta:
+        model = Street
+        fields = [
+            'district',
+            'name'
         ]
