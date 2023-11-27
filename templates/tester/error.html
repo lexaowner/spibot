@@ -1,75 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-{% load static %}
-{% load bootstrap5 %}
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
-    <script src="{% static 'js/all_functions.js' %}" defer></script>
-
-    <script src="/static/smart-selects/admin/js/chainedfk.js"></script>
-    <script src="/static/smart-selects/admin/js/bindfields.js"></script>
-
-    {% bootstrap_messages %}
-    {% bootstrap_css %}
-    {% bootstrap_javascript %}
-    <title>CORA_2</title>
-</head>
-<body>
-<div class="container-fluid">
-    <nav class="navbar navbar-light bg-light">
-        <form class="container-fluid justify-content-start">
-            <a href="{% url 'start_page' %}">
-                <button class="btn btn-outline-dark me-2" type="button" >CORA_2</button>
-            </a>
-                <a href="{% url 'logaut' %}">
-                <button class="btn btn btn-outline-warning me-2" type="button">Выход</button>
-            </a>
-        </form>
-    </nav>
-</div>
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12">
-            <table class="table table-stripped w-100">
-
-            </table>
-        </div>
+{% extends 'tester/base.html' %}
+{% block navbar %}
+	{% include 'tester/navbar.html' %}
+{% endblock %}
+{% block content %}
+    <div class="d-flex position-absolute top-50 start-50 translate-middle">
+    <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
     </div>
-</div>
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12">
-            <table class="table table-stripped w-100">
-
-            </table>
-        </div>
     </div>
-</div>
+{% endblock %}
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-4">
-            <table class="table table-stripped w-100">
-                <form method="POST" class="form-row">
-                    {% csrf_token %}
-                    <div class="col col-md-4">
-                        {{ form.district }}
-                        {{ form.street }}
-                        {{ form.house }}
-                        {{ form.apartment }}
-                        {{ form.login }}
-                        {{ form.first_contact }}
-                        {{ form.second_contact }}
-                        {{ form.comment_operator }}
-                        {{ form.operator }}
-                        {{ form.media.js }}
-                    </div>
-                </form>
-            </table>
-        </div>
-    </div>
-</div>
-
-</body>
-</html>

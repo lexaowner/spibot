@@ -125,7 +125,7 @@
      </div>
 </div>
 <style>
-    .col-2{display:inline-block;}
+    .col-sm-2{display:inline-block;}
 </style>
  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable modal-xl">
@@ -191,7 +191,7 @@
     <ul class="pagination justify-content-center p-2">
     {{ tickets.number }}
         {% for page in pages %}
-            <li class="page-item {% if tickets.number == page %} disabled{% endif %}"><a class="page-link bg-dark" href="#">{{ page }}</a></li>
+            <li class="page-item {% if tickets.number == page %} disabled{% endif %}"><button type="submit" class="page-link bg-dark" name="page_id" value="{{ page }}">{{ page }}</button></li>
         {% endfor %}
     </ul>
 </nav>

@@ -1,7 +1,7 @@
 {% load static %}
 {% block footer %}
     <footer class="footer d-flex justify-content-center mt-auto py-3 bg text-white" style="height: 0.5rem">
-        <span class="text-secondary m-auto p-2">© SPECTR IT | 2023</span>
+        <span class="text-secondary m-auto p-2">© SPECTR IT | {{ year_now|date:"Y" }}</span>
         <span class="text-secondary m-auto p-2">CORA_KTV | OWNER</span>
     </footer>
 {% endblock %}

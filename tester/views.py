@@ -25,6 +25,7 @@ def start_page(request):
 
         elif request.method == 'GET':
             username = request.user.get_username()
+            year_now = timezone.now()
             ticket_time = timezone.now()
             is_super = bool(request.user.is_superuser)
             get_mater_ticket = TicketFilterForm(request.GET, queryset=Ticket.objects.filter(master=request.user.id))
@@ -47,7 +48,8 @@ def start_page(request):
                 "news": news,
                 "n_form": news_form,
                 "time": ticket_time,
-                'pages': paginator.page_range,
+                "pages": paginator.page_range,
+                "year_now": year_now,
             }
 
             return render(request, 'tester/start_page.html', context)
@@ -56,6 +58,7 @@ def start_page(request):
         return redirect("login")
 
 
+@permission_required('tester.master', login_url='error')
 def add_com_master(request, pk):
     if request.method == 'POST':
         try:
@@ -67,11 +70,13 @@ def add_com_master(request, pk):
             messages.error(request, f'Данные не могут быть изменены {Exception()}')
 
     username = request.user.get_username()
+    year_now = timezone.now()
     on = Ticket.objects.get(id=pk)
     edit_from = AddComMaster(instance=on)
     context = {
         "username": username,
         "form": edit_from,
+        "year_now": year_now
     }
     return render(request, 'tester/add_comment_master.html', context)
 
@@ -79,6 +84,7 @@ def add_com_master(request, pk):
 @permission_required('tester.operator', login_url='error')
 def add_ticket(request):
     username = request.user.get_username()
+    year_now = timezone.now()
     if request.user.is_authenticated:
         if request.method == 'POST':
             handle_edit(request)
@@ -87,11 +93,13 @@ def add_ticket(request):
     form = TicketForm()
     context = {
         "form": form,
-        "username": username
+        "username": username,
+        "year_now": year_now
     }
     return render(request, 'tester/add_ticket.html', context)
 
 
+@permission_required('tester.master', login_url='error')
 def com_master_edit(request, instance=None):
     form = AddComMaster(request.POST, instance=instance)
     if form.is_valid():
@@ -142,6 +150,7 @@ def logout_cora_2(request):
 
 def profile(request):
     username = request.user.get_username()
+    year_now = timezone.now()
     user = User.objects.get(pk=request.user.id)
     password = request.POST.get('password')
     password_confirm = request.POST.get('password_confirm')
@@ -155,20 +164,24 @@ def profile(request):
     context = {
         "user": user,
         "username": username,
+        "year_now": year_now
     }
     return render(request, 'tester/profile.html', context)
 
 
+@permission_required('tester.dispatcher', login_url='error')
 def processing(request):
     news = News.objects.all()
     # messages.error(request, f'{get_user.has_perm("tester.operator")}')
     change_master = TicketForm()
     tickets = TicketFilterForm(request.GET, queryset=Ticket.objects.filter(status=None))
     username = request.user.get_username()
+    year_now = timezone.now()
     is_super = bool(request.user.is_superuser)
     context = {
         "tickets": tickets,
         "username": username,
+        "year_now": year_now,
         "is_super": is_super,
         "change_master": change_master,
         "news": news,
@@ -176,6 +189,7 @@ def processing(request):
     return render(request, 'tester/processing.html', context)
 
 
+@permission_required('tester.operator', login_url='error')
 def edit_ticket(request, pk):
     get_odj = Ticket.objects.get(id=pk)
     history = get_odj.history.all()
@@ -213,21 +227,28 @@ def edit_ticket(request, pk):
             messages.error(request, f'Данные не могут быть изменены {Exception(request)}')
 
     username = request.user.get_username()
+    year_now = timezone.now()
     on = Ticket.objects.get(id=pk)
     edit_from = TicketForm(instance=on)
     context = {
         "e_form": edit_from,
         "username": username,
         "history": history,
-        # "delta": delta
+        "year_now": year_now
     }
 
     return render(request, 'tester/edit_ticketfrom.html', context)
 
 
 def error(request):
+    username = request.user.get_username()
+    year_now = timezone.now()
     messages.error(request, 'Недостаточно прав')
-    return render(request, 'tester/error.html')
+    context = {
+        "username": username,
+        "year_now": year_now,
+    }
+    return render(request, 'tester/error.html', context)
 
 
 def log(request, pk):
@@ -244,6 +265,7 @@ def log(request, pk):
     return render(request, 'tester/log.html', context)
 
 
+@permission_required('tester.master', login_url='error')
 def shutdown(request):
     username = request.user.get_username()
     form = ShutdownForm()
@@ -255,9 +277,17 @@ def shutdown(request):
     return render(request, 'tester/shutdown.html', context)
 
 
+@permission_required('tester.dispatcher', login_url='error')
 def territory(request):
-    return render(request, 'tester/territory.html')
+    username = request.user.get_username()
+    year_now = timezone.now()
+    context = {
+        "username": username,
+        "year_now": year_now,
+    }
+    return render(request, 'tester/territory.html', context)
 
 
 def test(request):
     return render(request, 'tester/test.html')
+
