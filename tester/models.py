@@ -29,11 +29,7 @@ class User(AbstractUser):
         permissions = [
             ("operator", "Can add ticket, change, change yourself profile"),
             ("master", "Can closed ticked, change owner, change yourself profile"),
-            (""
-             ""
-             ""
-             "", "Can add ticket, change, change yourself profile, add news, change news, change ticket "
-                 "status")
+            ("dispatcher", "Can add ticket, change, change yourself profile, add news, change news, change ticket status")
         ]
 
     def __str__(self):
@@ -118,6 +114,7 @@ class Ticket(models.Model):
     apartment = models.CharField(max_length=32, verbose_name=_('Квартира'), blank=True, null=True)
 
     date = models.DateTimeField(editable=True, default=timezone.now, verbose_name="Дата открытия")
+    date_change = models.DateTimeField(editable=True, default=timezone.now, verbose_name="Дата измененя")
     closed_date = models.DateTimeField(editable=True, null=True, blank=True, verbose_name="Дата закрытия")
 
     completion_date = models.DateTimeField(default=None, null=True, blank=True, editable=True,
@@ -163,13 +160,15 @@ class Ticket(models.Model):
                                 verbose_name="Причина", )
 
     user_change = models.CharField(max_length=12, null=True, blank=True, verbose_name="Изменил")
-
+    viewed = models.BooleanField(choices=[(True, 'Просмотрено'), (False, 'Не просмотрено')], null=True,
+                                blank=True, default=False,
+                                verbose_name="Статус тикета", )
     history = HistoricalRecords()
 
     # deleted = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'{self.street} | {self.house} | {self.apartment}'
+        return f'{self.street} | {self.house} | {self.apartment}| {self.status}'
 
     class Meta:
         verbose_name = 'Заявка'

@@ -26,7 +26,7 @@
                           </thead>
                           <tbody class="table-group-divider">
                             {% for foo in tickets.qs %}
-                            <tr {% if foo.priority == 'Срочный' %}class="table-danger"{% elif foo.priority == 'Корпоративный' %}class="table-warning"{% endif %}>
+                            <tr class="position-relative"{% if foo.priority == 'Срочный' %}class="table-danger"{% elif foo.priority == 'Корпоративный' %}class="table-warning"{% endif %}>
                               <td><a class="link-light" href="{% url 'edit_ticket' foo.id %}">{{ foo.get_full_address }}{% if foo.apartment %} кв {{ foo.apartment| default:'' }}</a>{% endif %}</td>
                               <td>{{ foo.type }}</td>
                               <td>{{ foo.first_contact }}</td>
@@ -55,6 +55,9 @@
                                           Обработка
                                       </div>
                                 {% endif %}
+                                   {% if foo.viewed == False %}
+                                                <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger rounded-circle"></span>
+                                            {% endif %}
                             </tr>
                             {% endfor %}
                           </tbody>

@@ -31,6 +31,7 @@ def start_page(request):
             get_mater_ticket = TicketFilterForm(request.GET, queryset=Ticket.objects.filter(master=request.user.id))
             news = News.objects.all()
             news_form = NewsForm()
+            proc = Ticket.objects.filter(status=None)
             # messages.error(request, f'{get_user.has_perm("tester.operator")}')
             change_master = TicketForm()
             tickets = TicketFilterForm(request.GET, queryset=Ticket.objects.all())
@@ -50,6 +51,7 @@ def start_page(request):
                 "time": ticket_time,
                 "pages": paginator.page_range,
                 "year_now": year_now,
+                "processing": proc,
             }
 
             return render(request, 'tester/start_page.html', context)
@@ -83,6 +85,8 @@ def add_com_master(request, pk):
 
 @permission_required('tester.operator', login_url='error')
 def add_ticket(request):
+    news = News.objects.all()
+    ticket_time = timezone.now()
     username = request.user.get_username()
     year_now = timezone.now()
     if request.user.is_authenticated:
@@ -94,7 +98,9 @@ def add_ticket(request):
     context = {
         "form": form,
         "username": username,
-        "year_now": year_now
+        "year_now": year_now,
+        "news": news,
+        "time": ticket_time,
     }
     return render(request, 'tester/add_ticket.html', context)
 
@@ -172,12 +178,15 @@ def profile(request):
 @permission_required('tester.dispatcher', login_url='error')
 def processing(request):
     news = News.objects.all()
+    ticket_time = timezone.now()
     # messages.error(request, f'{get_user.has_perm("tester.operator")}')
     change_master = TicketForm()
     tickets = TicketFilterForm(request.GET, queryset=Ticket.objects.filter(status=None))
     username = request.user.get_username()
     year_now = timezone.now()
+    proc = Ticket.objects.filter(status=None)
     is_super = bool(request.user.is_superuser)
+
     context = {
         "tickets": tickets,
         "username": username,
@@ -185,12 +194,24 @@ def processing(request):
         "is_super": is_super,
         "change_master": change_master,
         "news": news,
+        "time": ticket_time,
+        "processing": proc,
+
     }
     return render(request, 'tester/processing.html', context)
 
 
 @permission_required('tester.operator', login_url='error')
 def edit_ticket(request, pk):
+    get_user = request.user
+    if get_user.has_perm("tester.dispatcher"):
+        if request.method == "GET":
+            form = Ticket.objects.get(id=pk)
+            form.viewed = True
+            form.save()
+        else:
+            messages.error(request,f'Ошибка {Exception(request)}')
+
     get_odj = Ticket.objects.get(id=pk)
     history = get_odj.history.all()
 
@@ -211,6 +232,8 @@ def edit_ticket(request, pk):
             if form.is_valid():
                 ticket = form.save(commit=False)
                 ticket.user_change = request.user.get_username()
+                ticket.date_change = timezone.now()
+                ticket.viewed = False
                 ticket.save()
 
                 if instance.apartment is None:
