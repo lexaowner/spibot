@@ -29,29 +29,29 @@
                           <tbody class="table-group-divider">
                             {% if perms.tester.master %}
                                       {% for foo in master_ticket.qs %}
-                            <tr {% if foo.priority == 'Срочный' %}class="table-danger"{% elif foo.priority == 'Корпоративный' %}class="table-warning"{% elif foo.status == None %}class="table-primary"{% endif %}>
-                              <td><a class="link-light" href="{% url 'master_comment' foo.id %}">{{ foo.get_full_address }}{% if foo.apartment %} кв {{ foo.apartment| default:'' }}</a>{% endif %}</td>
-                              <td>{{ foo.type }}</td>
-                              <td>{{ foo.first_contact }}</td>
-                              <td>{{ foo.second_contact| default:"" }}</td>
+                            <tr {% if foo.priority == 'Срочный' %}class="table-danger"{% elif foo.priority == 'Корпоративный' %}class="table-warning"{% endif %}>
+                              <td><a {% if foo.status == None %}class="link-secondary"{% else %}class="link-light"{% endif %}href="{% url 'master_comment' foo.id %}">{{ foo.get_full_address }}{% if foo.apartment %} кв {{ foo.apartment| default:'' }}</a>{% endif %}</td>
+                              <td {% if foo.status == None %}class="text-secondary"{% else %}class="text-light"{% endif %}>{{ foo.type }}</td>
+                              <td {% if foo.status == None %}class="text-secondary"{% else %}class="text-light"{% endif %}>{{ foo.first_contact }}</td>
+                              <td {% if foo.status == None %}class="text-secondary"{% else %}class="text-light"{% endif %}>{{ foo.second_contact| default:"" }}</td>
                               {% if foo.priority == 'Срочный' %}
                                 <td class="align-middle">
-                                        <div class="">Срочный</div>
+                                        <div>Срочный</div>
                                 </td>
                                 {% elif foo.priority == 'Корпоративный' %}
                                     <td class="">
-                                            <div class="">Корпоративный</div>
+                                            <div>Корпоративный</div>
                                     </td>
                                 {% elif foo.priority %}
                                     <td>
-                                        <div>{{ foo.priority }}</div>
+                                        <div {% if foo.status == None %}class="text-secondary"{% else %}class="text-light"{% endif %}>{{ foo.priority }}</div>
                                     </td>
                                 {% endif %}
-                                <td>{{ foo.login| default:'' }}</td>
-                                <td>{{ foo.operator.first_name }}</td>
-                                <td>{{ foo.comment_operator| slice:16 | default:'' }}</td>
-                                <td>{{ foo.master| default:'Не выбран' }}</td>
-                                <td>{{ foo.comment_master| slice:16 | default:'' }}</td>
+                                <td {% if foo.status == None %}class="text-secondary"{% else %}class="text-light"{% endif %}>{{ foo.login| default:'' }}</td>
+                                <td {% if foo.status == None %}class="text-secondary"{% else %}class="text-light"{% endif %}>{{ foo.operator.first_name }}</td>
+                                <td {% if foo.status == None %}class="text-secondary"{% else %}class="text-light"{% endif %}>{{ foo.comment_operator| slice:16 | default:'' }}</td>
+                                <td {% if foo.status == None %}class="text-secondary"{% else %}class="text-light"{% endif %}>{{ foo.master| default:'Не выбран' }}</td>
+                                <td {% if foo.status == None %}class="text-secondary"{% else %}class="text-light"{% endif %}>{{ foo.comment_master| slice:16 | default:'' }}</td>
                                 {% if foo.status == True %}
                                      <td>
                                       <div class="bg-success  text-center rounded">

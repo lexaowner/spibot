@@ -48,10 +48,10 @@ class User(AbstractUser):
 
 class TicketManager(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().filter(status=True)
+        return super().get_queryset().filter(status=True).order_by("-date")
 
     def get_queryset_none(self):
-        return super().get_queryset().filter(status=None)
+        return super().get_queryset().filter(status=None).order_by("-date")
 
 
 class Region(models.Model):
@@ -157,7 +157,7 @@ class Ticket(models.Model):
 
     cause = models.BooleanField(choices=[(True, '----------'), (None, 'Выполнена'), (False, 'Не дозвон')], null=True,
                                 blank=True, default=None,
-                                verbose_name="Причина", )
+                                verbose_name="Причина закрытия", )
 
     user_change = models.CharField(max_length=12, null=True, blank=True, verbose_name="Изменил")
     viewed = models.BooleanField(choices=[(True, 'Просмотрено'), (False, 'Не просмотрено')], null=True,

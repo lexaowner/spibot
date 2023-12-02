@@ -28,13 +28,13 @@ def start_page(request):
             year_now = timezone.now()
             ticket_time = timezone.now()
             is_super = bool(request.user.is_superuser)
-            get_mater_ticket = TicketFilterForm(request.GET, queryset=Ticket.objects.filter(master=request.user.id))
-            news = News.objects.all()
+            get_mater_ticket = TicketFilterForm(request.GET, queryset=Ticket.objects.filter(master=request.user.id).order_by("-date"))
+            news = News.objects.order_by("-date")
             news_form = NewsForm()
             proc = Ticket.objects.filter(status=None)
             # messages.error(request, f'{get_user.has_perm("tester.operator")}')
             change_master = TicketForm()
-            tickets = TicketFilterForm(request.GET, queryset=Ticket.objects.all())
+            tickets = TicketFilterForm(request.GET, queryset=Ticket.objects.all().order_by("-date"))
 
             paginator = Paginator(tickets.qs, 25)
             page_number = request.POST.get('page_id')
@@ -231,9 +231,9 @@ def edit_ticket(request, pk):
             form = TicketForm(request.POST, instance=instance)
             if form.is_valid():
                 ticket = form.save(commit=False)
-                ticket.user_change = request.user.get_username()
-                ticket.date_change = timezone.now()
                 ticket.viewed = False
+                ticket.user_change = request.user.first_name
+                ticket.date_change = timezone.now()
                 ticket.save()
 
                 if instance.apartment is None:
