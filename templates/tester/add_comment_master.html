@@ -6,21 +6,22 @@
 
 {% block content %}
 <div class="container p-2">
-        <div class="row col-sm-12 me-1 ms-1 rounded shadow mb-2 rounded" style="background-color: rgba(89, 89, 89, 1)">
+        <div class="row col-sm-12 me-1 ms-1 rounded shadow mb-2 rounded position-relative" style="background-color: rgba(89, 89, 89, 1)">
         <div class="text-light">
     <form method="POST" >
+        <h3 class="mb-2">Добавить комментарий</h3>
         {% csrf_token %}
-        {{ form.media.js }}
-        <div class="col-sm-2" style="width: 500px">
-        {{ form.comment_master|as_crispy_field }}
+        <div class="col-sm-6 col-sm-2">
+            {{ form.comment_master|as_crispy_field }}
         </div>
         <div class="col-sm-2">
-        {{ form.cause|as_crispy_field }}
+            {{ form.cause|as_crispy_field }}
         </div>
         <div class="col-sm-2">
-        {{ form.status|as_crispy_field }}
+            {{ form.status|as_crispy_field }}
         </div>
-        <button class="btn btn-primary" type="submit">Добавить</button>
+        <button class="btn btn-primary position-absolute bottom-0 end-0" type="submit">Добавить</button>
+        <div class="p-3"></div>
     </form>
     </div>
     </div>

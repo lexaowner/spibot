@@ -163,6 +163,7 @@ class Ticket(models.Model):
     viewed = models.BooleanField(choices=[(True, 'Просмотрено'), (False, 'Не просмотрено')], null=True,
                                 blank=True, default=False,
                                 verbose_name="Статус тикета", )
+
     history = HistoricalRecords()
 
     # deleted = models.BooleanField(default=False)

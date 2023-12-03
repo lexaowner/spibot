@@ -53,14 +53,20 @@
                     </div>
                     <div class="col-sm-1">
                             <button type="submit" class="btn btn-secondary">Применить</button>
+                        <div class="col-sm-1">
+                            <button type="reset" class="resetForms btn btn-secondary">Сброс</button>
+                        </div>
                     </div>
                 </form>
-                  <div class="col-sm-1">
-                        <a href="{% url 'start_page' %}"><button type="submit" class="btn btn-secondary">Сброс</button></a>
-                    </div>
             </div>
         </div>
     </div>
     </div>
     </nav>
+<script>
+    $('.resetForms').on('click', function (event) {
+  event.preventDefault();
+  $('col-sm-1').trigger('reset');
+})
+</script>
 {% endblock %}

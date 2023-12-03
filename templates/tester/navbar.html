@@ -41,7 +41,7 @@
       {% endif %}
       </ul>
          {% if user.is_authenticated %}
-            <a class="nav-link" aria-disabled="true" href="{% url 'profile' %}">{{ username }}</a>
+            <a class="nav-link link-secondary" aria-disabled="true" href="{% url 'profile' %}">{{ username }}</a>
             <a href="{% url 'logaut' %}"><button type="button" class="btn btn-secondary me-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
             Выйти
             </button></a>

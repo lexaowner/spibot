@@ -140,7 +140,7 @@
             {% if new.date|date:"d.m.Y" == time|date:"d.m.Y" %}
                 <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger rounded-circle" style="height: 5px; width: 5px;"></span>
             {% endif %}
-            <div class="row">
+            <div class="row ">
                 <div class="col-sm-2"><h4>{{ new.title| default:'Spectr IT' }}</h4></div>
                 <div class="col-sm-2 text-light"><h6>{{ new.date|date:"d.m.Y" }}</h6></div>
                 <p class="text-light">{{ new.text}}</p>

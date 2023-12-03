@@ -8,10 +8,16 @@
 <style>
     .col-sm-2{display:inline-block;}
 </style>
-<div class="container p-2">
+<div class="container p-2 position-relative">
         <div class="row col-sm-12 me-1 ms-1 rounded shadow mb-2 rounded position-relative" style="background-color: rgba(89, 89, 89, 1)">
         <div class="text-light">
+                {% if perms.tester.dispatcher %}
+                        {% if obj.viewed == True %}
+                            <span class="position-absolute top-0 end-0 badge bg-success">Просмотрено</span>
+                        {% endif %}
+                {% endif %}
                 <form method="POST" class="form-row">
+                    <h3 class="mb-2">Редактирование</h3>
                     {{ e_form.media.js }}
                     {% csrf_token %}
                       <div class="col-sm-2">
@@ -63,33 +69,46 @@
         </div>
     </div>
 </div>
-
-    {% for foo in history %}
     <div class="container p-2">
         <div class="row col-sm-12 me-1 ms-1 rounded shadow mb-2 rounded" style="background-color: rgba(89, 89, 89, 1);">
-        <div class="text-light">
-            <div class="col-sm-2">
-                {% if foo.history_type == '+' %}
-                    <span class="badge bg-success">Добавлено</span>
-                    {{ foo.history_date|date:"d.m.Y H:i" }}
-                {% endif %}
-                {% if foo.history_type == '-' %}
-                    <span class="badge bg-danger">Удалено</span>
-                    {{ foo.history_date|date:"d.m.Y H:i" }}
-                {% endif %}
-                {% if foo.history_type == '~' %}
-                    <span class="badge bg-warning">Изменено</span>
-                    {{ foo.history_date|date:"d.m.Y H:i" }}
-                {% endif %}
-            </div>
+            <div class="text-light">
+                <div class="col-sm-2 p-1">
+                    Статус
+                </div>
+                <div class=" col-sm-2">
+                    Имя
+                </div>
                 <div class="col-sm-2">
-                    {% if foo.user_change == None %}
-
-                    {% else %}
-                        <span class="badge bg-primary">
-                        {{ foo.user_change }}
-                        </span>
-                    {% endif %}
+                    Изменения
+                </div>
+            </div>
+        </div>
+    </div>
+    {% for foo in history %}
+        {% if foo.viewed != True %}
+            <div class="container p-2">
+                <div class="row col-sm-12 me-1 ms-1 rounded shadow mb-2 rounded" style="background-color: rgba(89, 89, 89, 1);">
+                    <div class="text-light">
+                    <div class="col-sm-2">
+                        {% if foo.history_type == '+' %}
+                            <span class="badge bg-success">Добавлено</span>
+                                {{ foo.history_date|date:"d.m.Y H:i" }}
+                        {% elif foo.history_type == '-' %}
+                            <span class="badge bg-danger">Удалено</span>
+                            {{ foo.history_date|date:"d.m.Y H:i" }}
+                        {% elif foo.history_type == '~' %}
+                            <span class="badge bg-warning">Изменено</span>
+                        {{ foo.history_date|date:"d.m.Y H:i" }}
+                        {% endif %}
+                    </div>
+                <div class="col-sm-2">
+                {% if foo.user_change == None %}
+                {% else %}
+                <span class="badge bg-primary">
+                {{ foo.user_change }}
+                </span>
+                {% endif %}
+            {% endif %}
 
                 </div>
         </div>

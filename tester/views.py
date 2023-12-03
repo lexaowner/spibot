@@ -32,7 +32,6 @@ def start_page(request):
             news = News.objects.order_by("-date")
             news_form = NewsForm()
             proc = Ticket.objects.filter(status=None)
-            # messages.error(request, f'{get_user.has_perm("tester.operator")}')
             change_master = TicketForm()
             tickets = TicketFilterForm(request.GET, queryset=Ticket.objects.all().order_by("-date"))
 
@@ -66,7 +65,6 @@ def add_com_master(request, pk):
         try:
             instance = Ticket.objects.get(id=pk)
             com_master_edit(request, instance)
-            return redirect('start_page')
 
         except:
             messages.error(request, f'Данные не могут быть изменены {Exception()}')
@@ -89,10 +87,20 @@ def add_ticket(request):
     ticket_time = timezone.now()
     username = request.user.get_username()
     year_now = timezone.now()
+
     if request.user.is_authenticated:
         if request.method == 'POST':
-            handle_edit(request)
-            return redirect('start_page')
+            instance = None
+            form = TicketForm(request.POST, instance=instance)
+            if form.is_valid():
+                ticket = form.save(commit=False)
+                ticket.operator = request.user
+                ticket.status = None
+                ticket.comment_master = None
+                ticket.user_change = request.user.first_name
+                ticket.save()
+                if ticket.id:
+                    return redirect('edit_ticket', ticket.id)
 
     form = TicketForm()
     context = {
@@ -112,21 +120,16 @@ def com_master_edit(request, instance=None):
         ticket = form.save(commit=False)
         ticket.user_change = request.user.get_username()
         ticket.save()
-        messages.success(request,
-                         f'Добавлен коментарий к заявке {instance.street}  {instance.house} кв {instance.apartment}')
-    else:
-        messages.error(request, f'Данные не могут быть изменены {Exception(request)}')
+        if instance.apartment is None:
+            messages.success(request,
+                             f'Данные успешно изменены {instance.street}  {instance.house}')
 
+        else:
+            messages.success(request,
+                             f'Данные успешно изменены {instance.street}  {instance.house} кв {instance.apartment}')
 
-def handle_edit(request, instance=None):
-    form = TicketForm(request.POST, instance=instance)
-    if form.is_valid():
-        ticket = form.save(commit=False)
-        ticket.operator = request.user
-        ticket.status = None
-        ticket.comment_master = None
-        ticket.user_change = request.user
-        ticket.save()
+        return redirect('master_comment', ticket.id)
+
     else:
         messages.error(request, f'Данные не могут быть изменены {Exception(request)}')
 
@@ -201,29 +204,21 @@ def processing(request):
     return render(request, 'tester/processing.html', context)
 
 
+def delta_history(obj):
+
+    delta = obj.diff_against(obj)
+    return delta.changed_fields
+
+
 @permission_required('tester.operator', login_url='error')
 def edit_ticket(request, pk):
-    get_user = request.user
-    if get_user.has_perm("tester.dispatcher"):
-        if request.method == "GET":
+    if request.method == "GET":
+        if request.user.has_perm("tester.dispatcher"):
             form = Ticket.objects.get(id=pk)
             form.viewed = True
             form.save()
-        else:
-            messages.error(request,f'Ошибка {Exception(request)}')
-
-    get_odj = Ticket.objects.get(id=pk)
-    history = get_odj.history.all()
-
-    # global delta
-    # for i in get_odj.history.all():
-    #     delta = i.diff_against(i)
-    #
-    # messages.success(request, f"{delta.changes}")
-
-    # new, old = get_odj.history.all()
-    # delta = new.diff_against(old)
-    # messages.success(request, delta)
+    else:
+        pass
 
     if request.method == 'POST':
         try:
@@ -249,6 +244,9 @@ def edit_ticket(request, pk):
         except:
             messages.error(request, f'Данные не могут быть изменены {Exception(request)}')
 
+    get_odj = Ticket.objects.get(id=pk)
+    # delta_history(obj=get_odj)
+    history = get_odj.history.all()
     username = request.user.get_username()
     year_now = timezone.now()
     on = Ticket.objects.get(id=pk)
@@ -257,7 +255,8 @@ def edit_ticket(request, pk):
         "e_form": edit_from,
         "username": username,
         "history": history,
-        "year_now": year_now
+        "year_now": year_now,
+        "obj": get_odj
     }
 
     return render(request, 'tester/edit_ticketfrom.html', context)
