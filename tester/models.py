@@ -47,11 +47,20 @@ class User(AbstractUser):
 
 
 class TicketManager(models.Manager):
-    def get_queryset(self):
+    def get_queryset_true(self):
         return super().get_queryset().filter(status=True).order_by("-date")
+
+    def get_queryset_false(self):
+        return super().get_queryset().filter(status=False).order_by("-date")
 
     def get_queryset_none(self):
         return super().get_queryset().filter(status=None).order_by("-date")
+
+    def get_master(self, id):
+        return super().get_queryset().filter(master=id)
+
+    def get(self, id):
+        return super().get_queryset().get(id=id)
 
 
 class Region(models.Model):
@@ -104,7 +113,7 @@ class House(models.Model):
 
 
 class Ticket(models.Model):
-    # objects = TicketManager()
+    objects = TicketManager()
 
     district = models.ForeignKey("District", on_delete=models.PROTECT, verbose_name=_('Район'))
     street = ChainedForeignKey("Street", chained_field='district', chained_model_field='district', show_all=False,
@@ -166,7 +175,9 @@ class Ticket(models.Model):
 
     history = HistoricalRecords()
 
-    # deleted = models.BooleanField(default=False)
+    deleted = models.BooleanField(choices=[(True, 'Закрыта'), (False, 'Открыта'),], null=True,
+                                blank=True, default=False,
+                                verbose_name="Статус_deleted", )
 
     def __str__(self):
         return f'{self.street} | {self.house} | {self.apartment}| {self.status}'

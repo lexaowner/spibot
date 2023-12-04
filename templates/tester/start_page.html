@@ -76,7 +76,7 @@
                                 {% endif %}
 
                             {% if perms.tester.operator or perms.tester.dispecher %}
-                            {% for foo in tickets.qs %}
+                            {% for foo in page_obj %}
                                 {% if foo.status == False or True and foo.status != None %}
                             <tr {% if foo.priority == 'Срочный' %}class="table-danger"{% elif foo.priority == 'Корпоративный' %}class="table-warning"{% endif %}>
                               <td><a class="text-light" href="{% url 'edit_ticket' foo.id %}">{{ foo.get_full_address }}{% if foo.apartment %} кв {{ foo.apartment| default:'' }}</a>{% endif %}</td>
@@ -185,15 +185,34 @@
     </div>
   </div>
 </div>
-
  {% if pages %}
-<nav aria-label="Page navigation">
-    <ul class="pagination justify-content-center p-2">
-    {{ tickets.number }}
-        {% for page in pages %}
-            <li class="page-item {% if tickets.number == page %} disabled{% endif %}"><button type="submit" class="page-link bg-dark" name="page_id" value="{{ page }}">{{ page }}</button></li>
-        {% endfor %}
-    </ul>
-</nav>
+     {% if page_obj.paginator.num_pages == 1 %}
+     {% else %}
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center p-2">
+            {{ tickets.number }}
+                {% for page in pages %}
+                    <a href="?page={{ page }}"><li class="page-item {% if tickets.number == page %} disabled{% endif %}"><button type="submit" class="page-link bg-dark" name="page" value="{{ page.next_page_number  }}">{{ page }}</button></li></a>
+                {% endfor %}
+            {% endif %}
+            </ul>
+        </nav>
+{#     <div class="pagination">#}
+{#    <span class="step-links">#}
+{#        {% if page_obj.has_previous %}#}
+{#            <a href="?page=1">&laquo; first</a>#}
+{#            <a href="?page={{ page_obj.previous_page_number }}">previous</a>#}
+{#        {% endif %}#}
+{##}
+{#        <span class="current">#}
+{#            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.#}
+{#        </span>#}
+{##}
+{#        {% if page_obj.has_next %}#}
+{#            <a href="?page={{ page_obj.next_page_number }}">next</a>#}
+{#            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>#}
+{#        {% endif %}#}
+{#    </span>#}
+{#</div>#}
     {% endif %}
 {% endblock %}

@@ -25,22 +25,21 @@ def start_page(request):
 
         elif request.method == 'GET':
             username = request.user.get_username()
-            year_now = timezone.now()
             ticket_time = timezone.now()
             is_super = bool(request.user.is_superuser)
-            get_mater_ticket = TicketFilterForm(request.GET, queryset=Ticket.objects.filter(master=request.user.id).order_by("-date"))
+            get_mater_ticket = TicketFilterForm(request.GET, queryset=Ticket.objects.get_master(id=request.user.id).order_by("-date"))
             news = News.objects.order_by("-date")
             news_form = NewsForm()
-            proc = Ticket.objects.filter(status=None)
+            proc = Ticket.objects.get_queryset_none()
             change_master = TicketForm()
-            tickets = TicketFilterForm(request.GET, queryset=Ticket.objects.all().order_by("-date"))
-
-            paginator = Paginator(tickets.qs, 25)
-            page_number = request.POST.get('page_id')
-            page_objcs = paginator.get_page(page_number)
+            tickets = TicketFilterForm(request.GET, queryset=Ticket.objects.get_queryset_true().order_by("-date"))
+            paginator = Paginator(tickets.qs, 42)
+            page_number = request.GET.get('page')
+            page_obj = paginator.get_page(page_number)
 
             context = {
                 "tickets": tickets,
+                "page_obj": page_obj,
                 "username": username,
                 "is_super": is_super,
                 "master_ticket": get_mater_ticket,
@@ -49,7 +48,7 @@ def start_page(request):
                 "n_form": news_form,
                 "time": ticket_time,
                 "pages": paginator.page_range,
-                "year_now": year_now,
+                "year_now": ticket_time,
                 "processing": proc,
             }
 
@@ -184,7 +183,7 @@ def processing(request):
     ticket_time = timezone.now()
     # messages.error(request, f'{get_user.has_perm("tester.operator")}')
     change_master = TicketForm()
-    tickets = TicketFilterForm(request.GET, queryset=Ticket.objects.filter(status=None))
+    tickets = TicketFilterForm(request.GET, queryset=Ticket.objects.get_queryset_none())
     username = request.user.get_username()
     year_now = timezone.now()
     proc = Ticket.objects.filter(status=None)
@@ -214,7 +213,7 @@ def delta_history(obj):
 def edit_ticket(request, pk):
     if request.method == "GET":
         if request.user.has_perm("tester.dispatcher"):
-            form = Ticket.objects.get(id=pk)
+            form = Ticket.objects.get(int(pk))
             form.viewed = True
             form.save()
     else:
