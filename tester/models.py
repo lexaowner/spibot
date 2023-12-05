@@ -48,10 +48,7 @@ class User(AbstractUser):
 
 class TicketManager(models.Manager):
     def get_queryset_true(self):
-        return super().get_queryset().filter(status=True).order_by("-date")
-
-    def get_queryset_false(self):
-        return super().get_queryset().filter(status=False).order_by("-date")
+        return super().get_queryset().filter(deleted=False).order_by("-date")
 
     def get_queryset_none(self):
         return super().get_queryset().filter(status=None).order_by("-date")
@@ -175,9 +172,9 @@ class Ticket(models.Model):
 
     history = HistoricalRecords()
 
-    deleted = models.BooleanField(choices=[(True, 'Закрыта'), (False, 'Открыта'),], null=True,
-                                blank=True, default=False,
-                                verbose_name="Статус_deleted", )
+    deleted = models.BooleanField(choices=[(True, 'Удаленна'), (False, 'Активна'), ], null=True,
+                                  blank=True, default=False,
+                                  verbose_name="Статус_deleted", )
 
     def __str__(self):
         return f'{self.street} | {self.house} | {self.apartment}| {self.status}'

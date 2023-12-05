@@ -119,6 +119,7 @@ def com_master_edit(request, instance=None):
         ticket = form.save(commit=False)
         ticket.user_change = request.user.get_username()
         ticket.save()
+
         if instance.apartment is None:
             messages.success(request,
                              f'Данные успешно изменены {instance.street}  {instance.house}')
