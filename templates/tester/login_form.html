@@ -1,58 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'tester/base.html' %}
 {% load static %}
-<head>
-    <meta charset="UTF-8">
-
-    <link rel="stylesheet" href="{% static 'css/login.css' %}">
-    <script src="{% static 'js/login.js' %}" defer></script>
-
-    <script src="/static/smart-selects/admin/js/chainedfk.js"></script>
-    <script src="/static/smart-selects/admin/js/bindfields.js"></script>
-
-    <title>CORA_2</title>
-</head>
-<body style="background-color: rgba(59, 59, 59, 1)">
-<div class="logo">
-
-</div>
-<div class="box bg-img">
-  <div class="content">
-{#    <img src="{% static 'img/Spectr.png' %}" alt="" width="240" height="80">#}
-      <img src="{% static 'img/logo _KTV.png' %}" alt="" width="220" height="180">
-    <h2>Вход</h2>
-      <form method="POST">
-    <div class="forms">
-        {% csrf_token %}
-
-      <div class="user-input">
-        <input type="text" class="login-input" placeholder="user name" name="login" id="name" required>
-        <i class="fas fa-user"></i>
-      </div>
-
-      <div class="pass-input">
-        <input type="password" class="login-input" placeholder="password" name="password" id="my-password" required>
-
-        <span class="eye" onclick="myFunction()">
-          <i id="hide-1" class="fas fa-eye-slash"></i>
-          <i id="hide-2" class="fas fa-eye"></i>
-        </span>
-      </div>
-
+{% block navbar %}
+{% endblock %}
+{% block content %}
+<div class="container p-3 col-sm-3 position-absolute top-50 start-50 translate-middle">
+    <div class="row row shadow p-2 me-2 ms-2 bg-body-tertiary rounded" style="background-color: rgba(89, 89, 89, 1);">
+        <div class="text-light">
+            <div class="row align-items-start rounded-pill">
+            <div class="message">
+                {% if messages %}
+              {% for message in messages %}
+                 {% if message.tags == 'error' %}
+                      <div class="alert alert-danger" role="alert">
+                          {{ message }}
+                      </div>
+                 {% else %}
+                      <div class="alert alert-{{ message.tags }}" role="alert">
+                          {{ message }}
+                      </div>
+                 {% endif %}
+                {% endfor %}
+            {% endif %}
+            </div>
+                    <img src="{% static 'img/logo _KTV.png' %}" alt="" class="rounded mx-auto d-block" style="height: 260px; width: 300px">
+                <div class="p-3"></div>
+                <form method="POST">
+                    {% csrf_token %}
+                  <div class="mb-3">
+                    <label for="login" class="form-label" >Логин</label>
+                    <input type="login" class="form-control" id="login" aria-describedby="text" name="login">
+                    <div id="login" class="form-text">Убедитесь что логин введён корректно</div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="password" class="form-label">Пароль</label>
+                    <input type="password" class="form-control" id="password" name="password">
+                  </div>
+                  <button type="submit" class="btn btn-primary">Войти</button>
+                </form>
+                </div>
+            </div>
+        </div>
+           <footer class="footer d-flex justify-content-center mt-auto py-3 bg text-white" style="height: 0.5rem">
+                <span class="text-secondary m-auto p-2">© SPECTR IT | {{ year_now|date:"Y" }}</span>
+            </footer>
     </div>
-
-    <button type="submit" class="login-btn">Войти</button>
-      </form>
-
-
-    <br>
-
-    <p class="f-pass">CORA_KTV</p>
-
-  </div>
-</div>
-
-<script src="https://kit.fontawesome.com/c0078485ae.js" crossorigin="anonymous"></script>
-
-</body>
-</html>
+{% endblock %}
+{% block footer %}
+{% endblock %}

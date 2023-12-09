@@ -135,6 +135,10 @@ def com_master_edit(request, instance=None):
 
 
 def login_cora_2(request):
+    year_now = timezone.now()
+    context = {
+        "year_now": year_now
+    }
     if request.method == 'POST':
         username = request.POST.get('login')
         password = request.POST.get('password')
@@ -149,7 +153,7 @@ def login_cora_2(request):
             messages.error(request, 'Имя или логин введеный не верно')
             redirect('login')
 
-    return render(request, 'tester/login_form.html')
+    return render(request, 'tester/login_form.html', context=context)
 
 
 def logout_cora_2(request):

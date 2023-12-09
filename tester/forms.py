@@ -42,9 +42,6 @@ class NewsForm(forms.ModelForm):
 
 
 class TicketFilterForm(django_filters.FilterSet):
-    def __init__(self, *args, **kwargs):
-        super(TicketFilterForm, self).__init__(*args, **kwargs)
-        self.form.initial['status'] = False
 
     class Meta:
         model = Ticket
