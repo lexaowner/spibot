@@ -207,4 +207,6 @@ class News(models.Model):
 
 
 class Shutdown(models.Model):
+    master = models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT, verbose_name="Мастер",
+                               related_name='mater_shutdown')
     file = models.FileField(verbose_name='Файл отключки')

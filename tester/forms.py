@@ -84,10 +84,15 @@ class UserChangeForm(_UserChangeForm):
 
 
 class ShutdownForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(ShutdownForm, self).__init__(*args, **kwargs)  # populates the post
+        self.fields['master'].queryset = User.objects.filter(groups__name='Мастер')
+
     class Meta:
         model = Shutdown
         fields = [
-            'file'
+            'file',
+            'master'
         ]
 
 

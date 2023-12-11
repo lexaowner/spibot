@@ -33,7 +33,7 @@ def start_page(request):
             proc = Ticket.objects.get_queryset_none()
             change_master = TicketForm()
             tickets = TicketFilterForm(request.GET, queryset=Ticket.objects.get_queryset_true().order_by("-date"))
-            paginator = Paginator(tickets.qs, 42)
+            paginator = Paginator(tickets.qs, 37)
             page_number = request.GET.get('page')
             page_obj = paginator.get_page(page_number)
 
@@ -48,7 +48,6 @@ def start_page(request):
                 "n_form": news_form,
                 "time": ticket_time,
                 "pages": paginator.page_range,
-                "year_now": ticket_time,
                 "processing": proc,
             }
 
@@ -86,6 +85,7 @@ def add_ticket(request):
     ticket_time = timezone.now()
     username = request.user.get_username()
     year_now = timezone.now()
+    proc = Ticket.objects.get_queryset_none()
 
     if request.user.is_authenticated:
         if request.method == 'POST':
@@ -108,6 +108,7 @@ def add_ticket(request):
         "year_now": year_now,
         "news": news,
         "time": ticket_time,
+        "processing": proc,
     }
     return render(request, 'tester/add_ticket.html', context)
 
@@ -208,12 +209,6 @@ def processing(request):
     return render(request, 'tester/processing.html', context)
 
 
-def delta_history(obj):
-
-    delta = obj.diff_against(obj)
-    return delta.changed_fields
-
-
 @permission_required('tester.operator', login_url='error')
 def edit_ticket(request, pk):
     if request.method == "GET":
@@ -255,12 +250,15 @@ def edit_ticket(request, pk):
     year_now = timezone.now()
     on = Ticket.objects.get(id=pk)
     edit_from = TicketForm(instance=on)
+    proc = Ticket.objects.get_queryset_none()
+
     context = {
         "e_form": edit_from,
         "username": username,
         "history": history,
         "year_now": year_now,
-        "obj": get_odj
+        "obj": get_odj,
+        "processing": proc,
     }
 
     return render(request, 'tester/edit_ticketfrom.html', context)
@@ -295,6 +293,7 @@ def log(request, pk):
 def shutdown(request):
     username = request.user.get_username()
     form = ShutdownForm()
+    proc = Ticket.objects.get_queryset_none()
 
     if request.method == "POST":
         messages.success(request, f"{request.POST.get('file')}")
@@ -307,7 +306,8 @@ def shutdown(request):
 
     context = {
         "username": username,
-        "form": form
+        "form": form,
+        "processing": proc,
     }
     return render(request, 'tester/shutdown.html', context)
 
@@ -320,6 +320,7 @@ def add_address(request):
     d = AddDistrict()
     street = Street.objects.all()
     district = District.objects.all()
+    proc = Ticket.objects.get_queryset_none()
 
     if request.method == "POST":
         form = AddDistrict(request.POST)
@@ -340,6 +341,7 @@ def add_address(request):
         "form_district": d,
         "streets": street,
         "districts": district,
+        "processing": proc,
     }
     return render(request, 'tester/address.html', context)
 
@@ -347,9 +349,11 @@ def add_address(request):
 def territory(request):
     username = request.user.get_username()
     year_now = timezone.now()
+    proc = Ticket.objects.get_queryset_none()
     context = {
         "username": username,
         "year_now": year_now,
+        "processing": proc,
     }
     return render(request, 'tester/territory.html', context)
 
