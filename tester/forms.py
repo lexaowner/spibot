@@ -42,6 +42,23 @@ class NewsForm(forms.ModelForm):
 
 
 class TicketFilterForm(django_filters.FilterSet):
+    def __init__(self, data=None, *args, **kwargs):
+        if data is not None:
+            data = data.copy()
+            data.setdefault("status", True)
+        super(TicketFilterForm, self).__init__(data, *args, **kwargs)
+
+    master = django_filters.ModelChoiceFilter(
+        queryset=User.objects.filter(groups__name='Мастер'),
+        label="Мастер",
+        widget=forms.Select(attrs={'class': 'master'}),
+    )
+
+    operator = django_filters.ModelChoiceFilter(
+        queryset=User.objects.filter(groups__name='Опер'),
+        label="Оператор",
+        widget=forms.Select(attrs={'class': 'operator'}),
+    )
 
     class Meta:
         model = Ticket
@@ -58,6 +75,36 @@ class TicketFilterForm(django_filters.FilterSet):
             "master",
             "priority",
             "status",
+        ]
+
+
+class TicketFilterFormProcessing(django_filters.FilterSet):
+    master = django_filters.ModelChoiceFilter(
+        queryset=User.objects.filter(groups__name='Мастер'),
+        label="Мастер",
+        widget=forms.Select(attrs={'class': 'master'}),
+    )
+
+    operator = django_filters.ModelChoiceFilter(
+        queryset=User.objects.filter(groups__name='Опер'),
+        label="Оператор",
+        widget=forms.Select(attrs={'class': 'operator'}),
+    )
+
+    class Meta:
+        model = Ticket
+        fields = [
+            "district",
+            "street",
+            "house",
+            "apartment",
+            "login",
+            "first_contact",
+            "second_contact",
+            "type",
+            "operator",
+            "master",
+            "priority",
         ]
 
 

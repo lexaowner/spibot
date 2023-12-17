@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
 from django.core.paginator import Paginator
+from simple_history.models import model_to_dict
 
 
 def start_page(request):
@@ -32,7 +33,7 @@ def start_page(request):
             news_form = NewsForm()
             proc = Ticket.objects.get_queryset_none()
             change_master = TicketForm()
-            tickets = TicketFilterForm(request.GET, queryset=Ticket.objects.get_queryset_true().order_by("-date"))
+            tickets = TicketFilterForm(request.GET, queryset=Ticket.objects.get_queryset_true())
             paginator = Paginator(tickets.qs, 37)
             page_number = request.GET.get('page')
             page_obj = paginator.get_page(page_number)
@@ -189,7 +190,7 @@ def processing(request):
     ticket_time = timezone.now()
     # messages.error(request, f'{get_user.has_perm("tester.operator")}')
     change_master = TicketForm()
-    tickets = TicketFilterForm(request.GET, queryset=Ticket.objects.get_queryset_none())
+    tickets = TicketFilterFormProcessing(request.GET, queryset=Ticket.objects.get_queryset_none())
     username = request.user.get_username()
     year_now = timezone.now()
     proc = Ticket.objects.filter(status=None)
@@ -244,7 +245,6 @@ def edit_ticket(request, pk):
             messages.error(request, f'Данные не могут быть изменены {Exception(request)}')
 
     get_odj = Ticket.objects.get(id=pk)
-    # delta_history(obj=get_odj)
     history = get_odj.history.all()
     username = request.user.get_username()
     year_now = timezone.now()

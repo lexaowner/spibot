@@ -39,10 +39,10 @@
                     <div class="col-sm-1">
                         {{ tickets.form.type|as_crispy_field }}
                     </div>
-                    <div class="col-sm-1" style="width: 100px">
+                    <div class="col-sm-1 operator" style="width: 100px">
                         {{ tickets.form.operator|as_crispy_field }}
                     </div>
-                    <div class="col-sm-1">
+                    <div class="col-sm-1 master">
                         {{ tickets.form.master|as_crispy_field }}
                     </div>
                     <div class="col-sm-1">
@@ -54,7 +54,7 @@
                     <div class="col-sm-1">
                             <button type="submit" class="btn btn-secondary">Применить</button>
                         <div class="col-sm-1">
-                            <button type="reset" class="resetForms btn btn-secondary">Сброс</button>
+                            <a href="{% url 'start_page' %}" type="reset" class="resetForms btn btn-secondary">Сброс</a>
                         </div>
                     </div>
                 </form>
@@ -63,10 +63,4 @@
     </div>
     </div>
     </nav>
-<script>
-    $('.resetForms').on('click', function (event) {
-  event.preventDefault();
-  $('col-sm-1').trigger('reset');
-})
-</script>
 {% endblock %}

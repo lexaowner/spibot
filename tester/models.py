@@ -117,7 +117,7 @@ class Ticket(models.Model):
                                verbose_name=_('Улица'))
 
     house = models.CharField(max_length=16, verbose_name=_('Дом'))
-    apartment = models.CharField(max_length=32, verbose_name=_('Квартира'), blank=True, null=True)
+    apartment = models.CharField(max_length=32, verbose_name=_('Кв'), blank=True, null=True)
 
     date = models.DateTimeField(editable=True, default=timezone.now, verbose_name="Дата открытия")
     date_change = models.DateTimeField(editable=True, default=timezone.now, verbose_name="Дата измененя")
