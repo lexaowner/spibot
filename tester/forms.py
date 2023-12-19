@@ -1,6 +1,7 @@
 import django_filters
 from django import forms
 from django.contrib.auth.forms import UserCreationForm as _UserCreationForm, UserChangeForm as _UserChangeForm
+from django.core.exceptions import ValidationError
 
 from .models import *
 
@@ -10,6 +11,31 @@ class TicketForm(forms.ModelForm):
         super(TicketForm, self).__init__(*args, **kwargs)  # populates the post
         self.fields['master'].queryset = User.objects.filter(groups__name='Мастер')
         self.fields['operator'].queryset = User.objects.filter(groups__name='Опер')
+
+    def clean(self):
+        cleaned_data = super().clean()
+        district = cleaned_data.get('district')
+        street = cleaned_data.get('street')
+        apartment = cleaned_data.get('apartment')
+        house = cleaned_data.get('house')
+
+        # Проверка наличия дубликата объекта Ticket в базе данных
+        existing_tickets = Ticket.objects.filter(
+            district=district.id,
+            street=street.id,
+            house=house,
+            apartment=apartment,
+            # Добавьте другие поля, если они должны быть уникальными
+        )
+
+        if self.instance:
+            # Если это редактирование, исключите текущий объект из поиска дубликатов
+            existing_tickets = existing_tickets.exclude(pk=self.instance.pk)
+
+        if existing_tickets.exists():
+            raise ValidationError('Такой объект Ticket уже существует.')
+
+        return cleaned_data
 
     class Meta:
         model = Ticket

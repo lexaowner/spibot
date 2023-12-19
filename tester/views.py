@@ -102,6 +102,9 @@ def add_ticket(request):
                 if ticket.id:
                     return redirect('edit_ticket', ticket.id)
 
+            else:
+                messages.error(request, "Такой объект Ticket уже существует")
+
     form = TicketForm()
     context = {
         "form": form,
@@ -210,6 +213,23 @@ def processing(request):
     return render(request, 'tester/processing.html', context)
 
 
+def get_changes(historical_instance):
+    """
+    Функция для получения изменений в одной исторической записи и вывода полей, которые были изменены, и их значений.
+    """
+    changes = historical_instance.changes()
+
+    if not changes:
+        return "Нет изменений"
+
+    result = "Измененные поля:\n"
+
+    for field, (old_value, new_value) in changes.items():
+        result += f"{field}: {old_value} -> {new_value}\n"
+
+    return result
+
+
 @permission_required('tester.operator', login_url='error')
 def edit_ticket(request, pk):
     if request.method == "GET":
@@ -253,6 +273,7 @@ def edit_ticket(request, pk):
     proc = Ticket.objects.get_queryset_none()
 
     context = {
+        "get_changes": get_changes,
         "e_form": edit_from,
         "username": username,
         "history": history,
