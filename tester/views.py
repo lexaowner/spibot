@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from .forms import *
 from django.contrib.auth.models import Group
@@ -7,8 +8,11 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
 from django.core.paginator import Paginator
-from simple_history.models import model_to_dict
+from reversion.models import Version
 
+def get_unviewed_tickets(request):
+    unviewed_tickets = Ticket.objects.filter(viewed=False).values('id')
+    return JsonResponse({'start_page': list(unviewed_tickets)})
 
 def start_page(request):
     if request.user.is_authenticated:
@@ -264,8 +268,11 @@ def edit_ticket(request, pk):
         except:
             messages.error(request, f'Данные не могут быть изменены {Exception(request)}')
 
+    latest_version = Version.objects.get_for_object(Ticket.objects.get(id=pk))
+
+    messages.success(request, f"{latest_version}")
+
     get_odj = Ticket.objects.get(id=pk)
-    history = get_odj.history.all()
     username = request.user.get_username()
     year_now = timezone.now()
     on = Ticket.objects.get(id=pk)
@@ -276,7 +283,6 @@ def edit_ticket(request, pk):
         "get_changes": get_changes,
         "e_form": edit_from,
         "username": username,
-        "history": history,
         "year_now": year_now,
         "obj": get_odj,
         "processing": proc,
@@ -299,12 +305,8 @@ def error(request):
 def log(request, pk):
     username = request.user.get_username()
     get_odj = Ticket.objects.get(id=pk)
-    history = get_odj.history.all()
-    # history_old = history.prev_record
-    # messages.error(request, f'{history_old}')
 
     context = {
-        "history": history,
         "username": username,
     }
     return render(request, 'tester/log.html', context)

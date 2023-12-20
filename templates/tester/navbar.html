@@ -21,7 +21,7 @@
         <a class="nav-link" aria-current="page" href="{% url 'processing' %}">В обработкеa</a>
         {% for foo in processing %}
             {% if foo.viewed == False %}
-                <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger rounded-circle"></span>
+                <span id="unviewed-indicator" class="position-absolute top-0 start-100 translate-middle p-2 bg-danger rounded-circle"></span>
             {% endif %}
         {% endfor %}
         </li>
@@ -57,6 +57,31 @@
     </div>
   </div>
 </nav>
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: '/start_page/',
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
 
+                // Получите элемент по идентификатору
+                var unviewedIndicator = $('#unviewed-indicator');
+
+                // Определите, есть ли непросмотренные заявки
+                if (data.unviewed_tickets.length > 0) {
+                    // Измените стили тега или его содержимое
+                    unviewedIndicator.show();  // например, показать тег
+                } else {
+                    unviewedIndicator.hide();  // например, скрыть тег
+                }
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    });
+</script>
 {% endblock %}
 

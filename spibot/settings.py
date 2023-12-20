@@ -38,10 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'smart_selects',
     'bootstrap5',
-    'simple_history',
     'tester.apps.TesterConfig',
     'crispy_forms',
     'crispy_bootstrap5',
+    'reversion',
 ]
 
 
@@ -53,8 +53,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'simple_history.middleware.HistoryRequestMiddleware',
-
 ]
 
 ROOT_URLCONF = 'spibot.urls'

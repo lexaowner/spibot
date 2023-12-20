@@ -4,7 +4,7 @@ from django.utils.translation import gettext as _
 from smart_selects.db_fields import ChainedForeignKey
 from django.urls import reverse
 from django.contrib.auth.models import AbstractUser, Permission
-from simple_history.models import HistoricalRecords
+
 
 from spibot import settings
 
@@ -96,7 +96,6 @@ class Street(models.Model):
 
 
 class House(models.Model):
-    # master = models.ForeignKey('User')
     street = models.ForeignKey('Street', on_delete=models.CASCADE, verbose_name=_('Улица'))
     name = models.CharField(max_length=64, verbose_name=_('Дом'))
     apartment = models.CharField(max_length=16, blank=True, null=True, verbose_name=('Квартира'))
@@ -115,27 +114,20 @@ class Ticket(models.Model):
     district = models.ForeignKey("District", on_delete=models.PROTECT, verbose_name=_('Район'))
     street = ChainedForeignKey("Street", chained_field='district', chained_model_field='district', show_all=False,
                                verbose_name=_('Улица'))
-
     house = models.CharField(max_length=16, verbose_name=_('Дом'))
     apartment = models.CharField(max_length=32, verbose_name=_('Кв'), blank=True, null=True)
-
     date = models.DateTimeField(editable=True, default=timezone.now, verbose_name="Дата открытия")
     date_change = models.DateTimeField(editable=True, default=timezone.now, verbose_name="Дата измененя")
     closed_date = models.DateTimeField(editable=True, null=True, blank=True, verbose_name="Дата закрытия")
-
     completion_date = models.DateTimeField(default=None, null=True, blank=True, editable=True,
                                            verbose_name="Дата выполнения")
     login = models.CharField(blank=True, max_length=15, null=True, verbose_name="Логин")
-
     first_contact = models.CharField(max_length=13, null=True, verbose_name="Основной номер", default=None)
     second_contact = models.CharField(max_length=13, blank=True, null=True, verbose_name="Доп. номер", default=None)
-
     comment_master = models.TextField(blank=True, null=True, verbose_name="Комментарий мастера", default=None)
     comment_operator = models.TextField(blank=True, null=True, verbose_name="Комментарий оператора", default=None)
-
     operator = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name="Оператор",
                                  related_name='operator_tickets', null=True, blank=True, default=None)
-
     master = models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT, verbose_name="Мастер",
                                related_name='mater_tickets')
 
@@ -156,22 +148,16 @@ class Ticket(models.Model):
     ]
 
     priority = models.CharField(max_length=13, choices=PRIORITY, default="Обычный", verbose_name="Приоритет")
-
     status = models.BooleanField(choices=[(True, 'Открыта'), (False, 'Закрыта'), (None, 'В обработке')], null=True,
                                  blank=True, default=None,
                                  verbose_name="Статус", )
-
     cause = models.BooleanField(choices=[(True, '----------'), (None, 'Выполнена'), (False, 'Не дозвон')], null=True,
                                 blank=True, default=None,
                                 verbose_name="Причина закрытия", )
-
     user_change = models.CharField(max_length=12, null=True, blank=True, verbose_name="Изменил")
     viewed = models.BooleanField(choices=[(True, 'Просмотрено'), (False, 'Не просмотрено')], null=True,
                                 blank=True, default=False,
                                 verbose_name="Статус тикета", )
-
-    history = HistoricalRecords()
-
     deleted = models.BooleanField(choices=[(True, 'Удаленна'), (False, 'Активна'), ], null=True,
                                   blank=True, default=False,
                                   verbose_name="Статус_deleted", )
