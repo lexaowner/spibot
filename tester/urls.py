@@ -17,6 +17,4 @@ urlpatterns = [
     path('shutdown/', views.shutdown, name='shutdown'),
     path('address/', views.add_address, name='address'),
     path('territory/', views.territory, name='territory'),
-    path('start_page/', get_unviewed_tickets, name='update'),
-
 ]

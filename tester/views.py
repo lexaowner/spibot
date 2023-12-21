@@ -10,12 +10,23 @@ from django.contrib.auth.decorators import permission_required
 from django.core.paginator import Paginator
 from reversion.models import Version
 
-def get_unviewed_tickets(request):
-    unviewed_tickets = Ticket.objects.filter(viewed=False).values('id')
-    return JsonResponse({'start_page': list(unviewed_tickets)})
 
 def start_page(request):
     if request.user.is_authenticated:
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                proc = Ticket.objects.get_queryset_none().filter(viewed=False).values('id', 'district', 'street', 'house', 'apartment',
+                                                                  'date', 'date_change', 'closed_date',
+                                                                  'completion_date', 'login', 'first_contact',
+                                                                  'second_contact', 'comment_master',
+                                                                  'comment_operator', 'operator__id',
+                                                                  'operator__username', 'master__id',
+                                                                  'master__username', 'type', 'priority', 'status',
+                                                                  'cause', 'user_change', 'viewed', 'deleted')
+                data = list(proc)
+                return JsonResponse(data, safe=False)
+
+
         if request.method == 'POST':
             form = NewsForm(request.POST)
             if form.is_valid():
@@ -35,7 +46,6 @@ def start_page(request):
             get_mater_ticket = TicketFilterForm(request.GET, queryset=Ticket.objects.get_master(id=request.user.id).order_by("-date"))
             news = News.objects.order_by("-date")
             news_form = NewsForm()
-            proc = Ticket.objects.get_queryset_none()
             change_master = TicketForm()
             tickets = TicketFilterForm(request.GET, queryset=Ticket.objects.get_queryset_true())
             paginator = Paginator(tickets.qs, 37)
@@ -53,7 +63,7 @@ def start_page(request):
                 "n_form": news_form,
                 "time": ticket_time,
                 "pages": paginator.page_range,
-                "processing": proc,
+
             }
 
             return render(request, 'tester/start_page.html', context)
@@ -193,6 +203,20 @@ def profile(request):
 
 @permission_required('tester.dispatcher', login_url='error')
 def processing(request):
+    if request.user.is_authenticated:
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            proc = Ticket.objects.get_queryset_none().filter(viewed=False).values('id', 'district', 'street', 'house', 'apartment',
+                                                              'date', 'date_change', 'closed_date',
+                                                              'completion_date', 'login', 'first_contact',
+                                                              'second_contact', 'comment_master',
+                                                              'comment_operator', 'operator__id',
+                                                              'operator__username', 'master__id',
+                                                              'master__username', 'type', 'priority', 'status',
+                                                              'cause', 'user_change', 'viewed', 'deleted')
+            data = list(proc)
+            return JsonResponse(data, safe=False)
+
+
     news = News.objects.all()
     ticket_time = timezone.now()
     # messages.error(request, f'{get_user.has_perm("tester.operator")}')

@@ -17,13 +17,9 @@
           <li class="nav-item">
           <a class="nav-link" aria-current="page" href="{% url 'address' %}">Добавить адрес</a>
         </li>
-        <li class="nav-item position-relative">
+        <li id="processing-item" class="nav-item position-relative">
         <a class="nav-link" aria-current="page" href="{% url 'processing' %}">В обработкеa</a>
-        {% for foo in processing %}
-            {% if foo.viewed == False %}
-                <span id="unviewed-indicator" class="position-absolute top-0 start-100 translate-middle p-2 bg-danger rounded-circle"></span>
-            {% endif %}
-        {% endfor %}
+            	<span id="unviewed-indicator" class="position-absolute top-0 start-100 translate-middle p-2 bg-danger rounded-circle"></span>
         </li>
           <li class="nav-item">
           <a class="nav-link" aria-current="page" href="{% url 'territory' %}">Территории</a>
@@ -57,31 +53,42 @@
     </div>
   </div>
 </nav>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
-    $(document).ready(function () {
+    function updateProcessingStatus() {
         $.ajax({
-            url: '/start_page/',
+            url: '{% url 'start_page' %}',
             type: 'GET',
             dataType: 'json',
             success: function (data) {
                 console.log(data);
 
-                // Получите элемент по идентификатору
-                var unviewedIndicator = $('#unviewed-indicator');
+                var processingItem = $('#unviewed-indicator');
 
-                // Определите, есть ли непросмотренные заявки
-                if (data.unviewed_tickets.length > 0) {
-                    // Измените стили тега или его содержимое
-                    unviewedIndicator.show();  // например, показать тег
+                // Проверяем, есть ли непросмотренные заявки
+                var hasUnviewed = data.some(function(ticket) {
+                    return ticket.viewed === false;
+                });
+
+                // Изменяем стили тега или его содержимое
+                if (hasUnviewed) {
+                    processingItem.find('#unviewed-indicator').show();
+                    processingItem.show();
+                    console.log('work')
                 } else {
-                    unviewedIndicator.hide();  // например, скрыть тег
+                    processingItem.hide();
+                    processingItem.find('#unviewed-indicator').hide();
+                    console.log('not work')
                 }
             },
             error: function (error) {
                 console.error(error);
             }
         });
-    });
+    }
+
+    // Вызываем функцию с интервалом в 5 секунд (5000 миллисекунд)
+    setInterval(updateProcessingStatus, 2000);
 </script>
 {% endblock %}
 

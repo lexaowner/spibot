@@ -115,7 +115,7 @@
                                       </div>
                                 {% endif %}
                                    {% if foo.viewed == False %}
-                                                <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger rounded-circle"></span>
+                                                <span id="unviewed-indicator" class="position-absolute top-0 start-100 translate-middle p-2 bg-danger rounded-circle"></span>
                                             {% endif %}
                             </tr>
                             {% endfor %}
@@ -126,4 +126,42 @@
          </div>
      </div>
 </div>
+
+{% comment %}        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    function updateProcessingStatus() {
+        $.ajax({
+            url: '{% url 'start_page' %}',
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+
+                var processingItem = $('#unviewed-indicator');
+
+                // Проверяем, есть ли непросмотренные заявки
+                var hasUnviewed = data.some(function(ticket) {
+                    return ticket.viewed === false;
+                });
+
+                // Изменяем стили тега или его содержимое
+                if (hasUnviewed) {
+                    processingItem.find('#unviewed-indicator').show();
+                    processingItem.show();
+                    console.log('work')
+                } else {
+                    processingItem.hide();
+                    processingItem.find('#unviewed-indicator').hide();
+                    console.log('not work')
+                }
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    }
+
+    // Вызываем функцию с интервалом в 5 секунд (5000 миллисекунд)
+    setInterval(updateProcessingStatus, 2000);
+</script>{% endcomment %}
 {% endblock %}
