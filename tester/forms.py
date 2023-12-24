@@ -2,7 +2,6 @@ import django_filters
 from django import forms
 from django.contrib.auth.forms import UserCreationForm as _UserCreationForm, UserChangeForm as _UserChangeForm
 from django.core.exceptions import ValidationError
-
 from .models import *
 
 
@@ -73,6 +72,28 @@ class TicketFilterForm(django_filters.FilterSet):
             data = data.copy()
             data.setdefault("status", True)
         super(TicketFilterForm, self).__init__(data, *args, **kwargs)
+
+        # self.filters['street'] = django_filters.ModelChoiceFilter(
+        #     queryset=Street.objects.none(),  # queryset будет установлен в зависимости от выбранного района
+        #     label="Улица",
+        #     widget=ChainedSelect(
+        #         to_app_name='tester',
+        #         to_model_name='Ticket',
+        #         chained_field='district',
+        #         chained_model_field='district',
+        #         foreign_key_app_name='tester',
+        #         foreign_key_model_name='Street',
+        #         foreign_key_field_name='street',
+        #         auto_choose=False,
+        #         show_all=False,
+        #     ),
+        # )
+        #
+        # # Запоминаем выбранный район
+        # district = self.data.get('district')
+        # if district:
+        #     # Обновляем queryset для поля street
+        #     self.filters['street'].queryset = Street.objects.filter(district=district)
 
     master = django_filters.ModelChoiceFilter(
         queryset=User.objects.filter(groups__name='Мастер'),

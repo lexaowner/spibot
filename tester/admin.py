@@ -10,6 +10,7 @@ admin.site.register(Region)
 admin.site.register(House)
 admin.site.register(Street)
 admin.site.register(District)
+admin.site.register(Shutdown)
 
 
 class UserAdmin(_UserAdmin):

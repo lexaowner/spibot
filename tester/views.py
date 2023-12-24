@@ -11,21 +11,24 @@ from django.core.paginator import Paginator
 from reversion.models import Version
 
 
+
 def start_page(request):
     if request.user.is_authenticated:
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                proc = Ticket.objects.get_queryset_none().filter(viewed=False).values('id', 'district', 'street', 'house', 'apartment',
-                                                                  'date', 'date_change', 'closed_date',
-                                                                  'completion_date', 'login', 'first_contact',
-                                                                  'second_contact', 'comment_master',
-                                                                  'comment_operator', 'operator__id',
-                                                                  'operator__username', 'master__id',
-                                                                  'master__username', 'type', 'priority', 'status',
-                                                                  'cause', 'user_change', 'viewed', 'deleted')
-                data = list(proc)
-                return JsonResponse(data, safe=False)
-
+            proc = Ticket.objects.get_queryset_none().filter(viewed=False).values('id', 'district', 'street', 'house',
+                                                                                  'apartment',
+                                                                                  'date', 'date_change', 'closed_date',
+                                                                                  'completion_date', 'login',
+                                                                                  'first_contact',
+                                                                                  'second_contact', 'comment_master',
+                                                                                  'comment_operator', 'operator__id',
+                                                                                  'operator__username', 'master__id',
+                                                                                  'master__username', 'type',
+                                                                                  'priority', 'status',
+                                                                                  'cause', 'user_change', 'viewed',
+                                                                                  'deleted')
+            data = list(proc)
+            return JsonResponse(data, safe=False)
 
         if request.method == 'POST':
             form = NewsForm(request.POST)
@@ -43,7 +46,9 @@ def start_page(request):
             username = request.user.get_username()
             ticket_time = timezone.now()
             is_super = bool(request.user.is_superuser)
-            get_mater_ticket = TicketFilterForm(request.GET, queryset=Ticket.objects.get_master(id=request.user.id).order_by("-date"))
+            get_mater_ticket = TicketFilterForm(request.GET,
+                                                queryset=Ticket.objects.get_master(id=request.user.id).order_by(
+                                                    "-date"))
             news = News.objects.order_by("-date")
             news_form = NewsForm()
             change_master = TicketForm()
@@ -205,17 +210,20 @@ def profile(request):
 def processing(request):
     if request.user.is_authenticated:
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            proc = Ticket.objects.get_queryset_none().filter(viewed=False).values('id', 'district', 'street', 'house', 'apartment',
-                                                              'date', 'date_change', 'closed_date',
-                                                              'completion_date', 'login', 'first_contact',
-                                                              'second_contact', 'comment_master',
-                                                              'comment_operator', 'operator__id',
-                                                              'operator__username', 'master__id',
-                                                              'master__username', 'type', 'priority', 'status',
-                                                              'cause', 'user_change', 'viewed', 'deleted')
+            proc = Ticket.objects.get_queryset_none().filter(viewed=False).values('id', 'district', 'street', 'house',
+                                                                                  'apartment',
+                                                                                  'date', 'date_change', 'closed_date',
+                                                                                  'completion_date', 'login',
+                                                                                  'first_contact',
+                                                                                  'second_contact', 'comment_master',
+                                                                                  'comment_operator', 'operator__id',
+                                                                                  'operator__username', 'master__id',
+                                                                                  'master__username', 'type',
+                                                                                  'priority', 'status',
+                                                                                  'cause', 'user_change', 'viewed',
+                                                                                  'deleted')
             data = list(proc)
             return JsonResponse(data, safe=False)
-
 
     news = News.objects.all()
     ticket_time = timezone.now()
@@ -239,23 +247,6 @@ def processing(request):
 
     }
     return render(request, 'tester/processing.html', context)
-
-
-def get_changes(historical_instance):
-    """
-    Функция для получения изменений в одной исторической записи и вывода полей, которые были изменены, и их значений.
-    """
-    changes = historical_instance.changes()
-
-    if not changes:
-        return "Нет изменений"
-
-    result = "Измененные поля:\n"
-
-    for field, (old_value, new_value) in changes.items():
-        result += f"{field}: {old_value} -> {new_value}\n"
-
-    return result
 
 
 @permission_required('tester.operator', login_url='error')
@@ -284,8 +275,7 @@ def edit_ticket(request, pk):
                                      f'Данные успешно изменены {instance.street}  {instance.house}')
 
                 else:
-                    messages.success(request,
-                                     f'Данные успешно изменены {instance.street}  {instance.house} кв {instance.apartment}')
+                    messages.success(request, f'Данные успешно изменены {instance.street}  {instance.house} кв {instance.apartment}')
 
                 return redirect('edit_ticket', pk)
 
@@ -304,7 +294,6 @@ def edit_ticket(request, pk):
     proc = Ticket.objects.get_queryset_none()
 
     context = {
-        "get_changes": get_changes,
         "e_form": edit_from,
         "username": username,
         "year_now": year_now,
@@ -326,9 +315,8 @@ def error(request):
     return render(request, 'tester/error.html', context)
 
 
-def log(request, pk):
+def log(request):
     username = request.user.get_username()
-    get_odj = Ticket.objects.get(id=pk)
 
     context = {
         "username": username,
@@ -338,18 +326,21 @@ def log(request, pk):
 
 @permission_required('tester.master', login_url='error')
 def shutdown(request):
+    if request.method == 'POST':
+        form = ShutdownForm(request.POST)
+        messages.error(request, f'{form}')
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Файл успешно импортирован.')
+
+            return redirect('shutdown')
+
+        else:
+            messages.error(request, f'Данные не могут быть изменены {Exception(request)}')
+
     username = request.user.get_username()
     form = ShutdownForm()
     proc = Ticket.objects.get_queryset_none()
-
-    if request.method == "POST":
-        messages.success(request, f"{request.POST.get('file')}")
-        with open(request.POST.get('file'), "r") as file:
-            content = file
-            messages.error(request, f"{content}")
-
-    else:
-        messages.error(request, f'Данные не могут быть изменены {Exception(request)}')
 
     context = {
         "username": username,

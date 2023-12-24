@@ -54,41 +54,41 @@
   </div>
 </nav>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script>
-    function updateProcessingStatus() {
-        $.ajax({
-            url: '{% url 'start_page' %}',
-            type: 'GET',
-            dataType: 'json',
-            success: function (data) {
-                console.log(data);
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        const processingItem = $('#unviewed-indicator');
 
-                var processingItem = $('#unviewed-indicator');
+        function updateProcessingStatus() {
+            $.ajax({
+                url: '{% url 'start_page' %}',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data);
 
-                // Проверяем, есть ли непросмотренные заявки
-                var hasUnviewed = data.some(function(ticket) {
-                    return ticket.viewed === false;
-                });
+                    // Проверяем, есть ли непросмотренные заявки
+                    let hasUnviewed = data.some(function (ticket) {
+                        return ticket.viewed === false;
+                    });
 
-                // Изменяем стили тега или его содержимое
-                if (hasUnviewed) {
-                    processingItem.find('#unviewed-indicator').show();
-                    processingItem.show();
-                    console.log('work')
-                } else {
-                    processingItem.hide();
-                    processingItem.find('#unviewed-indicator').hide();
-                    console.log('not work')
+                    // Изменяем стили тега или его содержимое
+                    if (hasUnviewed) {
+                        processingItem.show();
+                        console.log('work')
+                    } else {
+                        processingItem.hide();
+                        console.log('not work')
+                    }
+                },
+                error: function (error) {
+                    console.error(error);
                 }
-            },
-            error: function (error) {
-                console.error(error);
-            }
-        });
-    }
+            });
+        }
 
-    // Вызываем функцию с интервалом в 5 секунд (5000 миллисекунд)
-    setInterval(updateProcessingStatus, 2000);
-</script>
+        processingItem.hide();
+        // Вызываем функцию с интервалом в 5 секунд (5000 миллисекунд)
+        setInterval(updateProcessingStatus, 2000);
+    </script>
 {% endblock %}
 

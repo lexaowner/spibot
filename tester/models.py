@@ -196,3 +196,14 @@ class Shutdown(models.Model):
     master = models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT, verbose_name="Мастер",
                                related_name='mater_shutdown')
     file = models.FileField(verbose_name='Файл отключки')
+
+    class Meta:
+        verbose_name = 'Отключки'
+        verbose_name_plural = 'Отключки'
+
+    def __str__(self):
+        return self.master
+
+    def get_display_name(self):
+        # Логика для получения строкового представления объекта
+        return f"{self.master} - {self.file}"
