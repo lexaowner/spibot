@@ -1,49 +1,57 @@
 {% extends 'tester/base.html' %}
+{% load static %}
 {% block navbar %}
     {% include 'tester/navbar.html' %}
 {% endblock %}
 {% block content %}
-    <div class="container p-3">
-         <div class="row-3 row shadow p-2 me-2 ms-2 rounded m-2" style="background-color: rgba(89, 89, 89, 1);">
-            <div class="text-light">
-                        <form class="" method="post">
-                            {% csrf_token %}
-                            <div class="form-group col-sm-4 my-1">
-                                <label for="InputFirstName">Имя</label>
-                                <input disabled name="first_name" type="text"
-                                       value="{{ user.first_name }}"
-                                       class="form-control form-control-sm" placeholder="Имя">
-                                <small class="form-text text-muted">Имя будет отображаться в заявках</small>
-                            </div>
-                            <div class="form-group col-sm-4 my-1">
-                                <label for="InputLastName">Логин</label>
-                                <input name="first_name" type="text" value="{{ user.last_name }}"
-                                       class="form-control form-control-sm"
-                                       id="InputLastName"
-                                       placeholder="">
-                                <small class="form-text text-muted">Товй логин</small>
-                            </div>
-
-                            <div class="form-group col-sm-4 my-1">
-                                <label for="InputPassword">Новый пароль</label>
-                                <input name="password" type="password" class="form-control form-control-sm"
-                                       id="InputPassword"
-                                       placeholder="*********">
-                                <small class="form-text text-danger">Новый пароль</small>
-                            </div>
-                            <div class="form-group col-sm-4 my-1">
-                                <label for="InputPasswordConfirm">Подтвердите пароль</label>
-                                <input name="password_confirm" type="password" class="form-control form-control-sm"
-                                       id="InputPasswordConfirm"
-                                       placeholder="*********">
-                                <small class="form-text text-muted">Подтвердите пароль, во избежание
-                                    криворукости</small>
-                            </div>
-
-                            <button type="submit" class="btn btn-sm ml-2 mt-2 btn-outline-primary">Сохранить
-                            </button>
-                        </form>
-                    </div>
+    <div class="container p-3 col-sm-3">
+    <div class="row row shadow p-2 me-2 ms-2 bg-body-tertiary rounded position-relative" style="background-color: rgba(89, 89, 89, 1);">
+        <div class="text-light">
+            <div class="row align-items-start rounded-pill">
+            <div class="message">
+                {% if messages %}
+              {% for message in messages %}
+                 {% if message.tags == 'error' %}
+                      <div class="alert alert-danger" role="alert">
+                          {{ message }}
+                      </div>
+                 {% else %}
+                      <div class="alert alert-{{ message.tags }}" role="alert">
+                          {{ message }}
+                      </div>
+                 {% endif %}
+                {% endfor %}
+            {% endif %}
+            </div>
+            <h3 class="mb-2 text-center">Профиль</h3>
+                <form method="POST">
+                    {% csrf_token %}
+                  <div class="mb-3">
+                    <label for="first_name" class="form-label" >Имя</label>
+                    <input type="text" class="form-control" id="login" aria-describedby="text" value="{{ user.first_name }}" name="first_name">
+                    <div id="login" class="form-text">Имя Пользователья</div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="login" class="form-label" >Логин</label>
+                    <input type="text" disabled class="form-control" id="" aria-describedby="text" value="{{ user }}" name="user_name">
+                    <div id="login" class="form-text">Логин может изменить только админ</div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="password" class="form-label">Новый пароль</label>
+                    <input type="password" class="form-control" id="password" name="password">
+                      <div id="login" class="form-text">Придумайте новый пароль для учетной записи</div>
+                  </div>
+                  <div class="mb-5">
+                    <label for="password" class="form-label">Подтвердите пароль</label>
+                    <input type="password" class="form-control" id="password" name="password_confirm">
+                      <div id="login" class="form-text">Подтвердите новый пароль для учетной записи</div>
+                  </div>
+                    <div class="p-2"></div>
+                  <button type="submit" class="btn btn-primary position-absolute start-0 bottom-0 end-0">Сохранить</button>
+                </form>
+                </div>
             </div>
         </div>
+    </div>
 {% endblock %}
+

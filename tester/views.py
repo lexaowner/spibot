@@ -1,3 +1,5 @@
+import time
+
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
@@ -191,17 +193,25 @@ def profile(request):
     user = User.objects.get(pk=request.user.id)
     password = request.POST.get('password')
     password_confirm = request.POST.get('password_confirm')
+    first_name = request.POST.get('first_name')
+
+    if first_name:
+        user.first_name = first_name
+        user.save()
+
     if password:
         if password == password_confirm:
             user.set_password(password)
             messages.success(request, 'Пароль обновлен')
+
         else:
             messages.error(request, 'Пароли не совпадают, текущий пароль не изменен')
+
     user.save()
     context = {
         "user": user,
         "username": username,
-        "year_now": year_now
+        "time": year_now
     }
     return render(request, 'tester/profile.html', context)
 
@@ -327,10 +337,9 @@ def log(request):
 @permission_required('tester.master', login_url='error')
 def shutdown(request):
     if request.method == 'POST':
-        form = ShutdownForm(request.POST)
+        form = ShutdownForm(request.POST,request.FILES.get(''))
         messages.error(request, f'{form}')
         if form.is_valid():
-            form.save()
             messages.success(request, 'Файл успешно импортирован.')
 
             return redirect('shutdown')

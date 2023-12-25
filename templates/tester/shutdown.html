@@ -5,13 +5,23 @@
 	{% include 'tester/navbar.html' %}
 {% endblock %}
 {% block content %}
-<div class="container p-3">
-    <div class="row-3 row shadow p-2 me-2 ms-2 bg-body-tertiary rounded position-relative" style="background-color: rgba(89, 89, 89, 1);">
+<style>
+    .col-sm-1 {
+        display: inline-block;
+    }
+</style>
+<div class="container col-3 p-3">
+    <div class="row row shadow p-2 me-2 ms-2 bg-body-tertiary rounded position-relative text-center" style="background-color: rgba(89, 89, 89, 1);">
         <div class="text-light">
             <div class="row align-items-start rounded-pill">
                 <form method="POST">
                     {% csrf_token %}
-                    {{ form }}
+                     <div class="col-sm-1 me-3" style="width: 140px">
+                        {{ form.file|as_crispy_field }}
+                    </div>
+                    <div class="col-sm-1 me-3" style="width: 130px">
+                        {{ form.master|as_crispy_field }}
+                    </div>
                     <button type="submit" class="btn btn-secondary">Добавить</button>
                 </form>
             </div>

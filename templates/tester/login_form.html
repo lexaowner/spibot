@@ -4,7 +4,7 @@
 {% endblock %}
 {% block content %}
 <div class="container p-3 col-sm-3 position-absolute top-50 start-50 translate-middle">
-    <div class="row row shadow p-2 me-2 ms-2 bg-body-tertiary rounded" style="background-color: rgba(89, 89, 89, 1);">
+    <div class="row row shadow p-2 me-2 ms-2 bg-body-tertiary rounded position-relative" style="background-color: rgba(89, 89, 89, 1);">
         <div class="text-light">
             <div class="row align-items-start rounded-pill">
             <div class="message">
@@ -31,11 +31,12 @@
                     <input type="login" class="form-control" id="login" aria-describedby="text" name="login">
                     <div id="login" class="form-text">Убедитесь что логин введён корректно</div>
                   </div>
-                  <div class="mb-3">
+                  <div class="mb-5">
                     <label for="password" class="form-label">Пароль</label>
                     <input type="password" class="form-control" id="password" name="password">
                   </div>
-                  <button type="submit" class="btn btn-primary">Войти</button>
+                    <div class="p-3"></div>
+                  <button type="submit" class="btn btn-primary position-absolute start-0 bottom-0 end-0">Войти</button>
                 </form>
                 </div>
             </div>
