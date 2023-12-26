@@ -126,6 +126,7 @@ def add_ticket(request):
             else:
                 messages.error(request, "Такой объект Ticket уже существует")
 
+
     form = TicketForm()
     context = {
         "form": form,
@@ -176,7 +177,7 @@ def login_cora_2(request):
             return redirect('start_page')
 
         else:
-            messages.error(request, 'Имя или логин введеный не верно')
+            messages.error(request, 'Логин или пароль введеный не верно')
             redirect('login')
 
     return render(request, 'tester/login_form.html', context=context)
