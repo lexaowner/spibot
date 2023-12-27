@@ -16,7 +16,7 @@
             <div class="row align-items-start rounded-pill">
                 <form method="POST">
                     {% csrf_token %}
-                     <div class="col-sm-1 me-3" style="width: 140px">
+                     <div class="col-sm-1 me-3" name="file" style="width: 140px">
                         {{ form.file|as_crispy_field }}
                     </div>
                     <div class="col-sm-1 me-3" style="width: 130px">

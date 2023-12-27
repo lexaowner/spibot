@@ -1,6 +1,8 @@
+import os
 import time
-
+import pandas as pd
 from django.contrib.auth.decorators import login_required
+from django.core.files.storage import FileSystemStorage
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from .forms import *
@@ -335,18 +337,32 @@ def log(request):
     return render(request, 'tester/log.html', context)
 
 
+def handle_uploaded_file(file):
+    # Создайте отдельный путь для загруженных файлов
+    upload_path = os.path.join(settings.MEDIA_ROOT, 'uploads')
+    os.makedirs(upload_path, exist_ok=True)
+
+    # Сохраните файл в новый путь
+    fs = FileSystemStorage(location=upload_path)
+    filename = fs.save(file.name, file)
+
+    # Загрузите данные Excel с использованием pandas
+    excel_path = os.path.join(upload_path, filename)
+    df = pd.read_excel(excel_path)
+
+    # Добавьте вашу логику обработки данных здесь
+
+    # Верните данные в представление (здесь просто для примера)
+    return render(None, 'tester/shutdown.html', {'data': df.to_html()})
+
+
 @permission_required('tester.master', login_url='error')
 def shutdown(request):
     if request.method == 'POST':
-        form = ShutdownForm(request.POST,request.FILES.get(''))
-        messages.error(request, f'{form}')
-        if form.is_valid():
-            messages.success(request, 'Файл успешно импортирован.')
+        messages.error(request, request.POST, request.FILES)
+        excel_file = request.FILE
 
-            return redirect('shutdown')
-
-        else:
-            messages.error(request, f'Данные не могут быть изменены {Exception(request)}')
+        return handle_uploaded_file(excel_file)
 
     username = request.user.get_username()
     form = ShutdownForm()

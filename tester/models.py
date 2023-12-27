@@ -24,6 +24,9 @@ class User(AbstractUser):
     phone_number = models.CharField(max_length=32, blank=True, null=True, verbose_name=_('phone number'))
 
     class Meta:
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
+
         ordering = ('id',)
 
         permissions = [
@@ -202,7 +205,7 @@ class Shutdown(models.Model):
         verbose_name_plural = 'Отключки'
 
     def __str__(self):
-        return self.master
+        return f'Отключки {self.master.first_name}'
 
     def get_display_name(self):
         # Логика для получения строкового представления объекта
