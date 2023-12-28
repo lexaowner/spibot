@@ -31,7 +31,9 @@ def start_page(request):
                                                                                   'priority', 'status',
                                                                                   'cause', 'user_change', 'viewed',
                                                                                   'deleted')
-            data = list(proc)
+            user_per = list(request.user.get_group_permissions())
+
+            data = {'tickets': list(proc), 'user_permissions': user_per}
             return JsonResponse(data, safe=False)
 
         if request.method == 'POST':

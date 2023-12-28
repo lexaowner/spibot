@@ -53,42 +53,76 @@
     </div>
   </div>
 </nav>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- Подключение звука (например, уведомления) -->
+<audio id="notificationSound">
+    <source src="{% static 'mp3/message_alert.mp3' %}" type="audio/mp3">
+    <!-- Добавьте другие форматы звука по необходимости -->
+</audio>    
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script>
-        const processingItem = $('#unviewed-indicator');
+<script>
+const processingItem = $('#unviewed-indicator');
+    let alertShown = false;
 
-        function updateProcessingStatus() {
-            $.ajax({
-                url: '{% url 'start_page' %}',
-                type: 'GET',
-                dataType: 'json',
-                success: function (data) {
-                    console.log(data);
+    // Функция для проигрывания звука уведомления
+    function playNotificationSound() {
+        const notificationSound = document.getElementById('notificationSound');
+        notificationSound.play();
+    }
 
-                    // Проверяем, есть ли непросмотренные заявки
-                    let hasUnviewed = data.some(function (ticket) {
-                        return ticket.viewed === false;
+    function updateProcessingStatus() {
+        $.ajax({
+            url: '{% url 'start_page' %}',
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+
+                // Проверяем, есть ли непросмотренные заявки и разрешение 'tester.dispatcher'
+                let hasUnviewedAndPermission = data.tickets.some(function (ticket) {
+                    return ticket.viewed === false && data.user_permissions.includes('tester.dispatcher');
+                });
+
+                // Проверяем, был ли уже показан алерт
+                if (hasUnviewedAndPermission && !alertShown) {
+                    // Вызываем функцию для проигрывания звука
+                    playNotificationSound();
+
+                    // Показываем предупреждение
+                    Swal.fire({
+                        title: 'Есть непросмотренные заявки',
+                        icon: 'warning',
+                        showCancelButton: false,
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Действие после подтверждения алерта
+                        }
                     });
 
-                    // Изменяем стили тега или его содержимое
-                    if (hasUnviewed) {
-                        processingItem.show();
-                        console.log('work')
-                    } else {
-                        processingItem.hide();
-                        console.log('not work')
-                    }
-                },
-                error: function (error) {
-                    console.error(error);
+                    alertShown = true;  // Устанавливаем флаг, что алерт был показан
                 }
-            });
-        }
 
-        processingItem.hide();
-        // Вызываем функцию с интервалом в 5 секунд (5000 миллисекунд)
-        setInterval(updateProcessingStatus, 2000);
-    </script>
+                // Изменяем стили тега или его содержимое
+                if (hasUnviewedAndPermission) {
+                    processingItem.show();
+                    console.log('work');
+                } else {
+                    processingItem.hide();
+                    console.log('not work');
+                }
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    }
+
+    processingItem.hide();
+    // Вызываем функцию с интервалом в 5 секунд (5000 миллисекунд)
+    setInterval(updateProcessingStatus, 2000);
+</script>
 {% endblock %}
 
