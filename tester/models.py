@@ -196,8 +196,13 @@ class News(models.Model):
 
 
 class Shutdown(models.Model):
-    master = models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT, verbose_name="Мастер",
-                               related_name='mater_shutdown')
+    street = models.CharField(max_length=40, blank=True, null=True, verbose_name=_('Улица'))
+    house = models.CharField(max_length=16, blank=True, null=True, verbose_name=_('Дом'))
+    apartment = models.CharField(max_length=32, blank=True, null=True, verbose_name=_('Кв'))
+    date = models.DateTimeField(editable=True, default=timezone.now, verbose_name="Дата открытия")
+    date_change = models.DateTimeField(editable=True, default=timezone.now, verbose_name="Дата измененя")
+    closed_date = models.DateTimeField(editable=True, null=True, blank=True, verbose_name="Дата закрытия")
+    master = models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT, verbose_name="Мастер",related_name='mater_shutdown')
     file = models.FileField(verbose_name='Файл отключки')
 
     class Meta:

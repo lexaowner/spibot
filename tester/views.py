@@ -13,6 +13,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
 from django.core.paginator import Paginator
 from reversion.models import Version
+from openpyxl import load_workbook
 
 
 
@@ -361,10 +362,15 @@ def handle_uploaded_file(file):
 @permission_required('tester.master', login_url='error')
 def shutdown(request):
     if request.method == 'POST':
-        messages.error(request, request.POST, request.FILES)
-        excel_file = request.FILE
+        wdw = ShutdownForm(request.POST, request.FILES.get('file'))
+        excel_file = wdw
+        messages.error(request,f"{excel_file}")
+        wb = load_workbook(str(excel_file))
+        ws = wb.active
 
-        return handle_uploaded_file(excel_file)
+        for row in ws.iter_rows(min_row=4, values_only=True):
+            street, house, apartment, = row
+            Shutdown.objects.create(street=street, house=house, apartment=apartment, master=request.POST.get('master'))
 
     username = request.user.get_username()
     form = ShutdownForm()
