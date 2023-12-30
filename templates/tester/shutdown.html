@@ -14,9 +14,9 @@
     <div class="row row shadow p-2 me-2 ms-2 bg-body-tertiary rounded position-relative text-center" style="background-color: rgba(89, 89, 89, 1);">
         <div class="text-light">
             <div class="row align-items-start rounded-pill">
-                <form method="POST">
+                <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
-                     <div class="col-sm-1 me-3" name="file" style="width: 140px">
+                    <div class="col-sm-1 me-3" name="file" style="width: 140px">
                         {{ form.file|as_crispy_field }}
                     </div>
                     <div class="col-sm-1 me-3" style="width: 130px">

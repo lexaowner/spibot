@@ -1,0 +1,33 @@
+{% extends 'tester/base.html' %}
+{% load crispy_forms_filters %}
+{% block navbar %}
+	{% include 'tester/navbar.html'%}
+{% endblock %}
+{% block content %}
+    <div class="container col-sm-3 p-3">
+    <div class="row shadow p-2 me-2 ms-2 bg-body-tertiary rounded position-relative" style="background-color: rgba(89, 89, 89, 1);">
+        <div class="text-light">
+            <div class="row align-items-start rounded-pill">
+                <div class="row">
+                    <form method="POST">
+                        <h3 class="mb-2">Редактирование</h3>
+                        {% csrf_token %}
+                    <div class="col-sm-12">
+                        {{ news_form.title|as_crispy_field }}
+                    </div>
+                         <div class="col-sm-12">
+                        {{ news_form.text|as_crispy_field }}
+                    </div>
+                    <div class="col-sm-2 p-3">
+                        <button type="submit" class="btn btn-secondary position-absolute bottom-0 end-0">Сохронить</button>
+                    </div>
+                    </form>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+{% endblock %}
+{% block footer %}
+	{% include 'tester/footer.html' %}
+{% endblock %}

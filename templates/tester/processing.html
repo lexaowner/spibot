@@ -84,7 +84,7 @@
                             </tr>
                           </thead>
                           <tbody class="table-group-divider">
-                            {% for foo in tickets.qs %}
+                            {% for foo in page_obj %}
                             <tr class="position-relative"{% if foo.priority == 'Срочный' %}class="table-danger"{% elif foo.priority == 'Корпоративный' %}class="table-warning"{% endif %}>
                               <td><a class="link-light" href="{% url 'edit_ticket' foo.id %}">{{ foo.get_full_address }}{% if foo.apartment %} кв {{ foo.apartment| default:'' }}</a>{% endif %}</td>
                               <td>{{ foo.type }}</td>
@@ -126,42 +126,14 @@
          </div>
      </div>
 </div>
-
-{% comment %}        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script>
-    function updateProcessingStatus() {
-        $.ajax({
-            url: '{% url 'start_page' %}',
-            type: 'GET',
-            dataType: 'json',
-            success: function (data) {
-                console.log(data);
-
-                var processingItem = $('#unviewed-indicator');
-
-                // Проверяем, есть ли непросмотренные заявки
-                var hasUnviewed = data.some(function(ticket) {
-                    return ticket.viewed === false;
-                });
-
-                // Изменяем стили тега или его содержимое
-                if (hasUnviewed) {
-                    processingItem.find('#unviewed-indicator').show();
-                    processingItem.show();
-                    console.log('work')
-                } else {
-                    processingItem.hide();
-                    processingItem.find('#unviewed-indicator').hide();
-                    console.log('not work')
-                }
-            },
-            error: function (error) {
-                console.error(error);
-            }
-        });
-    }
-
-    // Вызываем функцию с интервалом в 5 секунд (5000 миллисекунд)
-    setInterval(updateProcessingStatus, 2000);
-</script>{% endcomment %}
+ {% if pages %}
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center p-2">
+            {{ tickets.number }}
+                {% for page in pages %}
+                    <a href="?page={{ page }}"><li class="page-item {% if tickets.number == page %} disabled{% endif %}"><button type="submit" class="page-link bg-dark" name="page" value="{{ page.next_page_number }}">{{ page }}</button></li></a>
+                {% endfor %}
+            </ul>
+        </nav>
+    {% endif %}
 {% endblock %}

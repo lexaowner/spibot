@@ -99,7 +99,7 @@
                                 <td>{{ foo.login| default:'' }}</td>
                                 <td>{{ foo.operator.first_name }}</td>
                                 <td>{{ foo.comment_operator| slice:16 | default:'' }}</td>
-                                <td>{{ foo.master| default:'Не выбран' }}</td>
+                                <td>{{ foo.master.first_name| default:'Не выбран' }}</td>
                                 <td>{{ foo.comment_master| slice:16 | default:'' }}</td>
                                 {% if foo.status == True %}
                                      <td>
@@ -140,10 +140,15 @@
             {% if new.date|date:"d.m.Y" == time|date:"d.m.Y" %}
                 <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger rounded-circle" style="height: 5px; width: 5px;"></span>
             {% endif %}
-            <div class="row ">
-                <div class="col-sm-2"><h4>{{ new.title| default:'Spectr IT' }}</h4></div>
+            <div class="row">
+                {% if perms.tester.dispatcher %}
+                    <a href="{% url 'edit_news'  new.id %}"><div class="col-sm-2 text-dark"><h4>{{ new.title| default:'Spectr IT' }}</h4></div></a>
+                {% else %}
+                     <div class="col-sm-2 text-dark"><h4>{{ new.title| default:'Spectr IT' }}</h4></div>
+                {% endif %}
+                <div class="col-sm-2 text-dark"><h4>{{ new.title| default:'Spectr IT' }}</h4></div>
                 <div class="col-sm-2 text-light"><h6>{{ new.date|date:"d.m.Y" }}</h6></div>
-                <p class="text-light">{{ new.text}}</p>
+                <p class="text-light">{{ new.text}} id {{ new.id }}</p>
             </div>
         </div>
           <br>
@@ -185,34 +190,14 @@
   </div>
 </div>
 
-{# {% if pages %}#}
-{#     {% if page_obj.paginator.num_pages == 1 %}#}
-{#     {% else %}#}
-{#        <nav aria-label="Page navigation">#}
-{#            <ul class="pagination justify-content-center p-2">#}
-{#            {{ tickets.number }}#}
-{#                {% for page in pages %}#}
-{#                    <a href="?page={{ page }}"><li class="page-item {% if tickets.number == page %} disabled{% endif %}"><button type="submit" class="page-link bg-dark" name="page" value="{{ page.next_page_number  }}">{{ page }}</button></li></a>#}
-{#                {% endfor %}#}
-{#            {% endif %}#}
-{#            </ul>#}
-{#        </nav>#}
-{#     <div class="pagination">#}
-{#    <span class="step-links">#}
-{#        {% if page_obj.has_previous %}#}
-{#            <a href="?page=1">&laquo; first</a>#}
-{#            <a href="?page={{ page_obj.previous_page_number }}">previous</a>#}
-{#        {% endif %}#}
-{##}
-{#        <span class="current">#}
-{#            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.#}
-{#        </span>#}
-{##}
-{#        {% if page_obj.has_next %}#}
-{#            <a href="?page={{ page_obj.next_page_number }}">next</a>#}
-{#            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>#}
-{#        {% endif %}#}
-{#    </span>#}
-{#</div>#}
-{#    {% endif %}#}
+ {% if pages %}
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center p-2">
+            {{ tickets.number }}
+                {% for page in pages %}
+                    <a href="?page={{ page }}"><li class="page-item {% if tickets.number == page %} disabled{% endif %}"><button type="submit" class="page-link bg-dark" name="page" value="{{ page.next_page_number }}">{{ page }}</button></li></a>
+                {% endfor %}
+            </ul>
+        </nav>
+    {% endif %}
 {% endblock %}

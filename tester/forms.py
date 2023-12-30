@@ -189,6 +189,12 @@ class ShutdownForm(forms.ModelForm):
             'master'
         ]
 
+    def clean_file(self):
+        file = self.cleaned_data.get('file')
+        if not file:
+            raise forms.ValidationError('Выберите файл для загрузки.')
+        return file
+
 
 class AddDistrict(forms.ModelForm):
     class Meta:

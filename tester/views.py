@@ -56,11 +56,11 @@ def start_page(request):
             get_mater_ticket = TicketFilterForm(request.GET,
                                                 queryset=Ticket.objects.get_master(id=request.user.id).order_by(
                                                     "-date"))
-            news = News.objects.order_by("-date")
+            news = News.objects.all().order_by("-date")
             news_form = NewsForm()
             change_master = TicketForm()
             tickets = TicketFilterForm(request.GET, queryset=Ticket.objects.get_queryset_true())
-            paginator = Paginator(tickets.qs, 37)
+            paginator = Paginator(tickets.qs, 25)
             page_number = request.GET.get('page')
             page_obj = paginator.get_page(page_number)
 
@@ -243,23 +243,26 @@ def processing(request):
 
     news = News.objects.all()
     ticket_time = timezone.now()
-    # messages.error(request, f'{get_user.has_perm("tester.operator")}')
     change_master = TicketForm()
     tickets = TicketFilterFormProcessing(request.GET, queryset=Ticket.objects.get_queryset_none())
     username = request.user.get_username()
-    year_now = timezone.now()
     proc = Ticket.objects.filter(status=None)
     is_super = bool(request.user.is_superuser)
+
+    paginator = Paginator(tickets.qs, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     context = {
         "tickets": tickets,
         "username": username,
-        "year_now": year_now,
         "is_super": is_super,
         "change_master": change_master,
         "news": news,
         "time": ticket_time,
         "processing": proc,
+        "page_obj": page_obj,
+        "pages": paginator.page_range,
 
     }
     return render(request, 'tester/processing.html', context)
@@ -312,7 +315,7 @@ def edit_ticket(request, pk):
     context = {
         "e_form": edit_from,
         "username": username,
-        "year_now": year_now,
+        "time": year_now,
         "obj": get_odj,
         "processing": proc,
     }
@@ -326,7 +329,7 @@ def error(request):
     messages.error(request, 'Недостаточно прав')
     context = {
         "username": username,
-        "year_now": year_now,
+        "time": year_now,
     }
     return render(request, 'tester/error.html', context)
 
@@ -362,16 +365,22 @@ def handle_uploaded_file(file):
 @permission_required('tester.master', login_url='error')
 def shutdown(request):
     if request.method == 'POST':
-        wdw = ShutdownForm(request.POST, request.FILES.get('file'))
-        excel_file = wdw
-        messages.error(request,f"{excel_file}")
-        wb = load_workbook(str(excel_file))
-        ws = wb.active
-
-        for row in ws.iter_rows(min_row=4, values_only=True):
-            street, house, apartment, = row
-            Shutdown.objects.create(street=street, house=house, apartment=apartment, master=request.POST.get('master'))
-
+        wdw = ShutdownForm(request.POST, request.FILES)
+        if wdw.is_valid():
+            excel_file = request.FILES['file']
+            try:
+                wb = load_workbook(excel_file)
+                ws = wb.active
+                for row in ws.iter_rows(min_row=9, values_only=True):
+                    street, house, apartment = row
+                    obj = Shutdown(street=street, house=house, apartment=apartment, master=request.POST.get('master'))
+                    obj.save()
+                messages.success(request, 'Отключения успешно добавлены.')
+            except Exception as e:
+                messages.error(request, f'Ошибка при обработке файла Excel: {e}')
+        else:
+            messages.error(request, 'Форма недействительна. Пожалуйста, проверьте введенные данные.')
+            messages.error(request, wdw)
     username = request.user.get_username()
     form = ShutdownForm()
     proc = Ticket.objects.get_queryset_none()
@@ -408,7 +417,7 @@ def add_address(request):
 
     context = {
         "username": username,
-        "year_now": year_now,
+        "time": year_now,
         "form_street": f,
         "form_district": d,
         "streets": street,
@@ -424,10 +433,35 @@ def territory(request):
     proc = Ticket.objects.get_queryset_none()
     context = {
         "username": username,
-        "year_now": year_now,
+        "time": year_now,
         "processing": proc,
     }
     return render(request, 'tester/territory.html', context)
+
+
+def edit_news(request, pk):
+    if request.method == 'POST':
+        form = NewsForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Новость успешно изменена ')
+
+        else:
+            messages.success(request,'Новость не может быть изменена')
+
+    news = News.objects.all().order_by("-date")
+    news_pk = News.objects.get(id=pk)
+    news_form = NewsForm(instance=news_pk)
+    year_now = timezone.now()
+
+    context = {
+        "time": year_now,
+        'news': news,
+        'news_pk': news_pk,
+        'news_form': news_form,
+    }
+
+    return render(request, 'tester/edit_news.html', context)
 
 
 def test(request):
