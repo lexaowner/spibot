@@ -441,13 +441,18 @@ def territory(request):
 
 def edit_news(request, pk):
     if request.method == 'POST':
-        form = NewsForm(request.POST)
+        instance = News.objects.get(id=pk)
+        form = NewsForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()
             messages.success(request, 'Новость успешно изменена ')
 
+            return redirect('start_page')
+
         else:
             messages.success(request,'Новость не может быть изменена')
+
+            return redirect('start_page')
 
     news = News.objects.all().order_by("-date")
     news_pk = News.objects.get(id=pk)
