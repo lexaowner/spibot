@@ -53,9 +53,7 @@ def start_page(request):
             username = request.user.get_username()
             ticket_time = timezone.now()
             is_super = bool(request.user.is_superuser)
-            get_mater_ticket = TicketFilterForm(request.GET,
-                                                queryset=Ticket.objects.get_master(id=request.user.id).order_by(
-                                                    "-date"))
+            get_mater_ticket = TicketFilterForm(request.GET,queryset=Ticket.objects.get_master(id=request.user.id).order_by( "-date"))
             news = News.objects.all().order_by("-date")
             news_form = NewsForm()
             change_master = TicketForm()
@@ -362,7 +360,7 @@ def handle_uploaded_file(file):
     return render(None, 'tester/shutdown.html', {'data': df.to_html()})
 
 
-@permission_required('tester.master', login_url='error')
+@permission_required('tester.dispatcher', login_url='error')
 def shutdown(request):
     if request.method == 'POST':
         wdw = ShutdownForm(request.POST, request.FILES)
@@ -371,26 +369,62 @@ def shutdown(request):
             try:
                 wb = load_workbook(excel_file)
                 ws = wb.active
-                for row in ws.iter_rows(min_row=9, values_only=True):
+                for row in ws.iter_rows(min_row=2, values_only=True):
                     street, house, apartment = row
-                    obj = Shutdown(street=street, house=house, apartment=apartment, master=request.POST.get('master'))
+                    master_id = request.POST.get('master')
+                    obj = Shutdown(street=street, house=house, apartment=apartment, master_id=master_id)
                     obj.save()
+
                 messages.success(request, 'Отключения успешно добавлены.')
             except Exception as e:
-                messages.error(request, f'Ошибка при обработке файла Excel: {e}')
+                messages.error(request,f'Ошибка при обработке файла: {e}')  # Вывод ошибки для проверки
+
         else:
             messages.error(request, 'Форма недействительна. Пожалуйста, проверьте введенные данные.')
             messages.error(request, wdw)
+
     username = request.user.get_username()
     form = ShutdownForm()
     proc = Ticket.objects.get_queryset_none()
+    year_now = timezone.now()
+    master_shutdown = ShutdownFilter(request.GET, queryset=Shutdown.objects.all())
 
     context = {
+        "master": master_shutdown,
         "username": username,
         "form": form,
         "processing": proc,
+        "time": year_now,
     }
     return render(request, 'tester/shutdown.html', context)
+
+
+def shutdown_master(request):
+    if request.method == 'POST':
+        form = Shutdownlist(request.POST)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            messages.success(request, f'{instance}')
+            if form.cleaned_data['completion']:
+                instance.completion = True
+                instance.save()
+                messages.success(request, 'Завершено успешно.')
+
+    username = request.user.get_username()
+    master_shutdown = ShutdownFilterMaster(request.GET, queryset=Shutdown.objects.filter(master_id=request.user.id))
+    form = Shutdownlist()
+    is_super = bool(request.user.is_superuser)
+    for_super = ShutdownFilterMaster(request.GET, queryset=Shutdown.objects.all())
+    year_now = timezone.now()
+    context = {
+        "for_super": for_super,
+        "is_super": is_super,
+        "form": form,
+        "username": username,
+        "master": master_shutdown,
+        "time": year_now,
+    }
+    return render(request, 'tester/shutdown_master.html', context)
 
 
 @permission_required('tester.dispatcher', login_url='error')

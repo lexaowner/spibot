@@ -122,8 +122,7 @@ class Ticket(models.Model):
     date = models.DateTimeField(editable=True, default=timezone.now, verbose_name="Дата открытия")
     date_change = models.DateTimeField(editable=True, default=timezone.now, verbose_name="Дата измененя")
     closed_date = models.DateTimeField(editable=True, null=True, blank=True, verbose_name="Дата закрытия")
-    completion_date = models.DateTimeField(default=None, null=True, blank=True, editable=True,
-                                           verbose_name="Дата выполнения")
+    completion_date = models.DateTimeField(default=None, null=True, blank=True, editable=True, verbose_name="Дата выполнения")
     login = models.CharField(blank=True, max_length=15, null=True, verbose_name="Логин")
     first_contact = models.CharField(max_length=13, null=True, verbose_name="Основной номер", default=None)
     second_contact = models.CharField(max_length=13, blank=True, null=True, verbose_name="Доп. номер", default=None)
@@ -202,7 +201,8 @@ class Shutdown(models.Model):
     date = models.DateTimeField(editable=True, default=timezone.now, verbose_name="Дата открытия")
     date_change = models.DateTimeField(editable=True, default=timezone.now, verbose_name="Дата измененя")
     closed_date = models.DateTimeField(editable=True, null=True, blank=True, verbose_name="Дата закрытия")
-    master = models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT, verbose_name="Мастер",related_name='mater_shutdown')
+    master = models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT, verbose_name="Мастер", related_name='mater_shutdown')
+    completion = models.BooleanField(choices=[(True, 'Выполнено'), (False, 'Не Выполнено')], null=True, blank=True,verbose_name="Выполнение", default=False)
     file = models.FileField(verbose_name='Файл отключки')
 
     class Meta:
@@ -210,7 +210,7 @@ class Shutdown(models.Model):
         verbose_name_plural = 'Отключки'
 
     def __str__(self):
-        return f'Отключки {self.master.first_name}'
+        return f'Отключка {self.master.first_name} Адрес: {self.street} Дом: {self.house} Кв: {self.apartment}'
 
     def get_display_name(self):
         # Логика для получения строкового представления объекта

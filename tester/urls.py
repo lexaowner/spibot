@@ -14,6 +14,7 @@ urlpatterns = [
     path('add_comment_master/<int:pk>', views.add_com_master, name='master_comment'),
     path('processing/', views.processing, name='processing'),
     path('shutdown/', views.shutdown, name='shutdown'),
+    path('shutdown_master/', views.shutdown_master, name='shutdown_master'),
     path('address/', views.add_address, name='address'),
     path('territory/', views.territory, name='territory'),
     path('edit_news/<int:pk>', views.edit_news, name='edit_news'),

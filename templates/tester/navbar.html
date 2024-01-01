@@ -17,6 +17,9 @@
           <li class="nav-item">
           <a class="nav-link" aria-current="page" href="{% url 'address' %}">Добавить адрес</a>
         </li>
+          <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="{% url 'shutdown' %}">Добавить отключки</a>
+        </li>
         <li id="processing-item" class="nav-item position-relative">
         <a class="nav-link" aria-current="page" href="{% url 'processing' %}">В обработкеa</a>
             	<span id="unviewed-indicator" class="position-absolute top-0 start-100 translate-middle p-2 bg-danger rounded-circle"></span>
@@ -25,9 +28,9 @@
           <a class="nav-link" aria-current="page" href="{% url 'territory' %}">Территории</a>
         </li>
           {% endif %}
-      {% if perms.tester.dispatcher or perms.tester.master%}
+       {% if perms.tester.master %}
         <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="{% url 'shutdown' %}">Отключки</a>
+          <a class="nav-link" aria-current="page" href="{% url 'shutdown_master' %}">Отключки</a>
         </li>
           {% endif %}
       {% if is_super %}

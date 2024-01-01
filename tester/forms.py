@@ -155,6 +155,33 @@ class TicketFilterFormProcessing(django_filters.FilterSet):
         ]
 
 
+class ShutdownFilter(django_filters.FilterSet):
+    master = django_filters.ModelChoiceFilter(
+        queryset=User.objects.filter(groups__name='Мастер'),
+        label="Мастер",
+        widget=forms.Select(attrs={'class': 'master'}),
+    )
+
+    class Meta:
+        model = Shutdown
+        fields = [
+            "street",
+            "house",
+            "apartment",
+            "master"
+        ]
+
+
+class ShutdownFilterMaster(django_filters.FilterSet):
+    class Meta:
+        model = Shutdown
+        fields = [
+            "street",
+            "house",
+            "apartment",
+        ]
+
+
 class AddComMaster(forms.ModelForm):
     class Meta:
         model = Ticket
@@ -189,11 +216,20 @@ class ShutdownForm(forms.ModelForm):
             'master'
         ]
 
-    def clean_file(self):
-        file = self.cleaned_data.get('file')
-        if not file:
-            raise forms.ValidationError('Выберите файл для загрузки.')
-        return file
+
+class Shutdownlist(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(Shutdownlist, self).__init__(*args, **kwargs)
+        self.fields['completion'].label = ''
+
+    class Meta:
+        model = Shutdown
+        fields = [
+            'completion',
+            ]
+        widgets = {
+            'completion': forms.CheckboxInput(attrs={'class': 'checkbox-class'}),
+        }
 
 
 class AddDistrict(forms.ModelForm):
