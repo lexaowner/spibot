@@ -131,7 +131,7 @@
             <ul class="pagination justify-content-center p-2">
             {{ tickets.number }}
                 {% for page in pages %}
-                    <a href="?page={{ page }}"><li class="page-item {% if tickets.number == page %} disabled{% endif %}"><button type="submit" class="page-link bg-dark" name="page" value="{{ page.next_page_number }}">{{ page }}</button></li></a>
+                    <a class="text-dark" href="?page={{ page }}"><li class="page-item{% if tickets.number == page %} disabled{% endif %}"><button type="submit" class="page-link bg-dark text-light me-1" name="page" value="{{ page.next_page_number }}">{{ page }}</button></li></a>
                 {% endfor %}
             </ul>
         </nav>

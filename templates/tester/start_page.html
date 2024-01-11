@@ -50,7 +50,7 @@
                                 <td {% if foo.status == None %}class="text-secondary"{% else %}class="text-light"{% endif %}>{{ foo.login| default:'' }}</td>
                                 <td {% if foo.status == None %}class="text-secondary"{% else %}class="text-light"{% endif %}>{{ foo.operator.first_name }}</td>
                                 <td {% if foo.status == None %}class="text-secondary"{% else %}class="text-light"{% endif %}>{{ foo.comment_operator| slice:16 | default:'' }}</td>
-                                <td {% if foo.status == None %}class="text-secondary"{% else %}class="text-light"{% endif %}>{{ foo.master| default:'Не выбран' }}</td>
+                                <td {% if foo.status == None %}class="text-secondary"{% else %}class="text-light"{% endif %}>{{ foo.master.first_name| default:'Не выбран' }}</td>
                                 <td {% if foo.status == None %}class="text-secondary"{% else %}class="text-light"{% endif %}>{{ foo.comment_master| slice:16 | default:'' }}</td>
                                 {% if foo.status == True %}
                                      <td>
@@ -195,7 +195,7 @@
             <ul class="pagination justify-content-center p-2">
             {{ tickets.number }}
                 {% for page in pages %}
-                    <a href="?page={{ page }}"><li class="page-item {% if tickets.number == page %} disabled{% endif %}"><button type="submit" class="page-link bg-dark" name="page" value="{{ page.next_page_number }}">{{ page }}</button></li></a>
+                    <a class="text-dark" href="?page={{ page }}"><li class="page-item {% if tickets.number == page %} disabled{% endif %}"><button type="submit" class="page-link bg-dark me-1 text-light" name="page" value="{{ page.next_page_number }}">{{ page }}</button></li></a>
                 {% endfor %}
             </ul>
         </nav>
