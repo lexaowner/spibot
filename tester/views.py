@@ -401,14 +401,14 @@ def shutdown(request):
 
 def shutdown_master(request):
     if request.method == 'POST':
-        form = Shutdownlist(request.POST)
-        if form.is_valid():
-            instance = form.save(commit=False)
-            messages.success(request, f'{instance}')
-            if form.cleaned_data['completion']:
-                instance.completion = True
-                instance.save()
-                messages.success(request, 'Завершено успешно.')
+        completed_ids = request.POST.getlist('completion_checkbox')
+        if completed_ids:
+            Shutdown.objects.filter(id__in=completed_ids).update(completion=True)
+            messages.success(request, 'dsdsdsd')
+        else:
+            completed_ids = request.POST.getlist('completion_checkbox_l')
+            Shutdown.objects.filter(id__in=completed_ids).update(completion=False)
+            messages.success(request, '545454554')
 
     username = request.user.get_username()
     master_shutdown = ShutdownFilterMaster(request.GET, queryset=Shutdown.objects.filter(master_id=request.user.id))

@@ -76,27 +76,27 @@
                       <tbody class="table-group-divider">
                       {% if perms.tester.master %}
                       {% for foo in  master.qs %}
-                          {% if foo.completion == False %}
+
                         <tr>
-                          <td>{{ form.completion|as_crispy_field }}</td>
+                          <td><input type="checkbox" {% if foo.completion == True%}checked="checked" name="completion_checkbox_l"{% endif %}  name="completion_checkbox" value="{{ foo.id }}"></td>
                           <td>{{ foo.street }}</td>
                           <td>{{ foo.house }}</td>
                           <td>{{ foo.apartment }}</td>
                         </tr>
-                          {% endif %}
+
                       {% endfor %}
                     {% endif %}
                    {% if is_super %}
                       {% for foo in  for_super.qs %}
-                          {% if foo.completion == False %}
+
                         <tr>
-                          <td>{{ form.completion|as_crispy_field }}</td>
+                          <td><input type="checkbox" {% if foo.completion == True%}checked="checked" name="completion_checkbox_l"{% endif %}  name="completion_checkbox" value="{{ foo.id }}"></td>
                           <td>{{ foo.street }}</td>
                           <td>{{ foo.house }}</td>
                           <td>{{ foo.apartment }}</td>
                           <td>{{ foo.master.first_name}}</td>
                         </tr>
-                          {% endif %}
+
                       {% endfor %}
                     {% endif %}
                       </tbody>
