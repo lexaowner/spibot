@@ -12,34 +12,16 @@
     display: inline-block;
 }
 </style>
-{% if perms.tester.master %}
 <div class="container col-sm-6 p-3">
     <div class="row shadow bg-body-tertiary rounded position-relative" style="background-color: rgba(89, 89, 89, 1);">
         <div class="text-light">
-            <div class="row p-2 align-items-start rounded-pill">
-                    <h3 class="mb-2">Отключки {{ username }}</h3>
-                <a class="" href="{% url 'include_master' %}"><button type="button" class="btn btn-secondary position-relative">
-                    {% if is_super %}
-                        {% for foo in  for_super.qs %}
-                               {% if foo.closed_date|date:"d.m.Y" == time|date:"d.m.Y" %}
-                                <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger rounded-circle"></span>
-                        {% endif %}
-                    {% endfor %}
-                    {% endif %}
-                    {% for foo in  master.qs %}
-                             {% if foo.closed_date|date:"d.m.Y" == time|date:"d.m.Y" %}
-                                <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger rounded-circle"></span>
-                        {% endif %}
-                    {% endfor %}
-                      За сегодня
-                    </button></a>
-
+            <div class="row align-items-start rounded-pill">
+                    <h3 class="mb-2">Отключенные за сегодня {{ username }}</h3>
             </div>
         </div>
     </div>
 </div>
-{% endif %}
-<nav class="navbar navbar-dark navbar-expand-lg bg-body-tertiary justify-content-center">
+	<nav class="navbar navbar-dark navbar-expand-lg bg-body-tertiary justify-content-center">
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#TopToggler" aria-controls="TopToggler" style="background-color: rgba(89, 89, 89, 1)">
             <span class="text-light">Фильтры</span>
         </button>
@@ -61,7 +43,7 @@
                     <div class="col-sm-2 me-2">
                             <button type="submit" class="btn btn-secondary">Применить</button>
                         <div class="col-sm-1">
-                        <a href="{% url 'shutdown_master' %}" type="reset" class="resetForms btn btn-secondary">Сброс</a>
+                        <a href="{% url 'include_master' %}" type="reset" class="resetForms btn btn-secondary">Сброс</a>
                     </div>
                     </div>
                 </form>
@@ -92,14 +74,12 @@
                       <tbody class="table-group-divider">
                       {% if perms.tester.master %}
                       {% for foo in  master.qs %}
-                          {% if foo.completion == False %}
                         <tr>
                           <td><input type="checkbox" name="completion_checkbox" value="{{ foo.id }}"></td>
                           <td>{{ foo.street }}</td>
                           <td>{{ foo.house }}</td>
                           <td>{{ foo.apartment }}</td>
                         </tr>
-                        {% endif %}
                       {% endfor %}
                     {% endif %}
                    {% if is_super %}

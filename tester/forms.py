@@ -32,7 +32,11 @@ class TicketForm(forms.ModelForm):
             existing_tickets = existing_tickets.exclude(pk=self.instance.pk)
 
         if existing_tickets.exists():
-            raise ValidationError('Такой объект Ticket уже существует.')
+            # Добавьте ошибку для конкретного поля, но оставьте значение в поле
+            self.add_error('district', 'Такой объект Ticket уже существует.')
+            self.add_error('street', 'Такой объект Ticket уже существует.')
+            self.add_error('house', 'Такой объект Ticket уже существует.')
+            self.add_error('apartment', f"Такой объект Ticket уже существует. /edit_ticket/{existing_tickets.first().id}")
 
         return cleaned_data
 

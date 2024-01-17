@@ -16,7 +16,6 @@ from reversion.models import Version
 from openpyxl import load_workbook
 
 
-
 def start_page(request):
     if request.user.is_authenticated:
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
@@ -106,12 +105,6 @@ def add_com_master(request, pk):
 
 @permission_required('tester.operator', login_url='error')
 def add_ticket(request):
-    news = News.objects.all()
-    ticket_time = timezone.now()
-    username = request.user.get_username()
-    year_now = timezone.now()
-    proc = Ticket.objects.get_queryset_none()
-
     if request.user.is_authenticated:
         if request.method == 'POST':
             instance = None
@@ -125,12 +118,18 @@ def add_ticket(request):
                 ticket.save()
                 if ticket.id:
                     return redirect('edit_ticket', ticket.id)
-
             else:
-                messages.error(request, "Такой объект Ticket уже существует")
+                messages.error(request, "Ошибка при сохранении формы. Проверьте данные.")
 
+        else:
+            form = TicketForm()
 
-    form = TicketForm()
+    news = News.objects.all()
+    ticket_time = timezone.now()
+    username = request.user.get_username()
+    year_now = timezone.now()
+    proc = Ticket.objects.get_queryset_none()
+
     context = {
         "form": form,
         "username": username,
@@ -148,6 +147,7 @@ def com_master_edit(request, instance=None):
     if form.is_valid():
         ticket = form.save(commit=False)
         ticket.user_change = request.user.get_username()
+        ticket.viewed = False
         ticket.save()
 
         if instance.apartment is None:
@@ -287,6 +287,18 @@ def edit_ticket(request, pk):
                 ticket.date_change = timezone.now()
                 ticket.save()
 
+                if ticket.status == False:
+                    ticket.deleted = True
+                    ticket.save()
+
+                elif ticket.status == True:
+                    ticket.deleted = False
+                    ticket.save()
+
+                elif ticket.status == None:
+                    ticket.viewed = False
+                    ticket.save()
+
                 if instance.apartment is None:
                     messages.success(request,
                                      f'Данные успешно изменены {instance.street}  {instance.house}')
@@ -399,22 +411,48 @@ def shutdown(request):
     return render(request, 'tester/shutdown.html', context)
 
 
+@permission_required('tester.master', login_url='error')
 def shutdown_master(request):
     if request.method == 'POST':
         completed_ids = request.POST.getlist('completion_checkbox')
         if completed_ids:
             Shutdown.objects.filter(id__in=completed_ids).update(completion=True)
-            messages.success(request, 'dsdsdsd')
-        else:
-            completed_ids = request.POST.getlist('completion_checkbox_l')
-            Shutdown.objects.filter(id__in=completed_ids).update(completion=False)
-            messages.success(request, '545454554')
+            Shutdown.objects.filter(id__in=completed_ids).update(closed_date=timezone.now())
+            messages.success(request, 'Оключка(и) выполнена(ы)')
 
     username = request.user.get_username()
     master_shutdown = ShutdownFilterMaster(request.GET, queryset=Shutdown.objects.filter(master_id=request.user.id))
     form = Shutdownlist()
     is_super = bool(request.user.is_superuser)
     for_super = ShutdownFilterMaster(request.GET, queryset=Shutdown.objects.all())
+    year_now = timezone.now()
+    button = Shutdown.objects.all().filter(master_id=request.user.id)
+    context = {
+        "for_super": for_super,
+        "is_super": is_super,
+        "form": form,
+        "username": username,
+        "master": master_shutdown,
+        "time": year_now,
+        "button": button,
+    }
+    return render(request, 'tester/shutdown_master.html', context)
+
+
+@permission_required('tester.master', login_url='error')
+def include_master(request):
+    if request.method == 'POST':
+        completed_ids = request.POST.getlist('completion_checkbox')
+        if completed_ids:
+            Shutdown.objects.filter(id__in=completed_ids).update(completion=False)
+            Shutdown.objects.filter(id__in=completed_ids).update(closed_date=None)
+            messages.success(request, 'Оключка(и) снова активна(ы)')
+
+    username = request.user.get_username()
+    master_shutdown = ShutdownFilterMaster(request.GET, queryset=Shutdown.objects.filter(master_id=request.user.id).filter(completion=True))
+    form = Shutdownlist()
+    is_super = bool(request.user.is_superuser)
+    for_super = ShutdownFilterMaster(request.GET, queryset=Shutdown.objects.all().filter(completion=True))
     year_now = timezone.now()
     context = {
         "for_super": for_super,
@@ -424,7 +462,7 @@ def shutdown_master(request):
         "master": master_shutdown,
         "time": year_now,
     }
-    return render(request, 'tester/shutdown_master.html', context)
+    return render(request, 'tester/include_master.html', context)
 
 
 @permission_required('tester.dispatcher', login_url='error')
@@ -460,7 +498,7 @@ def add_address(request):
     }
     return render(request, 'tester/address.html', context)
 
-
+@permission_required('tester.dispatcher', login_url='error')
 def territory(request):
     username = request.user.get_username()
     year_now = timezone.now()
@@ -473,6 +511,7 @@ def territory(request):
     return render(request, 'tester/territory.html', context)
 
 
+@permission_required('tester.dispatcher', login_url='error')
 def edit_news(request, pk):
     if request.method == 'POST':
         instance = News.objects.get(id=pk)
@@ -501,6 +540,14 @@ def edit_news(request, pk):
     }
 
     return render(request, 'tester/edit_news.html', context)
+
+
+@permission_required('tester.dispatcher', login_url='error')
+def delete_news(request, pk):
+    post_to_delete = News.objects.get(id=pk)
+    messages.success(request, f"Новость {post_to_delete.title} удалена")
+    post_to_delete.delete()
+    return redirect('start_page')
 
 
 def test(request):

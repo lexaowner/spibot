@@ -11,17 +11,15 @@ from spibot import settings
 
 class User(AbstractUser):
     last_login = models.DateTimeField(_('last login'), blank=True, null=True)
-    is_superuser = models.BooleanField(_('superuser status'), default=False, help_text=_(
-        'Designates that this user has all permissions without explicitly assigning them.'))
+    is_superuser = models.BooleanField(_('superuser status'), default=False, help_text=_('Designates that this user has all permissions without explicitly assigning them.'))
     first_name = models.CharField(_('first name'), max_length=150, blank=True)
     last_name = models.CharField(_('last name'), max_length=150, blank=True)
     email = models.EmailField(_('email address'), blank=True)
-    is_staff = models.BooleanField(_('staff status'), default=False,
-                                   help_text=_('Designates whether the user can log into this admin site.'))
-    is_active = models.BooleanField(_('active'), default=True, help_text=_(
-        'Designates whether this user should be treated as active. Unselect this instead of deleting accounts.'))
+    is_staff = models.BooleanField(_('staff status'), default=False,help_text=_('Designates whether the user can log into this admin site.'))
+    is_active = models.BooleanField(_('active'), default=True, help_text=_('Designates whether this user should be treated as active. Unselect this instead of deleting accounts.'))
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
     phone_number = models.CharField(max_length=32, blank=True, null=True, verbose_name=_('phone number'))
+    telegram_id = models.CharField(max_length=10, blank=True, null=True, verbose_name=_('telegram_id'))
 
     class Meta:
         verbose_name = 'Пользователь'
@@ -203,6 +201,7 @@ class Shutdown(models.Model):
     closed_date = models.DateTimeField(editable=True, null=True, blank=True, verbose_name="Дата закрытия")
     master = models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT, verbose_name="Мастер", related_name='mater_shutdown')
     completion = models.BooleanField(choices=[(True, 'Выполнено'), (False, 'Не Выполнено')], null=True, blank=True,verbose_name="Выполнение", default=False)
+    deleted = models.BooleanField(choices=[(True, 'Удаленна'), (False, 'Активна'), ], null=True,blank=True, default=False,verbose_name="Статус_deleted")
     file = models.FileField(verbose_name='Файл отключки')
 
     class Meta:
