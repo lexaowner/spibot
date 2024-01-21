@@ -56,7 +56,7 @@ def start_page(request):
             news = News.objects.all().order_by("-date")
             news_form = NewsForm()
             change_master = TicketForm()
-            tickets = TicketFilterForm(request.GET, queryset=Ticket.objects.get_queryset_true())
+            tickets = TicketFilterForm(request.GET, queryset=Ticket.objects.all())
             paginator = Paginator(tickets.qs, 25)
             page_number = request.GET.get('page')
             page_obj = paginator.get_page(page_number)
@@ -312,9 +312,6 @@ def edit_ticket(request, pk):
             messages.error(request, f'Данные не могут быть изменены {Exception(request)}')
 
     latest_version = Version.objects.get_for_object(Ticket.objects.get(id=pk))
-
-    messages.success(request, f"{latest_version}")
-
     get_odj = Ticket.objects.get(id=pk)
     username = request.user.get_username()
     year_now = timezone.now()
@@ -328,6 +325,7 @@ def edit_ticket(request, pk):
         "time": year_now,
         "obj": get_odj,
         "processing": proc,
+        "latest_version": latest_version,
     }
 
     return render(request, 'tester/edit_ticketfrom.html', context)
@@ -418,6 +416,7 @@ def shutdown_master(request):
         if completed_ids:
             Shutdown.objects.filter(id__in=completed_ids).update(completion=True)
             Shutdown.objects.filter(id__in=completed_ids).update(closed_date=timezone.now())
+            Shutdown.objects.filter(id__in=completed_ids).update(deleted=True)
             messages.success(request, 'Оключка(и) выполнена(ы)')
 
     username = request.user.get_username()
@@ -439,16 +438,16 @@ def shutdown_master(request):
     return render(request, 'tester/shutdown_master.html', context)
 
 
-@permission_required('tester.master', login_url='error')
 def include_master(request):
     if request.method == 'POST':
         completed_ids = request.POST.getlist('completion_checkbox')
         if completed_ids:
             Shutdown.objects.filter(id__in=completed_ids).update(completion=False)
             Shutdown.objects.filter(id__in=completed_ids).update(closed_date=None)
+            Shutdown.objects.filter(id__in=completed_ids).update(deleted=False)
             messages.success(request, 'Оключка(и) снова активна(ы)')
 
-    username = request.user.get_username()
+    username = request.user
     master_shutdown = ShutdownFilterMaster(request.GET, queryset=Shutdown.objects.filter(master_id=request.user.id).filter(completion=True))
     form = Shutdownlist()
     is_super = bool(request.user.is_superuser)
@@ -476,16 +475,27 @@ def add_address(request):
     proc = Ticket.objects.get_queryset_none()
 
     if request.method == "POST":
-        form = AddDistrict(request.POST)
-        if form.is_valid():
-            form.save()
+        street_form = AddStreet(request.POST)
+        district_form = AddDistrict(request.POST)
+
+        if district_form.is_valid():
+            district_form.save()
             messages.success(request, 'Район добавлен')
 
-    if request.method == "POST":
-        form = AddStreet(request.POST)
-        if form.is_valid():
-            form.save()
+        if street_form.is_valid():
+            street_form.save()
             messages.success(request, 'Улица добавлена')
+
+    if request.method == "POST":
+        # Изменение района
+        form_district_edit = AddDistrict(request.POST)
+        if form_district_edit.is_valid():
+            district_id = request.POST.get('district_id')
+            district_instance = District.objects.get(pk=district_id)
+            district_instance.name = form_district_edit.cleaned_data['name']
+            district_instance.save()
+            messages.success(request, 'Район изменен')
+            return redirect('add_address')  # Перенаправление на ту же страницу после успешного изменения
 
     context = {
         "username": username,
@@ -497,6 +507,7 @@ def add_address(request):
         "processing": proc,
     }
     return render(request, 'tester/address.html', context)
+
 
 @permission_required('tester.dispatcher', login_url='error')
 def territory(request):

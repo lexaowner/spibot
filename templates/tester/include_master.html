@@ -16,7 +16,7 @@
     <div class="row shadow bg-body-tertiary rounded position-relative" style="background-color: rgba(89, 89, 89, 1);">
         <div class="text-light">
             <div class="row align-items-start rounded-pill">
-                    <h3 class="mb-2">Отключенные за сегодня {{ username }}</h3>
+                    <h3 class="mb-2">Отключенные за сегодня {{ username.first_name }}</h3>
             </div>
         </div>
     </div>
@@ -59,6 +59,7 @@
     <div class="row shadow bg-body-tertiary rounded" style="background-color: rgba(89, 89, 89, 1);">
         <div class="text-light">
             <div class="row align-items-start p-2 rounded-pill">
+            <div class="table-responsive">
              <table class="table table-dark table-striped scrollspy-example bg-body-tertiary rounded-2" >
                 <thead>
                     <tr>
@@ -66,35 +67,44 @@
                       <th scope="col">Улица</th>
                       <th scope="col">Дом</th>
                       <th scope="col">Кв</th>
-                         {% if is_super %}
+                         {% if is_super or  perms.tester.dispatcher%}
                              <th scope="col">Мастер</th>
+                             <th scope="col">Время закрытия</th>
                         {% endif %}
                     </tr>
                       </thead>
                       <tbody class="table-group-divider">
                       {% if perms.tester.master %}
                       {% for foo in  master.qs %}
+                               {% if foo.closed_date|date:"d.m.Y" == time|date:"d.m.Y" %}
                         <tr>
                           <td><input type="checkbox" name="completion_checkbox" value="{{ foo.id }}"></td>
                           <td>{{ foo.street }}</td>
                           <td>{{ foo.house }}</td>
                           <td>{{ foo.apartment }}</td>
                         </tr>
+                          {% endif %}
                       {% endfor %}
                     {% endif %}
-                   {% if is_super %}
+                      {% if perms.tester.dispatcher %}
                       {% for foo in  for_super.qs %}
+                               {% if foo.closed_date|date:"d.m.Y" == time|date:"d.m.Y" %}
                         <tr>
                           <td><input type="checkbox" name="completion_checkbox" value="{{ foo.id }}"></td>
                           <td>{{ foo.street }}</td>
                           <td>{{ foo.house }}</td>
                           <td>{{ foo.apartment }}</td>
-                          <td>{{ foo.master.first_name}}</td>
+                            {% if is_super or  perms.tester.dispatcher%}
+                                <td>{{ foo.master.first_name }}</td>
+                                <td>{{ foo.closed_date|date:"d.m.y H:i" }}</td>
+                            {% endif %}
                         </tr>
+                          {% endif %}
                       {% endfor %}
                     {% endif %}
                       </tbody>
              </table>
+            </div>
             </div>
             </div>
         </div>

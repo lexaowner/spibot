@@ -135,6 +135,7 @@ class Ticket(models.Model):
         ('Ремонт', 'Ремонт'),
         ('Настройка', 'Настройка'),
         ('Перенос', 'Перенос'),
+        ('Включение', 'Включение'),
         ('Отключение', 'Отключение'),
         ('Установка', 'Установка'),
     ]
@@ -154,7 +155,7 @@ class Ticket(models.Model):
     cause = models.BooleanField(choices=[(True, '----------'), (None, 'Выполнена'), (False, 'Не дозвон')], null=True,
                                 blank=True, default=None,
                                 verbose_name="Причина закрытия", )
-    user_change = models.CharField(max_length=12, null=True, blank=True, verbose_name="Изменил")
+    user_change = models.CharField(max_length=24, null=True, blank=True, verbose_name="Изменил")
     viewed = models.BooleanField(choices=[(True, 'Просмотрено'), (False, 'Не просмотрено')], null=True,
                                 blank=True, default=False,
                                 verbose_name="Статус тикета", )

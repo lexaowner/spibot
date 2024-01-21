@@ -24,6 +24,7 @@ class TicketForm(forms.ModelForm):
             street=street.id,
             house=house,
             apartment=apartment,
+            deleted=False,
             # Добавьте другие поля, если они должны быть уникальными
         )
 
@@ -77,28 +78,6 @@ class TicketFilterForm(django_filters.FilterSet):
             data.setdefault("status", True)
         super(TicketFilterForm, self).__init__(data, *args, **kwargs)
 
-        # self.filters['street'] = django_filters.ModelChoiceFilter(
-        #     queryset=Street.objects.none(),  # queryset будет установлен в зависимости от выбранного района
-        #     label="Улица",
-        #     widget=ChainedSelect(
-        #         to_app_name='tester',
-        #         to_model_name='Ticket',
-        #         chained_field='district',
-        #         chained_model_field='district',
-        #         foreign_key_app_name='tester',
-        #         foreign_key_model_name='Street',
-        #         foreign_key_field_name='street',
-        #         auto_choose=False,
-        #         show_all=False,
-        #     ),
-        # )
-        #
-        # # Запоминаем выбранный район
-        # district = self.data.get('district')
-        # if district:
-        #     # Обновляем queryset для поля street
-        #     self.filters['street'].queryset = Street.objects.filter(district=district)
-
     master = django_filters.ModelChoiceFilter(
         queryset=User.objects.filter(groups__name='Мастер'),
         label="Мастер",
@@ -110,6 +89,8 @@ class TicketFilterForm(django_filters.FilterSet):
         label="Оператор",
         widget=forms.Select(attrs={'class': 'operator'}),
     )
+
+    status = django_filters.ChoiceFilter(choices=[(True, 'Открыта'), (False, 'Закрыта')], label="Статус",)
 
     class Meta:
         model = Ticket

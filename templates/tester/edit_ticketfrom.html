@@ -84,39 +84,39 @@
             </div>
         </div>
     </div>
-{#    {% for foo in history %}#}
-{#        {% if foo.viewed != True %}#}
-{#            <div class="container p-2">#}
-{#                <div class="row col-sm-12 me-1 ms-1 rounded shadow mb-2 rounded" style="background-color: rgba(89, 89, 89, 1);">#}
-{#                    <div class="text-light">#}
-{#                    <div class="col-sm-2">#}
-{#                        {% if foo.history_type == '+' %}#}
-{#                            <span class="badge bg-success">Добавлено</span>#}
-{#                                {{ foo.history_date|date:"d.m.Y H:i" }}#}
-{#                        {% elif foo.history_type == '-' %}#}
-{#                            <span class="badge bg-danger">Удалено</span>#}
-{#                            {{ foo.history_date|date:"d.m.Y H:i" }}#}
-{#                        {% elif foo.history_type == '~' %}#}
-{#                            <span class="badge bg-warning">Изменено</span>#}
-{#                        {{ foo.history_date|date:"d.m.Y H:i" }}#}
-{#                        {% endif %}#}
-{#                    </div>#}
+{#{% for version in latest_version %}#}
+{#    <div class="container p-2">#}
+{#        <div class="row col-sm-12 me-1 ms-1 rounded shadow mb-2 rounded" style="background-color: rgba(89, 89, 89, 1);">#}
+{#            <div class="text-light">#}
 {#                <div class="col-sm-2">#}
-{#                {% if foo.user_change == None %}#}
-{#                {% else %}#}
-{#                <span class="badge bg-primary">#}
-{#                {{ foo.user_change }}#}
-{#                </span>#}
-{#                    <div class="col-sm-2">#}
-{#             <span class="badge bg-warning">#}
-{#                        {{ get_changes }}#}
-{#                 </span>#}
-{#            </div>#}
-{#                {% endif %}#}
-{#            {% endif %}#}
+{#                   #}
+{#                        <span class="badge bg-success">Добавлено</span>#}
+{#                   #}
+{#                        <span class="badge bg-danger">Удалено</span>#}
+{#                  #}
+{#                        <span class="badge bg-warning">Изменено</span>#}
+{##}
+{#                  #}
 {#                </div>#}
-{#        </div>#}
+{#                <div class="col-sm-2">#}
+{#                    #}
+{#                </div>#}
+{#                <div class="col-sm-2">#}
+{#                #}
+{#                </div>#}
+{#            </div>#}
 {#        </div>#}
 {#    </div>#}
-{#    {% endfor %}#}
+{#{% endfor %}#}
+          {% for version in latest_version %}
+                    <p>Version ID: {{ version.id }}, Date Created: {{ version.revision.date_created }}</p>
+                        <ul>
+                               {% for field in version.field_dict %}
+                                {% if field == field %}
+                                    <li>Field: {{ field }} was changed to {{ field}}</li>
+                                    {{ version.field_dict.status }}
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                {% endfor %}
 {% endblock %}

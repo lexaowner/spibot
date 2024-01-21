@@ -19,5 +19,5 @@ urlpatterns = [
     path('territory/', views.territory, name='territory'),
     path('edit_news/<int:pk>', views.edit_news, name='edit_news'),
     path('delete_news/<int:pk>', views.delete_news, name='delete_news'),
-    path('include_master/', views.include_master, name='include_master'),
+    path('include_master/', views.include_master, name='include_master'),###########
 ]
