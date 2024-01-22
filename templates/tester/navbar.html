@@ -56,13 +56,10 @@
     </div>
   </div>
 </nav>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-<!-- Подключение звука (например, уведомления) -->
 <audio id="notificationSound">
-    <source src="{% static 'mp3/message_alert.mp3' %}" type="audio/mp3">
-    <!-- Добавьте другие форматы звука по необходимости -->
+<source src="{% static 'mp3/message_alert.mp3' %}" type="audio/mp3">
 </audio>    
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
@@ -83,32 +80,27 @@ const processingItem = $('#unviewed-indicator');
             success: function (data) {
                 console.log(data);
 
-                // Проверяем, есть ли непросмотренные заявки и разрешение 'tester.dispatcher'
                 let hasUnviewedAndPermission = data.tickets.some(function (ticket) {
                     return ticket.viewed === false && data.user_permissions.includes('tester.dispatcher');
                 });
 
-                // Проверяем, был ли уже показан алерт
                 if (hasUnviewedAndPermission && !alertShown) {
-                    // Вызываем функцию для проигрывания звука
                     playNotificationSound();
 
-                    // Показываем предупреждение
                     Swal.fire({
-                        title: 'Есть непросмотренные заявки',
-                        icon: 'warning',
-                        showCancelButton: false,
-                        confirmButtonText: 'OK'
+                          position: "center",
+                          icon: "info",
+                          title: "Есть не просмотренные заявки",
+                          showConfirmButton: false,
+                          timer: 1500
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            // Действие после подтверждения алерта
                         }
                     });
 
-                    alertShown = true;  // Устанавливаем флаг, что алерт был показан
+                    alertShown = true;
                 }
 
-                // Изменяем стили тега или его содержимое
                 if (hasUnviewedAndPermission) {
                     processingItem.show();
                     console.log('work');
@@ -124,7 +116,6 @@ const processingItem = $('#unviewed-indicator');
     }
 
     processingItem.hide();
-    // Вызываем функцию с интервалом в 5 секунд (5000 миллисекунд)
     setInterval(updateProcessingStatus, 2000);
 </script>
 {% endblock %}

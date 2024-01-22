@@ -29,7 +29,8 @@
                           </thead>
                           <tbody class="table-group-divider">
                             {% if perms.tester.master %}
-                                      {% for foo in master_ticket.qs %}
+                              {% for foo in master_ticket.qs %}
+                                  {% if foo.status == None or foo.status == True %}
                             <tr {% if foo.priority == 'Срочный' %}class="table-danger"{% elif foo.priority == 'Корпоративный' %}class="table-warning"{% endif %}>
                               <td><a {% if foo.status == None %}class="link-secondary"{% else %}class="link-light"{% endif %}href="{% url 'master_comment' foo.id %}">{{ foo.get_full_address }}{% if foo.apartment %} кв {{ foo.apartment| default:'' }}</a>{% endif %}</td>
                               <td {% if foo.status == None %}class="text-secondary"{% else %}class="text-light"{% endif %}>{{ foo.type }}</td>
@@ -64,15 +65,9 @@
                                           Обработка
                                       </div>
                                   </td>
-
-                                {% elif foo.status == False %}
-                                  <td>
-                                      <div class="bg-danger text-center rounded">
-                                          Закрыта
-                                      </div>
-                                  </td>
                                 {% endif %}
                             </tr>
+                                  {% endif %}
                             {% endfor %}
                                 {% endif %}
 

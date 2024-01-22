@@ -109,14 +109,12 @@
 {#    </div>#}
 {#{% endfor %}#}
           {% for version in latest_version %}
-                    <p>Version ID: {{ version.id }}, Date Created: {{ version.revision.date_created }}</p>
-                        <ul>
-                               {% for field in version.field_dict %}
-                                {% if field == field %}
-                                    <li>Field: {{ field }} was changed to {{ field}}</li>
-                                    {{ version.field_dict.status }}
-                                {% endif %}
-                            {% endfor %}
-                        </ul>
+              {{ version.field_dict }}
+{#                    <p>Version ID: {{ version.id }}, Date Created: {{ version.revision.date_created }}</p>#}
+{#                        <ul>#}
+{#                                {% for field_name, values in version.field_dict.items %}#}
+{#                                    <li>Field: {{ field_name }}, Old Value: {{ values }}, New Value: {{ values }}</li>#}
+{#                                {% endfor %}#}
+{#                        </ul>#}
                 {% endfor %}
 {% endblock %}

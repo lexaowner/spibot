@@ -311,7 +311,8 @@ def edit_ticket(request, pk):
         except:
             messages.error(request, f'Данные не могут быть изменены {Exception(request)}')
 
-    latest_version = Version.objects.get_for_object(Ticket.objects.get(id=pk))
+    latest_version = Version.objects.get_for_object_reference(Ticket, object_id=pk)
+    
     get_odj = Ticket.objects.get(id=pk)
     username = request.user.get_username()
     year_now = timezone.now()
