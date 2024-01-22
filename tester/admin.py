@@ -17,7 +17,18 @@ class UserAdmin(_UserAdmin):
     add_form = UserCreationForm
     form = UserChangeForm
     model = User
-    list_display = ['username', 'email', ]
+    list_display = ['username', 'email', 'telegram_id']  # Добавлено поле 'telegram_id'
+
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('username', 'password1', 'password2', 'email', 'telegram_id'),
+        }),
+    )
+
+    fieldsets = _UserAdmin.fieldsets + (
+        (None, {'fields': ('telegram_id',)}),
+    )
 
 
 admin.site.register(User, UserAdmin)

@@ -14,6 +14,8 @@ from django.contrib.auth.decorators import permission_required
 from django.core.paginator import Paginator
 from reversion.models import Version
 from openpyxl import load_workbook
+import telebot
+from telebot import types
 
 
 def start_page(request):
@@ -116,6 +118,7 @@ def add_ticket(request):
                 ticket.comment_master = None
                 ticket.user_change = request.user.first_name
                 ticket.save()
+                master_message(request, ticket)
                 if ticket.id:
                     return redirect('edit_ticket', ticket.id)
             else:
@@ -266,6 +269,18 @@ def processing(request):
     return render(request, 'tester/processing.html', context)
 
 
+def master_message(request, obj):
+    bot = telebot.TeleBot('6924477556:AAH3pYP8AzQJXia27bgxAW1srTfAAaCaHC0')
+    master_telegram_id = obj.master.telegram_id
+    if master_telegram_id:
+        if obj.apartment:
+            bot.send_message(master_telegram_id, f"Открыта новая заявка {obj.street} {obj.house} кв {obj.apartment}")
+        else:
+            bot.send_message(master_telegram_id, f"Открыта новая заявка {obj.street} {obj.house}")
+    else:
+        messages.error(request, "Не удалось отправить уведомление: отсутствует telegram_id для мастера.")
+
+
 @permission_required('tester.operator', login_url='error')
 def edit_ticket(request, pk):
     if request.method == "GET":
@@ -293,6 +308,7 @@ def edit_ticket(request, pk):
 
                 elif ticket.status == True:
                     ticket.deleted = False
+                    master_message(request, ticket)
                     ticket.save()
 
                 elif ticket.status == None:

@@ -53,6 +53,11 @@
             </div>
         </div>
     </div>
+    <div class="text-center">
+     {% if perms.tester.master %}
+                <a class="nav-link" aria-current="page" href="https://t.me/Cora_ktv_bot">Подключить уведомления в Telegram</a>
+        {% endif %}
+    </div>
  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable modal-xl">
     <div class="modal-content">

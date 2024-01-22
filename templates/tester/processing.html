@@ -106,7 +106,7 @@
                                 <td>{{ foo.login| default:'' }}</td>
                                 <td>{{ foo.operator.first_name }}</td>
                                 <td>{{ foo.comment_operator| slice:16 | default:'' }}</td>
-                                <td>{{ foo.master| default:'Не выбран' }}</td>
+                                <td>{{ foo.master.first_name| default:'Не выбран' }}</td>
                                 <td>{{ foo.comment_master| slice:16 | default:'' }}</td>
                                 {% if foo.status == None %}
                                      <td>

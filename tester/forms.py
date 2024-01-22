@@ -178,15 +178,17 @@ class AddComMaster(forms.ModelForm):
 
 
 class UserCreationForm(_UserCreationForm):
+    telegram_id = forms.CharField(max_length=10, required=False, label=('Telegram ID'))
     class Meta:
         model = User
-        fields = ('username', 'email')
+        fields = ('username', 'email', 'telegram_id',)
 
 
 class UserChangeForm(_UserChangeForm):
+    telegram_id = forms.CharField(max_length=10, required=False, label=('Telegram ID'))
     class Meta:
         model = User
-        fields = ('username', 'email')
+        fields = ('username', 'email', 'telegram_id',)
 
 
 class ShutdownForm(forms.ModelForm):
