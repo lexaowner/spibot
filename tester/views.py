@@ -439,6 +439,7 @@ def del_shutdown(request, pk):
     return redirect('shutdown')
 
 
+
 @permission_required('tester.master', login_url='error')
 def shutdown_master(request):
     if request.method == 'POST':
