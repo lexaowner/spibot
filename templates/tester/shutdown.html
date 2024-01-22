@@ -71,6 +71,7 @@
                       <th scope="col">Дом</th>
                       <th scope="col">Кв</th>
                       <th scope="col">Мастер</th>
+                      <th class="text-end" scope="col">Удалить</th>
                     </tr>
                       </thead>
                       <tbody class="table-group-divider">
@@ -81,6 +82,17 @@
                           <td>{{ foo.house }}</td>
                           <td>{{ foo.apartment }}</td>
                           <td>{{ foo.master.first_name }}</td>
+                         <td class="text-end">
+                             <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-trash"></i></button>
+                                <ul class="dropdown-menu bg-secondary">
+                                    <li class="text-center">
+                                        <a class="text-secondary" href="{% url 'del_shutdown' foo.id %}">
+                                            <button type="submit" class="btn btn-sm btn-danger me-1" name="district_id" value="">Удалить</button>
+                                        </a>
+                                        <button type="reset" class="btn btn-sm btn-primary">Отмена</button>
+                                    </li>
+                                </ul>
+                         </td>
                         </tr>
                           {% endif %}
                       {% endfor %}

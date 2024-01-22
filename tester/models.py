@@ -200,7 +200,7 @@ class Shutdown(models.Model):
     date = models.DateTimeField(editable=True, default=timezone.now, verbose_name="Дата открытия")
     date_change = models.DateTimeField(editable=True, default=timezone.now, verbose_name="Дата измененя")
     closed_date = models.DateTimeField(editable=True, null=True, blank=True, verbose_name="Дата закрытия")
-    master = models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT, verbose_name="Мастер", related_name='mater_shutdown')
+    master = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name="Мастер", related_name='mater_shutdown')
     completion = models.BooleanField(choices=[(True, 'Выполнено'), (False, 'Не Выполнено')], null=True, blank=True,verbose_name="Выполнение", default=False)
     deleted = models.BooleanField(choices=[(True, 'Удаленна'), (False, 'Активна'), ], null=True,blank=True, default=False,verbose_name="Статус_deleted")
     file = models.FileField(verbose_name='Файл отключки')

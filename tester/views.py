@@ -302,16 +302,16 @@ def edit_ticket(request, pk):
                 ticket.date_change = timezone.now()
                 ticket.save()
 
-                if ticket.status == False:
-                    ticket.deleted = True
-                    ticket.save()
-
-                elif ticket.status == True:
+                if ticket.status:
                     ticket.deleted = False
                     master_message(request, ticket)
                     ticket.save()
 
-                elif ticket.status == None:
+                elif not ticket.status:
+                    ticket.deleted = True
+                    ticket.save()
+
+                elif ticket.status is None:
                     ticket.viewed = False
                     ticket.save()
 
@@ -328,7 +328,7 @@ def edit_ticket(request, pk):
             messages.error(request, f'Данные не могут быть изменены {Exception(request)}')
 
     latest_version = Version.objects.get_for_object_reference(Ticket, object_id=pk)
-    
+
     get_odj = Ticket.objects.get(id=pk)
     username = request.user.get_username()
     year_now = timezone.now()
@@ -426,6 +426,19 @@ def shutdown(request):
     return render(request, 'tester/shutdown.html', context)
 
 
+@permission_required('tester.dispatcher', login_url='error')
+def del_shutdown(request, pk):
+    get_obj = Shutdown.objects.get(id=pk)
+    get_obj.delete()
+
+    if get_obj.apartment:
+        messages.success(request, f"Отключка {get_obj.street} {get_obj.house} кв {get_obj.apartment} удалена")
+    else:
+        messages.success(request, f"Отключка {get_obj.street} {get_obj.house} удалена")
+
+    return redirect('shutdown')
+
+
 @permission_required('tester.master', login_url='error')
 def shutdown_master(request):
     if request.method == 'POST':
@@ -494,25 +507,39 @@ def add_address(request):
     if request.method == "POST":
         street_form = AddStreet(request.POST)
         district_form = AddDistrict(request.POST)
+        district_edit = request.POST.get('district_edit')
+        street_edit = request.POST.get('street_edit')
+        district_id = request.POST.get('district_id')
+        street_id = request.POST.get('street_id')
+
+        obj_district = District.objects.filter(id=district_id)
+        obj_street = Street.objects.filter(id=street_id)
+
+        for it in obj_district:
+            if district_edit == it.name:
+                District.objects.filter(id=district_id).delete()
+                messages.success(request, f'{district_edit} район был изменён')
+
+            else:
+                District.objects.filter(id=district_id).update(name=district_edit)
+                messages.success(request, f'Название района было изменено с {it.name} на {district_edit}')
+
+        for it in obj_street:
+            if street_edit == it.name:
+                Street.objects.filter(id=street_id).delete()
+                messages.success(request, f'Улица {street_edit} была удалена ')
+
+            else:
+                Street.objects.filter(id=street_id).update(name=street_edit)
+                messages.success(request, f'Название улицы было изменено с {it.name} на {street_edit}')
 
         if district_form.is_valid():
             district_form.save()
             messages.success(request, 'Район добавлен')
 
-        if street_form.is_valid():
+        elif street_form.is_valid():
             street_form.save()
             messages.success(request, 'Улица добавлена')
-
-    if request.method == "POST":
-        # Изменение района
-        form_district_edit = AddDistrict(request.POST)
-        if form_district_edit.is_valid():
-            district_id = request.POST.get('district_id')
-            district_instance = District.objects.get(pk=district_id)
-            district_instance.name = form_district_edit.cleaned_data['name']
-            district_instance.save()
-            messages.success(request, 'Район изменен')
-            return redirect('add_address')  # Перенаправление на ту же страницу после успешного изменения
 
     context = {
         "username": username,
@@ -571,7 +598,7 @@ def edit_news(request, pk):
 
 
 @permission_required('tester.dispatcher', login_url='error')
-def delete_news(request, pk):
+def delete_obj(request, pk):
     post_to_delete = News.objects.get(id=pk)
     messages.success(request, f"Новость {post_to_delete.title} удалена")
     post_to_delete.delete()

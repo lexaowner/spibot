@@ -137,7 +137,7 @@
                 <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger rounded-circle" style="height: 5px; width: 5px;"></span>
             {% endif %}
         {% if perms.tester.dispatcher %}
-            <a href="{% url 'delete_news' new.id %}"><button type="button" class="btn-close position-relative" aria-label="Close"></button></a>
+            <a href="{% url 'delete_obj' new.id %}"><button type="button" class="btn-close position-relative" aria-label="Close"></button></a>
         {% endif %}
         <div class="text-light">
             <div class="row">

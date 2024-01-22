@@ -9,7 +9,7 @@
             display: inline-block;
         }
     </style>
-	<div class="container p-3">
+<div class="container p-3">
     <div class="row-3 row shadow p-2 me-2 ms-2 bg-body-tertiary rounded position-relative" style="background-color: rgba(89, 89, 89, 1);">
         <div class="text-light">
             <div class="row align-items-start rounded-pill">
@@ -42,98 +42,76 @@
         <div class="text-light">
             <div class="row align-items-start rounded-pill">
             <h3 class="mb-2">Районы</h3>
-                           {% for district in districts %}
-                       <div class="col-md-auto mb-3">
-                    <div class="btn-group" role="group">
-                        <button type="submit" name="district" form="district_edit" value="{{ district.id }}"
-                                class="btn btn-primary btn-sm">{{ district.name }}</button>
-                        <div class="btn-group" role="group">
-                            <button id="btnEdit{{ district.id }}" type="button"
-                                    class="btn btn-sm btn-success form_selector"
-                                    data-toggle="dropdown"><i class="bi bi-vector-pen"></i>
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="btnEdit{{ district.id }}">
-                                <input name="district_edit" type="text"
-                                       class="form-control form-control-sm mb-2"
-                                       value="{{ district.name }}">
-                                <button type="button" class="btn btn-sm btn-sm btn-outline-secondary ml-1">Отмена
-                                </button>
-                                <button name="district_id" type="submit"
-                                        value="{{ district.id }}"
-                                        class="btn btn-sm btn-sm btn-outline-success ml-2">Готово
-                                </button>
-                            </div>
-                        </div>
-                        <div class="btn-group" role="group">
-                            <button id="btnRem{{ district.id }}" type="button"
-                                    class="btn btn-sm btn-danger form_selector"
-                                    data-toggle="dropdown"><i class="bi bi-trash"></i>
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="btnRem{{ district.id }}">
-                                <input type="hidden" name="district_remove" value="ok">
-                                <button type="submit" name="district_id" value="{{ district.id }}"
-                                        class="btn btn-sm btn-sm btn-outline-danger ml-2">Удалить
-                                </button>
-                                <button type="reset" class="btn btn-sm btn-sm btn-outline-secondary mr-2">Отмена
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+           <div class="col-md-12">
                 </div>
+                {% for district in districts %}
+                    <div class="col-md-auto mb-2">
+                    <form method="POST" id="district_edit">
+                        {% csrf_token %}
+                     <div class="btn-group" role="group">
+                            <span class="btn btn-primary btn-sm">{{ district }}</span>
+                        <button type="button" class="btn btn-sm btn-success" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-feather"></i></button>
+                                <ul class="dropdown-menu bg-secondary">
+                                    <li class="p-1"> <input id="{{ districts.id }}" type="text" class="form-control" placeholder="" aria-label="Input group example" name="district_edit" value="{{ district }}" aria-describedby="btnGroupAddon"></li>
+                                    <li class="text-center">
+                                        <button type="reset" class="btn btn-sm btn-primary me-2">Отмена</button>
+                                        <button type="submit" class="btn btn-sm btn-success" name="district_id" value="{{ district.id }}">Готово</button>
+                                    </li>
+                                </ul>
+                            
+                               <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-trash"></i></button>
+                                <ul class="dropdown-menu bg-secondary">
+                                    <li class="text-center">
+                                        <button type="submit" class="btn btn-sm btn-danger me-1" name="district_id" value="{{ district.id }}">Удалить</button>
+                                        <button type="reset" class="btn btn-sm btn-primary">Отмена</button>
+                                    </li>
+                                </ul>
+                      </div>
+                    </form>
+                    </div>
+                {% endfor %}
+            </div>
+            </div>
+        </div>
+</div>
+    <div class="container p-3">
+        <div class="row-3 row shadow p-2 me-2 ms-2 bg-body-tertiary rounded position-relative" style="background-color: rgba(89, 89, 89, 1);">
+            <div class="text-light">
+                <div class="row align-items-start rounded-pill">
+                <div class="col-md-12">
+                    <h3 class="mb-2">Улицы</h3>
+                </div>
+                {% for street in streets %}
+                    <div class="col-md-auto mb-2">
+                    <form method="POST" id="street_edit">
+                        {% csrf_token %}
+                     <div class="btn-group" role="group">
+                            <span class="btn btn-secondary btn-sm">{{ street }}</span>
+                        <button type="button" class="btn btn-sm btn-success" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-feather"></i></button>
+                                <ul class="dropdown-menu bg-secondary">
+                                    <li class="p-1"> <input id="{{ street.id }}" type="text" class="form-control" placeholder="" aria-label="Input group example" name="street_edit" value="{{ street }}" aria-describedby="btnGroupAddon"></li>
+                                    <li class="text-center">
+                                        <button type="reset" class="btn btn-sm btn-primary me-1">Отмена</button>
+                                        <button type="submit" class="btn btn-sm btn-success" name="street_id" value="{{ street.id }}">Готово</button>
+                                    </li>
+                                </ul>
+                            
+                               <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-trash"></i></button>
+                                <ul class="dropdown-menu bg-secondary">
+                                    
+                                    <li class="text-center">
+                                        <button type="submit" class="btn btn-sm btn-danger me-1" name="street_id" value="{{ street.id }}">Удалить</button>
+                                        <button type="reset" class="btn btn-sm btn-primary">Отмена</button>
+                                    </li>
+                                </ul>
+                      </div>
+                    </form>
+                    </div>
                 {% endfor %}
             </div>
         </div>
     </div>
 </div>
-    <div class="container p-3">
-    <div class="row-3 row shadow p-2 me-2 ms-2 bg-body-tertiary rounded position-relative" style="background-color: rgba(89, 89, 89, 1);">
-        <div class="text-light">
-            <div class="row align-items-start rounded-pill">
-            <div class="col-md-12">
-                <h3 class="mb-2">Улицы</h3>
-            </div>
-            <form method="post" id="street_edit"> {% csrf_token %}</form>
-            {% for street in streets %}
-                <div class="col-md-auto mb-2">
-                    <div class="btn-group" role="group">
-                        <span class="btn btn-secondary btn-sm">{{ street.name }}</span>
-                        <div class="btn-group" role="group">
-                            <button id="btnEdit{{ street.id }}" type="button"
-                                    class="btn btn-sm btn-success form_selector"
-                                    data-toggle="dropdown"><i class="bi bi-vector-pen"></i>
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="btnEdit{{ street.id }}">
-                                <input name="street_edit" type="text"
-                                       class="form-control form-control-sm mb-2"
-                                       value="{{ street.name }}">
-                                <button type="button" class="btn btn-sm btn-sm btn-outline-secondary ml-1">Отмена
-                                </button>
-                                <button name="street_id" type="submit"
-                                        value="{{ street.id }}"
-                                        class="btn btn-sm btn-sm btn-outline-success ml-2">Готово
-                                </button>
-                            </div>
-                        </div>
-                        <div class="btn-group" role="group">
-                            <button id="btnRem{{ street.id }}" type="button" class="btn btn-sm btn-danger form_selector"
-                                    data-toggle="dropdown"><i class="bi bi-trash"></i>
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="btnRem{{ street.id }}">
-                                <input type="hidden" name="street_remove" value="ok">
-                                <button type="submit" name="street_id" value="{{ street.id }}"
-                                        class="btn btn-sm btn-sm btn-outline-danger ml-2">Удалить
-                                </button>
-                                <button type="reset" class="btn btn-sm btn-sm btn-outline-secondary mr-2">Отмена
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    </div>
-            </div>
-        </div>
  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable modal-xl">
     <div class="modal-content">
