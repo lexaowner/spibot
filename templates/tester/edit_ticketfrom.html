@@ -84,37 +84,32 @@
             </div>
         </div>
     </div>
-{#{% for version in latest_version %}#}
-{#    <div class="container p-2">#}
-{#        <div class="row col-sm-12 me-1 ms-1 rounded shadow mb-2 rounded" style="background-color: rgba(89, 89, 89, 1);">#}
-{#            <div class="text-light">#}
-{#                <div class="col-sm-2">#}
-{#                   #}
-{#                        <span class="badge bg-success">Добавлено</span>#}
-{#                   #}
-{#                        <span class="badge bg-danger">Удалено</span>#}
-{#                  #}
-{#                        <span class="badge bg-warning">Изменено</span>#}
-{##}
-{#                  #}
-{#                </div>#}
-{#                <div class="col-sm-2">#}
-{#                    #}
-{#                </div>#}
-{#                <div class="col-sm-2">#}
-{#                #}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{#    </div>#}
-{#{% endfor %}#}
-          {% for version in latest_version %}
-              {{ version.field_dict }}
+{% for change in changes_list %}
+    {% for field_info in change.changed_fields %}
+        {% if field_info.field == 'house' or field_info.field == 'login' or field_info.field == 'first_contact' or field_info.field == 'second_contact' or field_info.field == 'comment_master' or field_info.field == 'comment_operator' or field_info.field == 'type' or field_info.field == 'priority' or field_info.field == 'status' or field_info.field == 'cause' or field_info.field == 'apartment' or field_info.field == 'district_id' or field_info.field == 'street_id'%}
+    <div class="container p-2">
+        <div class="row col-sm-12 me-1 ms-1 rounded shadow mb-2 rounded" style="background-color: rgba(89, 89, 89, 1);">
+            <div class="text-light">
+                <div class="col-12">
+                    <span class="badge bg-secondary">Измененное поле:</span> <span class="badge bg-primary me-4">{{ field_info.field }}</span>
+                    
+                    <span class="badge bg-secondary"> Старое значение:</span> <span class="badge bg-primary me-4">{{ field_info.old_value }}</span>
+                    
+                    <span class="badge bg-secondary"> Новое значение:</span> <span class="badge bg-primary">{{ field_info.new_value }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+        {% endif %} 
+{% endfor %}
+    {% endfor %}
+
+
 {#                    <p>Version ID: {{ version.id }}, Date Created: {{ version.revision.date_created }}</p>#}
 {#                        <ul>#}
 {#                                {% for field_name, values in version.field_dict.items %}#}
 {#                                    <li>Field: {{ field_name }}, Old Value: {{ values }}, New Value: {{ values }}</li>#}
 {#                                {% endfor %}#}
 {#                        </ul>#}
-                {% endfor %}
+    
 {% endblock %}

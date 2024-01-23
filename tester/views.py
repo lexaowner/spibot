@@ -316,8 +316,7 @@ def edit_ticket(request, pk):
                     ticket.save()
 
                 if instance.apartment is None:
-                    messages.success(request,
-                                     f'Данные успешно изменены {instance.street}  {instance.house}')
+                    messages.success(request,f'Данные успешно изменены {instance.street}  {instance.house}')
 
                 else:
                     messages.success(request, f'Данные успешно изменены {instance.street}  {instance.house} кв {instance.apartment}')
@@ -327,7 +326,25 @@ def edit_ticket(request, pk):
         except:
             messages.error(request, f'Данные не могут быть изменены {Exception(request)}')
 
-    latest_version = Version.objects.get_for_object_reference(Ticket, object_id=pk)
+    versions = Version.objects.get_for_object(Ticket.objects.get(id=pk))
+
+    changes_list = []
+
+    for version in versions:
+        changes = version.field_dict.items()
+
+        changed_fields = []
+        for field, value in changes:
+            changed_fields.append({
+                'field': field,
+                'old_value': None,
+                'new_value': value,
+            })
+
+        changes_list.append({
+            'version_id': version.id,
+            'changed_fields': changed_fields,
+        })
 
     get_odj = Ticket.objects.get(id=pk)
     username = request.user.get_username()
@@ -342,7 +359,7 @@ def edit_ticket(request, pk):
         "time": year_now,
         "obj": get_odj,
         "processing": proc,
-        "latest_version": latest_version,
+        'changes_list': changes_list,
     }
 
     return render(request, 'tester/edit_ticketfrom.html', context)
@@ -437,7 +454,6 @@ def del_shutdown(request, pk):
         messages.success(request, f"Отключка {get_obj.street} {get_obj.house} удалена")
 
     return redirect('shutdown')
-
 
 
 @permission_required('tester.master', login_url='error')
