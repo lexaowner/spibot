@@ -7,61 +7,62 @@
         }
     </style>
     <nav class="navbar navbar-dark navbar-expand-lg bg-body-tertiary justify-content-center">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#TopToggler" aria-controls="TopToggler" style="background-color: rgba(89, 89, 89, 1)">
-                <span class="text-light">Фильтры</span>
-            </button>
-    <div class="collapse navbar-collapse" id="TopToggler">
-    <div class="container-12 p-2">
-        <div class="row col-sm-12 me-2 ms-1 rounded shadow mb-2 rounded" style="background-color: rgba(89, 89, 89, 1)">
-            <div class="text-light">
-                <form method="GET">
-                    {% csrf_token %}
-                    <div class="col-sm-1">
-                        {{ tickets.form.district|as_crispy_field }}
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#TopToggler" aria-controls="TopToggler"
+                style="background-color: rgba(89, 89, 89, 1)">
+            <span class="text-light">Фильтры</span>
+        </button>
+        <div class="collapse navbar-collapse" id="TopToggler">
+            <div class="container-12 p-2">
+                <div class="row col-sm-12 me-2 ms-1 rounded shadow mb-2 rounded" style="background-color: rgba(89, 89, 89, 1)">
+                    <div class="text-light">
+                        <form method="GET">
+                            {% csrf_token %}
+                            <div class="col-sm-1">
+                                {{ tickets.form.district|as_crispy_field }}
+                            </div>
+                            <div class="col-sm-1">
+                               <select name="street" class="chainedselect form-select chained-fk" id="id_street" data-chainfield="district" data-url="/smart-selects/filter/tester/Street/district/tester/Ticket/street" data-value="{{ tickets.form.street.value | default:'null' }}" data-auto_choose="false" data-empty_label="--------"><option value="">{{ tickets.street }}</option></select>
+                            </div>
+                            <div class="col-sm-1" style="width: 70px">
+                                {{ tickets.form.house|as_crispy_field }}
+                            </div>
+                            <div class="col-sm-1" style="width: 60px">
+                                {{ tickets.form.apartment|as_crispy_field }}
+                            </div>
+                            <div class="col-sm-1">
+                                {{ tickets.form.login|as_crispy_field }}
+                            </div>
+                            <div class="col-sm-1">
+                                {{ tickets.form.first_contact|as_crispy_field }}
+                            </div>
+                            <div class="col-sm-1">
+                                {{ tickets.form.second_contact|as_crispy_field }}
+                            </div>
+                            <div class="col-sm-1">
+                                {{ tickets.form.type|as_crispy_field }}
+                            </div>
+                            <div class="col-sm-1 operator" style="width: 100px">
+                                {{ tickets.form.operator|as_crispy_field }}
+                            </div>
+                            <div class="col-sm-1 master">
+                                {{ tickets.form.master|as_crispy_field }}
+                            </div>
+                            <div class="col-sm-1">
+                                {{ tickets.form.priority|as_crispy_field }}
+                            </div>
+                            <div class="col-sm-1">
+                                {{ tickets.form.status|as_crispy_field }}
+                            </div>
+                            <div class="col-sm-1">
+                                <button type="submit" class="btn btn-secondary">Применить</button>
+                                <div class="col-sm-1">
+                                    <a href="{% url 'start_page' %}" type="reset" class="resetForms btn btn-secondary">Сброс</a>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                    <div class="col-sm-1">
-                        {{ tickets.form.street|as_crispy_field }}
-                    </div>
-                    <div class="col-sm-1" style="width: 70px">
-                        {{ tickets.form.house|as_crispy_field }}
-                    </div>
-                    <div class="col-sm-1" style="width: 60px">
-                        {{ tickets.form.apartment|as_crispy_field }}
-                    </div>
-                    <div class="col-sm-1">
-                        {{ tickets.form.login|as_crispy_field }}
-                    </div>
-                    <div class="col-sm-1">
-                        {{ tickets.form.first_contact|as_crispy_field }}
-                    </div>
-                    <div class="col-sm-1">
-                        {{ tickets.form.second_contact|as_crispy_field }}
-                    </div>
-                    <div class="col-sm-1">
-                        {{ tickets.form.type|as_crispy_field }}
-                    </div>
-                    <div class="col-sm-1 operator" style="width: 100px">
-                        {{ tickets.form.operator|as_crispy_field }}
-                    </div>
-                    <div class="col-sm-1 master">
-                        {{ tickets.form.master|as_crispy_field }}
-                    </div>
-                    <div class="col-sm-1">
-                        {{ tickets.form.priority|as_crispy_field }}
-                    </div>
-                    <div class="col-sm-1">
-                        {{ tickets.form.status|as_crispy_field }}
-                    </div>
-                    <div class="col-sm-1">
-                            <button type="submit" class="btn btn-secondary">Применить</button>
-                        <div class="col-sm-1">
-                            <a href="{% url 'start_page' %}" type="reset" class="resetForms btn btn-secondary">Сброс</a>
-                        </div>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
-    </div>
-    </div>
     </nav>
 {% endblock %}

@@ -86,8 +86,7 @@
     </div>
 {% for change in changes_list %}
     {% for field_info in change.changed_fields %}
-        {% if field_info.field == 'house' or field_info.field == 'login' or field_info.field == 'first_contact' or field_info.field == 'second_contact' or field_info.field == 'comment_master' or field_info.field == 'comment_operator' or field_info.field == 'type' or field_info.field == 'priority' or field_info.field == 'status' or field_info.field == 'cause' or field_info.field == 'apartment' or field_info.field == 'district_id' or field_info.field == 'street_id'%}
-    <div class="container p-2">
+       <div class="container p-2">
         <div class="row col-sm-12 me-1 ms-1 rounded shadow mb-2 rounded" style="background-color: rgba(89, 89, 89, 1);">
             <div class="text-light">
                 <div class="col-12">
@@ -100,7 +99,7 @@
             </div>
         </div>
     </div>
-        {% endif %} 
+
 {% endfor %}
     {% endfor %}
 
