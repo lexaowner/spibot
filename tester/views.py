@@ -1,5 +1,7 @@
 import os
 import time
+from datetime import datetime
+
 import pandas as pd
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
@@ -618,8 +620,11 @@ def edit_news(request, pk):
 def info(request):
     status = [None, True, False]
     types = ['Ремонт','Настройка','Перенос','Включение','Отключение','Установка']
+    priority = ['Обычный','Срочный','Корпоративный']
     data = {}
-    data2= {}
+    data2 = {}
+    data3 = {}
+    data4 = {}
     for const in status:
         obj = Ticket.objects.filter(status=const)
         data[f'{const}'] = len(obj)
@@ -628,9 +633,13 @@ def info(request):
         obj2 = Ticket.objects.filter(type=it)
         data2[f'{it}'] = len(obj2)
 
-    print(data2)
+    for caus in status:
+        obj = Ticket.objects.filter(cause=caus)
+        data3[f'{caus}'] = len(obj)
 
-    print(data)
+    for pri in priority:
+        obj4 = Ticket.objects.filter(priority=pri)
+        data4[f'{pri}'] = len(obj4)
 
     year_now = timezone.now()
     obj = Ticket.objects.filter(status=None)
@@ -639,6 +648,8 @@ def info(request):
         'inte': len(obj),
         "data": data,
         "data2": data2,
+        "data3": data3,
+        "data4": data4,
         "time": year_now,
     }
     return render(request, 'tester/info.html', context)
