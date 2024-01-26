@@ -21,4 +21,5 @@ urlpatterns = [
     path('delete_obj/<int:pk>', views.delete_obj, name='delete_obj'),
     path('delete_shutdown/<int:pk>', views.del_shutdown, name='del_shutdown'),
     path('include_master/', views.include_master, name='include_master'),###########
+    path('info/', views.info, name='info'),
 ]

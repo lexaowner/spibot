@@ -615,6 +615,36 @@ def edit_news(request, pk):
 
 
 @permission_required('tester.dispatcher', login_url='error')
+def info(request):
+    status = [None, True, False]
+    types = ['Ремонт','Настройка','Перенос','Включение','Отключение','Установка']
+    data = {}
+    data2= {}
+    for const in status:
+        obj = Ticket.objects.filter(status=const)
+        data[f'{const}'] = len(obj)
+
+    for it in types:
+        obj2 = Ticket.objects.filter(type=it)
+        data2[f'{it}'] = len(obj2)
+
+    print(data2)
+
+    print(data)
+
+    year_now = timezone.now()
+    obj = Ticket.objects.filter(status=None)
+
+    context = {
+        'inte': len(obj),
+        "data": data,
+        "data2": data2,
+        "time": year_now,
+    }
+    return render(request, 'tester/info.html', context)
+
+
+@permission_required('tester.dispatcher', login_url='error')
 def delete_obj(request, pk):
     post_to_delete = News.objects.get(id=pk)
     messages.success(request, f"Новость {post_to_delete.title} удалена")
