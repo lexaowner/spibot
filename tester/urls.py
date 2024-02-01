@@ -22,4 +22,5 @@ urlpatterns = [
     path('delete_shutdown/<int:pk>', views.del_shutdown, name='del_shutdown'),
     path('include_master/', views.include_master, name='include_master'),###########
     path('info/', views.info, name='info'),
+    path('login_telegram/', views.login_in_telegram, name='login_telegram'),
 ]

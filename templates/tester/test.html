@@ -28,11 +28,18 @@
             <div class="col-5 shadow p-2 me-2 ms-2 bg-body-tertiary rounded" style="background-color: rgba(89, 89, 89, 1);">
                 sdfds
             </div>
+        <div class="col">
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-secondary">Auth</button>
+            </form>
+        </div>
             <div class="col-5 shadow p-2 me-2 ms-2 bg-body-tertiary rounded" style="background-color: rgba(89, 89, 89, 1);">
                 dsfds
             </div>
         </div>
     </div>
+
 
 </body>
 

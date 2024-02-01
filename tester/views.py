@@ -18,6 +18,24 @@ from reversion.models import Version
 from openpyxl import load_workbook
 import telebot
 from telebot import types
+from . import cora_bot
+
+
+# while True:
+#     bot = telebot.TeleBot('6924477556:AAH3pYP8AzQJXia27bgxAW1srTfAAaCaHC0')
+#     @bot.message_handler(commands=['start'])
+#     def start(message):
+#         bot.send_message(message.from_user.id, 'start')
+#
+#
+#     break
+#
+#
+#     def login_in_cora(message):
+#         pass
+#
+#     bot.polling(none_stop=True)
+#     break
 
 
 def start_page(request):
@@ -56,7 +74,7 @@ def start_page(request):
             username = request.user.get_username()
             ticket_time = timezone.now()
             is_super = bool(request.user.is_superuser)
-            get_mater_ticket = TicketFilterForm(request.GET,queryset=Ticket.objects.get_master(id=request.user.id).order_by( "-date"))
+            get_mater_ticket = TicketFilterForm(request.GET,queryset=Ticket.objects.get_master(id=request.user.id).order_by( "-date"), user=request.user)
             news = News.objects.all().order_by("-date")
             news_form = NewsForm()
             change_master = TicketForm()
@@ -83,6 +101,14 @@ def start_page(request):
 
     else:
         return redirect("login")
+
+
+def login_in_telegram(request):
+    if request.method == 'POST':
+        messages.success(request, f'Вы авторизовались в телерам как мастер {request.user.first_name}')
+        return redirect('profile')
+
+    return render(request, 'tester/login_in_telegram.html')
 
 
 @permission_required('tester.master', login_url='error')
@@ -665,3 +691,8 @@ def delete_obj(request, pk):
 
 def test(request):
     return render(request, 'tester/test.html')
+
+
+
+
+

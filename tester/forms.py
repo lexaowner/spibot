@@ -72,10 +72,16 @@ class NewsForm(forms.ModelForm):
 
 
 class TicketFilterForm(django_filters.FilterSet):
-    def __init__(self, data=None, *args, **kwargs):
-        if data is not None:
-            data = data.copy()
-            data.setdefault("status", True)
+    def __init__(self, data=None, user=None, *args, **kwargs):
+        if user and user.has_perm('tester.master'):
+            if data is not None:
+                data = data.copy()
+                data.setdefault("status", None)
+        else:
+            if data is not None:
+                data = data.copy()
+                data.setdefault("status", True)
+
         super(TicketFilterForm, self).__init__(data, *args, **kwargs)
 
     master = django_filters.ModelChoiceFilter(
