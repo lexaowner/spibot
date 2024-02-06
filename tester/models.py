@@ -138,6 +138,7 @@ class Ticket(models.Model):
         ('Включение', 'Включение'),
         ('Отключение', 'Отключение'),
         ('Установка', 'Установка'),
+        ('Тюнер', 'Тюнер'),
     ]
 
     type = models.CharField(max_length=13, choices=TYPE, verbose_name="Тип заявки")
@@ -203,6 +204,7 @@ class Shutdown(models.Model):
     master = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name="Мастер", related_name='mater_shutdown')
     completion = models.BooleanField(choices=[(True, 'Выполнено'), (False, 'Не Выполнено')], null=True, blank=True,verbose_name="Выполнение", default=False)
     deleted = models.BooleanField(choices=[(True, 'Удаленна'), (False, 'Активна'), ], null=True,blank=True, default=False,verbose_name="Статус_deleted")
+    comment = models.CharField(max_length=250,blank=True, null=True, verbose_name="Комментарий мастера", default=None)
     file = models.FileField(verbose_name='Файл отключки')
 
     class Meta:

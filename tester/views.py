@@ -645,12 +645,13 @@ def edit_news(request, pk):
 @permission_required('tester.dispatcher', login_url='error')
 def info(request):
     status = [None, True, False]
-    types = ['Ремонт','Настройка','Перенос','Включение','Отключение','Установка']
+    types = ['Ремонт','Настройка','Перенос','Включение','Отключение','Установка','Тюнер']
     priority = ['Обычный','Срочный','Корпоративный']
     data = {}
     data2 = {}
     data3 = {}
     data4 = {}
+    data5 = {}
     for const in status:
         obj = Ticket.objects.filter(status=const)
         data[f'{const}'] = len(obj)
@@ -667,15 +668,19 @@ def info(request):
         obj4 = Ticket.objects.filter(priority=pri)
         data4[f'{pri}'] = len(obj4)
 
+    obj5 = Shutdown.objects.all()
+    data5[f'Отключки'] = len(obj5)
+
     year_now = timezone.now()
-    obj = Ticket.objects.filter(status=None)
+    tickets = TicketFilterForm(request.GET, queryset=Ticket.objects.all())
 
     context = {
-        'inte': len(obj),
+        "tickets": tickets,
         "data": data,
         "data2": data2,
         "data3": data3,
         "data4": data4,
+        "data5": data5,
         "time": year_now,
     }
     return render(request, 'tester/info.html', context)

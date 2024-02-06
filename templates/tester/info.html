@@ -1,20 +1,78 @@
 {% extends 'tester/base.html' %}
 {% block content %}
+{% block filters %}
+	{% include 'tester/filters.html' %}
+{% endblock %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<div class="container col-sm-12 p-3">
-    <div class="row row shadow p-2 me-2 ms-2 bg-body-tertiary rounded position-relative" style="background-color: rgba(89, 89, 89, 1);">
-        <div class="text-light">
-            <div class="row align-items-start rounded-pill">
-                Filters
-                </div>
-            </div>
-        </div>
-    </div>
+
     <div class="container col-sm-12 p-3">
     <div class="row row shadow p-2 me-2 ms-2 bg-body-tertiary rounded position-relative" style="background-color: rgba(89, 89, 89, 1);">
         <div class="text-light">
             <div class="row align-items-start rounded-pill">
-                Main Chart
+                <div>
+                  <canvas id="Main_chart"></canvas>
+                </div>
+                <script>
+                  const main = document.getElementById('Main_chart');
+                  const plugin_main = {
+                      id: 'customCanvasBackgroundColor',
+                      beforeDraw: (chart, args, options) => {
+                        const {ctx} = chart;
+                        ctx.save();
+                        ctx.globalCompositeOperation = 'destination-over';
+                        ctx.fillStyle = options.color || '#99ffff';
+                        ctx.fillRect(0, 0, chart.width, chart.height);
+                        ctx.restore();
+                      }
+                    };
+
+                  new Chart(main, {
+                    type: 'bar',
+                    data: {
+                      labels: [{% for obj in tickets.qs %}'{{ obj }}'{% endfor %}],
+                      datasets: [{
+                        label: 'Причины закрытия заявок на {{ time|date:"d.m.y" }}',
+                        data: [ {% for obj in tickets.qs %} {{ obj }}, {% endfor %}],
+                       backgroundColor: [
+                                'rgba(54, 162, 235, 0.5)',
+                                'rgba(255, 206, 86, 0.5)',
+                                'rgba(255, 99, 132, 0.5)',
+                                'rgba(75, 192, 192, 0.5)',
+                                'rgba(153, 102, 255, 0.5)',
+                                'rgba(75, 192, 42, 0.5)',
+                                'rgba(153, 102, 54, 0.5)',
+                                'rgba(255, 159, 89, 0.5)'
+                            ],
+                      borderColor: [
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(75, 192, 32, 1)',
+                                'rgba(153, 102, 40, 1)',
+                                'rgba(255, 159, 32, 1)'
+                            ],
+                        borderWidth: 2
+                      }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        plugins: {
+                            customCanvasBackgroundColor: {
+                                color: 'Gray',
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        }
+                    },
+                  plugins: [plugin_main]
+                  });
+                </script>
+            {% for obj in tickets.qs %} {{ obj }}, {% endfor %}
                 </div>
             </div>
         </div>
@@ -314,6 +372,78 @@
             </div>
         </div>
     </div>
+    <div class="container-12 p-3 text-center">
+    <div class="row justify-content-center">
+            <div class="col-5 shadow p-2 me-2 ms-2 bg-body-tertiary rounded" style="background-color: rgba(89, 89, 89, 1);">
+                <div class="col-sm-12 text-center">
+                 {% for key,value in data5.items %}
+                     <span class="badge bg-secondary">{{ key }}</span> <span class="badge bg-primary me-4">{{ value }}</span>
+                 {% endfor %}
+                </div>
+                 <div>
+                  <canvas id="Chart5"></canvas>
+                </div>
+                <script>
+                  const ctx5 = document.getElementById('Chart5');
+                  const plugin5 = {
+                      id: 'customCanvasBackgroundColor',
+                      beforeDraw: (chart, args, options) => {
+                        const {ctx} = chart;
+                        ctx.save();
+                        ctx.globalCompositeOperation = 'destination-over';
+                        ctx.fillStyle = options.color || '#99ffff';
+                        ctx.fillRect(0, 0, chart.width, chart.height);
+                        ctx.restore();
+                      }
+                    };
+
+                  new Chart(ctx5, {
+                    type: 'bar',
+                    data: {
+                      labels: ['Отключки'],
+                      datasets: [{
+                        label: 'Количество отключений на {{ time|date:"d.m.y" }}',
+                        data: [{% for key,value in data5.items %} {{ value }}, {% endfor %} ],
+                       backgroundColor: [
+                                'rgba(54, 162, 235, 0.5)',
+                                'rgba(255, 206, 86, 0.5)',
+                                'rgba(255, 99, 132, 0.5)',
+                                'rgba(75, 192, 192, 0.5)',
+                                'rgba(153, 102, 255, 0.5)',
+                                'rgba(75, 192, 42, 0.5)',
+                                'rgba(153, 102, 54, 0.5)',
+                                'rgba(255, 159, 89, 0.5)'
+                            ],
+                      borderColor: [
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(75, 192, 32, 1)',
+                                'rgba(153, 102, 40, 1)',
+                                'rgba(255, 159, 32, 1)'
+                            ],
+                        borderWidth: 2
+                      }]
+                    },
+                    options: {
+                        indexAxis: 'x',
+                        plugins: {
+                            customCanvasBackgroundColor: {
+                                color: 'Gray',
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        }
+                    },
+                  plugins: [plugin5]
+                  });
+                </script>
+            </div>
 {% endblock %}
 {% block footer %}
 	{% include 'tester/footer.html' %}
