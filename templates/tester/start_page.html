@@ -31,7 +31,7 @@
                             {% if perms.tester.master %}
                               {% for foo in master_ticket.qs %}
                                   {% if foo.status == None or foo.status == True %}
-                            <tr {% if foo.priority == 'Срочный' %}class="table-danger"{% elif foo.priority == 'Корпоративный' %}class="table-warning"{% endif %}>
+                            <tr {% if foo.priority == 'Срочный' %}class="table-danger"{% elif foo.priority == 'Корпоративный' %}class="table-primary"{% endif %}>
                               <td><a {% if foo.status == None %}class="link-secondary"{% else %}class="link-light"{% endif %}href="{% url 'master_comment' foo.id %}">{{ foo.get_full_address }}{% if foo.apartment %} кв {{ foo.apartment| default:'' }}</a>{% endif %}</td>
                               <td {% if foo.status == None %}class="text-secondary"{% else %}class="text-light"{% endif %}>{{ foo.type }}</td>
                               <td {% if foo.status == None %}class="text-secondary"{% else %}class="text-light"{% endif %}>{{ foo.first_contact }}</td>
@@ -74,7 +74,7 @@
                             {% if perms.tester.operator or perms.tester.dispecher %}
                             {% for foo in page_obj %}
                                 {% if foo.status == False or foo.status == True %}
-                            <tr {% if foo.priority == 'Срочный' %}class="table-danger"{% elif foo.priority == 'Корпоративный' %}class="table-warning"{% endif %}>
+                            <tr {% if foo.priority == 'Срочный' %}class="table-danger"{% elif foo.priority == 'Корпоративный' %}class="table-primary"{% endif %}>
                               <td><a class="text-light" href="{% url 'edit_ticket' foo.id %}">{{ foo.get_full_address }}{% if foo.apartment %} кв {{ foo.apartment| default:'' }}</a>{% endif %}</td>
                               <td>{{ foo.type }}</td>
                               <td>{{ foo.first_contact }}</td>
