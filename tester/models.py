@@ -153,7 +153,7 @@ class Ticket(models.Model):
     status = models.BooleanField(choices=[(True, 'Открыта'), (False, 'Закрыта'), (None, 'В обработке')], null=True,
                                  blank=True, default=None,
                                  verbose_name="Статус", )
-    cause = models.BooleanField(choices=[(True, '----------'), (None, 'Выполнена'), (False, 'Не дозвон')], null=True,
+    cause = models.BooleanField(choices=[(True, '----------'), (None, 'Выполнена'), (False, 'Недозвон')], null=True,
                                 blank=True, default=None,
                                 verbose_name="Причина закрытия", )
     user_change = models.CharField(max_length=24, null=True, blank=True, verbose_name="Изменил")

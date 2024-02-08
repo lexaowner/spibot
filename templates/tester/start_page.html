@@ -105,7 +105,7 @@
                                 {% elif foo.status == False %}
                                   <td>
                                       <div class="bg-danger text-center rounded">
-                                          Закрыта
+                                          Закрыта {{ foo.closed_date|date:"d.m.Y" }} {{ foo.completion_date|date:"d.m.Y" }}
                                       </div>
                                   </td>
                                 {% endif %}

@@ -10,31 +10,31 @@
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           {% if perms.tester.operator %}
         <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="{% url 'add_ticket' %}">Добавить заявку</a>
+          <a class="nav-link" aria-current="page" href="{% url 'add_ticket' %}">Добавить заявку <i class="bi bi-pencil-square"></i></a>
         </li>
           {% endif %}
        {% if perms.tester.dispatcher %}
        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Управление
+          <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Управление <i class="bi bi-kanban"></i>
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{% url 'address' %}">Добавить адрес</a></li>
-            <li><a class="dropdown-item" href="{% url 'shutdown' %}">Добавить отключки</a></li>
-              <li><a class="dropdown-item" href="{% url 'info' %}">Статистика</a></li>
+            <li><a class="dropdown-item" href="{% url 'address' %}">Добавить адрес <i class="bi bi-house-add"></i></a></li>
+            <li><a class="dropdown-item" href="{% url 'shutdown' %}">Добавить отключки <i class="bi bi-cloud-plus-fill"></i></a></li>
+              <li><a class="dropdown-item" href="{% url 'info' %}">Статистика <i class="bi bi-bar-chart-line-fill"></i></a></li>
           </ul>
         <li id="processing-item" class="nav-item position-relative">
-        <a class="nav-link" aria-current="page" href="{% url 'processing' %}">В обработкеa</a>
+        <a class="nav-link" aria-current="page" href="{% url 'processing' %}">В обработке <i class="bi bi-arrow-repeat"></i></a>
             	<span id="unviewed-indicator" class="position-absolute top-0 start-100 translate-middle p-2 bg-danger rounded-circle"></span>
           {% endif %}
        {% if perms.tester.master %}
         <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="{% url 'shutdown_master' %}">Отключки</a>
+          <a class="nav-link" aria-current="page" href="{% url 'shutdown_master' %}">Отключки <i class="bi bi-building-x"></i></a>
         </li>
           {% endif %}
       {% if is_super %}
         <li class="nav-item">
-          <a class="nav-link" href="{{ "/admin/" }}">Админ</a>
+          <a class="nav-link" href="{{ "/admin/" }}">Админ <i class="bi bi-person-walking"></i></a>
         </li>
       {% endif %}
       </ul>

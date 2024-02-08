@@ -1,5 +1,7 @@
 from . import views
+from . import cora_bot
 from django.urls import path
+from django.views.decorators.csrf import csrf_exempt
 
 urlpatterns = [
     path('', views.start_page, name='start_page'),
@@ -23,4 +25,6 @@ urlpatterns = [
     path('include_master/', views.include_master, name='include_master'),###########
     path('info/', views.info, name='info'),
     path('login_telegram/', views.login_in_telegram, name='login_telegram'),
+    # path('start_bot/', views.bot, name='start_bot'),
+    # path('set_webhook/', views.set_webhook, name='set_webhook')
 ]

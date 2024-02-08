@@ -5,8 +5,10 @@ from datetime import datetime
 import pandas as pd
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse, HttpResponseNotAllowed
 from django.shortcuts import render, redirect
+from django.views.decorators.csrf import csrf_exempt
+
 from .forms import *
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import Permission
@@ -19,23 +21,37 @@ from openpyxl import load_workbook
 import telebot
 from telebot import types
 from . import cora_bot
+from django.core.exceptions import PermissionDenied
 
 
-# while True:
-#     bot = telebot.TeleBot('6924477556:AAH3pYP8AzQJXia27bgxAW1srTfAAaCaHC0')
-#     @bot.message_handler(commands=['start'])
-#     def start(message):
-#         bot.send_message(message.from_user.id, 'start')
+bot = telebot.TeleBot('6924477556:AAH3pYP8AzQJXia27bgxAW1srTfAAaCaHC0')
+
+# TOKEN = '6924477556:AAH3pYP8AzQJXia27bgxAW1srTfAAaCaHC0'
+# tbot = telebot.TeleBot(TOKEN)
+#
+# def set_webhook(request):
+#     bot_info = tbot.get_me()
+#     webhook_url = f"http://127.0.0.1:8000/set_webhook/"  # замените на ваш URL-адрес
+#     result = tbot.set_webhook(url=webhook_url)
+#     if result:
+#         return JsonResponse({'status': 'Webhook has been set'})
+#     else:
+#         return JsonResponse({'status': 'Failed to set webhook'})
+#
+# @csrf_exempt
+# def bot(request):
+#     if request.method == 'POST':
+#         json_data = request.body.decode('utf-8')
+#         update = telebot.types.Update.de_json(json_data)
+#         tbot.process_new_updates([update])
+#         return HttpResponse('')
+#     else:
+#         return HttpResponseNotAllowed(['POST'])
 #
 #
-#     break
-#
-#
-#     def login_in_cora(message):
-#         pass
-#
-#     bot.polling(none_stop=True)
-#     break
+# @tbot.message_handler(content_types=["text"])
+# def get_okn(message):
+#     tbot.send_message(message.chat.id, "Hello, bot!")
 
 
 def start_page(request):
@@ -118,6 +134,7 @@ def add_com_master(request, pk):
             instance = Ticket.objects.get(id=pk)
             com_master_edit(request, instance)
 
+
         except:
             messages.error(request, f'Данные не могут быть изменены {Exception()}')
 
@@ -181,13 +198,19 @@ def com_master_edit(request, instance=None):
         ticket.viewed = False
         ticket.save()
 
-        if instance.apartment is None:
-            messages.success(request,
-                             f'Данные успешно изменены {instance.street}  {instance.house}')
+        if ticket.cause == False:
+            messages.success(request, f'Заявка {instance.street}  {instance.house} закрыта по пречине недозвон')
+            ticket.closed_date = timezone.now()
+            ticket.completion_date = None
+            ticket.save()
 
-        else:
-            messages.success(request,
-                             f'Данные успешно изменены {instance.street}  {instance.house} кв {instance.apartment}')
+
+        if ticket.cause == None:
+            messages.success(request,f'Заявка {instance.street}  {instance.house} выполнена')
+            ticket.completion_date = timezone.now()
+            ticket.closed_date = None
+            ticket.save()
+
 
         return redirect('master_comment', ticket.id)
 
@@ -329,6 +352,18 @@ def edit_ticket(request, pk):
                 ticket.user_change = request.user.first_name
                 ticket.date_change = timezone.now()
                 ticket.save()
+
+                if ticket.cause == False:
+                    messages.success(request, f'Заявка {instance.street}  {instance.house} закрыта по пречине недозвон')
+                    ticket.closed_date = timezone.now()
+                    ticket.completion_date = None
+                    ticket.save()
+
+                if ticket.cause is None:
+                    messages.success(request, f'Заявка {instance.street}  {instance.house} выполнена')
+                    ticket.completion_date = timezone.now()
+                    ticket.closed_date = None
+                    ticket.save()
 
                 if ticket.status:
                     ticket.deleted = False
